@@ -1,0 +1,47 @@
+\documentclass[fleqn,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel} % 'dutch' will use Saxion Hogeschool logo, any other language uses Saxion University of Applied Sciences logo.
+\usepackage[backend=biber]{biblatex}
+\usepackage[normalem]{ulem}
+\usepackage{microtype}
+
+\usepackage{puml}
+\usepackage{longlisting}
+\usepackage{stylabletables}
+\usepackage{saxion}
+
+\graphicspath{{../fig/}{../uml/}} % Change this to be a relative path to your figures.
+\addbibresource{../bib/references.bib} % Change this to be a relative path to your references.bib file.
+
+\title{Your Title}
+\subtitle{Your subtitle}
+\author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\section{Changelog}\label{sec:changelog}
+
+\begin{htable}[
+		caption = {Changelog},
+		label = {tab:changelog},
+	]{
+		colspec={llX},
+	}
+	Versie & Datum & Omschrijving \\
+	1.0 & \today & Initial draft. \\
+\end{htable}
+
+\newpage
+\tableofcontents
+
+% Your content here.
+
+\newpage
+\printbibliography
+
+\end{document}
