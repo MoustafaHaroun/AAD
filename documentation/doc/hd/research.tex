@@ -5,14 +5,31 @@
 \usepackage[backend=biber]{biblatex}
 \usepackage[normalem]{ulem}
 \usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{import}
 
 \usepackage{puml}
 \usepackage{longlisting}
 \usepackage{stylabletables}
 \usepackage{saxion}
 
-\graphicspath{{../fig/}{../uml/}} % Change this to be a relative path to your figures.
-\addbibresource{../bib/references.bib} % Change this to be a relative path to your references.bib file.
+\makeatletter
+\newcommand{\setrootdepth}[1]{
+    \def\rootpath{}
+    \count0=0
+    \loop
+        \ifnum\count0<#1
+            \edef\rootpath{\rootpath../}
+            \advance\count0 by 1
+    \repeat
+ 
+    \graphicspath{{\rootpath fig/}{\rootpath uml/}} % Change this to be a relative path to your figures.
+    \addbibresource{\rootpath bib/references.bib} % Change this to be a relative path to your references.bib file.
+    \def\input@path{{\rootpath inc/}} % Change this to be a relative path to your included tex files.
+}
+\makeatother
+
+\setrootdepth{2} % Set this to correct nesting from the doc/ directory.
 
 \title{Hybrid Development}
 \subtitle{A research paper on hybrid frameworks for mobile applications.}
@@ -32,7 +49,7 @@
 	]{
 		colspec={llX},
 	}
-	Versie & Datum & Omschrijving \\
+	Version & Date & Description \\
 	1.0 & \today & Initial draft. \\
 \end{htable}
 
@@ -40,14 +57,13 @@
 \tableofcontents
 
 \newpage
-\input{../inc/hd/research/multi-criteria-analysis.tex}
+\input{hd/research/multi-criteria-analysis.tex}
 
 \newpage
-\input{../inc/hd/research/prototyping.tex}
+\input{hd/research/prototyping.tex}
 
 \newpage
-\input{../inc/hd/research/conclusion.tex}
-
+\input{hd/research/conclusion.tex}
 
 \newpage
 \printbibliography

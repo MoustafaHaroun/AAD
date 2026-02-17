@@ -11,8 +11,23 @@
 \usepackage{stylabletables}
 \usepackage{saxion}
 
-\graphicspath{{../fig/}{../uml/}} % Change this to be a relative path to your figures.
-\addbibresource{../bib/references.bib} % Change this to be a relative path to your references.bib file.
+\makeatletter
+\newcommand{\setrootdepth}[1]{
+    \def\rootpath{}
+    \count0=0
+    \loop
+        \ifnum\count0<#1
+            \edef\rootpath{\rootpath../}
+            \advance\count0 by 1
+    \repeat
+ 
+    \graphicspath{{\rootpath fig/}{\rootpath uml/}} % Change this to be a relative path to your figures.
+    \addbibresource{\rootpath bib/references.bib} % Change this to be a relative path to your references.bib file.
+    \def\input@path{{\rootpath inc/}} % Change this to be a relative path to your included tex files.
+}
+\makeatother
+
+\setrootdepth{1} % Set this to correct nesting from the doc/ directory.
 
 \title{Your Title}
 \subtitle{Your subtitle}
@@ -32,7 +47,7 @@
 	]{
 		colspec={llX},
 	}
-	Versie & Datum & Omschrijving \\
+	Version & Date & Description \\
 	1.0 & \today & Initial draft. \\
 \end{htable}
 
