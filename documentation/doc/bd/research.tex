@@ -11,26 +11,11 @@
 \usepackage{stylabletables}
 \usepackage{saxion}
 
-\makeatletter
-\newcommand{\setrootdepth}[1]{
-    \def\rootpath{}
-    \count0=0
-    \loop
-        \ifnum\count0<#1
-            \edef\rootpath{\rootpath../}
-            \advance\count0 by 1
-    \repeat
+\graphicspath{{../fig/}{../uml/}} % Change this to be a relative path to your figures.
+\addbibresource{../bib/references.bib} % Change this to be a relative path to your references.bib file.
 
-    \graphicspath{{\rootpath fig/}{\rootpath uml/}} % Change this to be a relative path to your figures.
-    \addbibresource{\rootpath bib/references.bib} % Change this to be a relative path to your references.bib file.
-    \def\input@path{{\rootpath inc/}} % Change this to be a relative path to your included tex files.
-}
-\makeatother
-
-\setrootdepth{2} % Set this to correct nesting from the doc/ directory.
-
-\title{Backend Development}
-\subtitle{A research paper on backend frameworks.}
+\title{Research}
+\subtitle{An Analysis of Backend Frameworks}
 \author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
 \date{\today}
 
