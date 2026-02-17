@@ -33,7 +33,7 @@ class ListingDetailsPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.delete),
             onPressed: () async {
-              await storage.deleteListing(listing);
+              await storage.deleteListing(listing.id);
               if (!context.mounted) return;
               Navigator.pop(context, true);
             },

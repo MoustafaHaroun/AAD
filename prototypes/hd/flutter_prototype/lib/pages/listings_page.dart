@@ -29,8 +29,7 @@ class _ListingsState extends State<Listings> {
   Future<void> _loadListings() async {
     setState(() => _loading = true);
 
-    final raw = await _storage.loadListings();
-    final listings = raw.map((e) => Listing.fromJson(e)).toList();
+    final listings = await _storage.loadListings();
 
     setState(() {
       _listings = listings;

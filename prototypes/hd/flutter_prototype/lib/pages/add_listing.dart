@@ -90,11 +90,9 @@ class _AddListingFormState extends State<AddListingForm> {
     );
 
     if (widget.existingPost == null) {
-      final existing = await _storage.loadListings();
-      existing.add(newListing.toJson());
-      await _storage.saveListings(existing);
+      await _storage.addListing(newListing);
     } else {
-      await _storage.updateListing(widget.existingPost!, newListing);
+      await _storage.updateListing(newListing);
     }
 
     if (!mounted) return;
