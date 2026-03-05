@@ -1,0 +1,23 @@
+\section{Prototyping}\label{sec:prototyping}
+This section discusses our experience building prototypes using Flutter and React Native.
+
+
+\subsection{Flutter}
+Setting up Flutter was, in our opinion, the most challenging part.
+Adding the PATH manually and configuring the Dart SDK in Android Studio is well documented, but it’s easy to make small mistakes that can take hours to troubleshoot.
+
+Working with widgets felt fairly straightforward and provided structure quickly.
+Built-in components such as the Scaffold allowed us to lay out pages fast, which made it satisfying to see the interface come together early in development.
+However, whenever we wanted to move beyond the default Material UI, we often had to write a significant amount of additional code, and styling pages sometimes became tricky.
+Each widget approaches styling slightly differently, and parameter names are not always consistent, which was frustrating.
+
+On the positive side, the Flutter ecosystem is very strong.
+Adding functionality like content sharing was simple and required minimal code.
+Many useful features, such as RefreshIndicator and Snackbar, are available out of the box, so we didn’t need many extra dependencies.
+
+The documentation was generally helpful, although we occasionally spent time searching for specific widgets when we didn’t know their exact names.
+The emulator provided mixed results: it is resource-intensive and sometimes displayed the app differently than a real device, but switching to wired debugging on a physical phone resolved most of those issues.
+
+For the prototype, we used Android Studio as our IDE.
+We implemented shared preferences for local storage and integrated the camera and path provider packages to capture images and store their paths on the device.
+Overall, once we became familiar with the ecosystem and workflow, Flutter made the development process approachable, and we appreciated how it simplified tasks that can be more tedious in other frameworks.

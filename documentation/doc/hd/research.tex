@@ -5,6 +5,8 @@
 \usepackage[backend=biber]{biblatex}
 \usepackage[normalem]{ulem}
 \usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{import}
 
 \usepackage{puml}
 \usepackage{longlisting}
@@ -27,10 +29,10 @@
 }
 \makeatother
 
-\setrootdepth{1} % Set this to correct nesting from the doc/ directory.
+\setrootdepth{2} % Set this to correct nesting from the doc/ directory.
 
-\title{Your Title}
-\subtitle{Your subtitle}
+\title{Hybrid Development}
+\subtitle{A research paper on hybrid frameworks for mobile applications.}
 \author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
 \date{\today}
 
@@ -54,7 +56,14 @@
 \newpage
 \tableofcontents
 
-% Your content here.
+\newpage
+\input{hd/research/multi-criteria-analysis.tex}
+
+\newpage
+\input{hd/research/prototyping.tex}
+
+\newpage
+\input{hd/research/conclusion.tex}
 
 \newpage
 \printbibliography
