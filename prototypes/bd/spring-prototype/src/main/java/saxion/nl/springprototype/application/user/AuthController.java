@@ -32,8 +32,8 @@ public class AuthController {
     @PostMapping("/login")
     public Map<String, String> login(@RequestBody LoginRequest request) {
         // For prototype: hardcode user/password
-        String hardcodedUser = "moustafa";
-        String hardcodedPass = passwordEncoder.encode("1234");
+        String hardcodedUser = "admin";
+        String hardcodedPass = passwordEncoder.encode("admin");
 
         if (!request.username().equals(hardcodedUser) ||
                 !passwordEncoder.matches(request.password(), hardcodedPass)) {
