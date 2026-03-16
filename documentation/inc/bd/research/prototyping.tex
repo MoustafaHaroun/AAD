@@ -1,0 +1,11 @@
+\section{Prototyping}\label{sec:prototyping}
+This section discusses the experience gained while building a prototype using Spring Boot and NestJS.
+
+\subsection{Spring Boot}
+Setting up and creating the project was relatively easy. For building the prototype we used IntelliJ IDEA, which integrates well with Java and Spring Boot. We decided to use Spring Boot 4 together with Java version 21.
+
+Creating controllers, services, and repositories, as well as setting up the ORM, was straightforward due to the annotation-based approach provided by Spring Boot. Dependency injection is handled out of the box, which simplifies the structure of the application. Adding tests was also relatively easy because of the built-in support within the framework.
+
+In addition, observability was added using Grafana, Prometheus, and Loki. Setting this up was mostly straightforward, as it mainly required adding the necessary dependencies and configuring the application. There were some difficulties when configuring the security settings in Spring Boot, but after some experimentation the configuration became clearer.
+
+The documentation for Spring Boot was generally sufficient. Because Spring Boot is a mature and widely used framework, there is a large amount of information available online. However, some resources were outdated, especially since this prototype uses the newer Spring Boot 4 version, which means certain solutions were deprecated. Despite this, the official Spring Boot documentation provided enough examples and it was generally possible to find solutions to the problems encountered.
