@@ -1,13 +1,38 @@
 import type { Listing } from "@/domain/entities";
 import type { IListingRepository } from "@/domain/repositories";
-import { db } from "@/infrastructure/persistence/drizzle";
+import {db, uuid} from "@/infrastructure/persistence/drizzle";
+import { eq } from "drizzle-orm";
 import {
     listingSchema,
     attachmentSchema,
 } from "@/infrastructure/persistence/drizzle/schema";
-import { eq } from "drizzle-orm";
 
 export class ListingRepository implements IListingRepository {
+    private reduceListingResults(result: Array<{
+        id: string,
+        title: string,
+        description: string | null,
+        location: string,
+        user: string,
+        attachmentPath: string | null,
+    }> | undefined): Listing[] {
+        return result?.reduce((acc, cur) => {
+            const listing = acc.find(item => item.id === cur.id);
+
+            if (cur.attachmentPath != null) {
+                if (listing == null) {
+                    acc.push({ ...cur, attachments: [cur.attachmentPath] });
+                } else {
+                    listing.attachments.push(cur.attachmentPath);
+                }
+            } else if (listing == null) {
+                acc.push({ ...cur, attachments: [] });
+            }
+
+            return acc;
+        }, [] as Listing[]) ?? [];
+    }
+
     public async getListingById(listingId: string): Promise<Listing | null> {
         let result;
 
@@ -36,18 +61,7 @@ export class ListingRepository implements IListingRepository {
             return null;
         }
 
-        const listing = result[0];
-
-        return {
-            id: listing.id,
-            title: listing.title ?? "",
-            description: listing.description ?? "",
-            location: listing.location ?? "",
-            user: listing.user ?? "",
-            attachments: result
-                .map(res => res.attachmentPath)
-                .filter(Boolean),
-        } satisfies Listing;
+        return this.reduceListingResults(result)[0];
     }
 
     public async getListingsByUser(userId: string): Promise<Listing[]> {
@@ -73,15 +87,7 @@ export class ListingRepository implements IListingRepository {
             console.error(error);
         }
 
-        console.log(result);
-        return result?.map(item => ({
-            id: item.id,
-            title: item.title ?? "",
-            description: item.description ?? "",
-            location: item.location ?? "",
-            user: item.user ?? "",
-            attachments: item.attachmentPath,
-        })) ?? [] satisfies Listing[];
+        return this.reduceListingResults(result);
     }
 
     public async createListing(
@@ -89,8 +95,10 @@ export class ListingRepository implements IListingRepository {
         listing: Listing,
     ): Promise<Listing> {
         try {
-            await db.insert(listingSchema).values(listing);
-            await Promise.all(listing.attachments.map(attachment => db.insert(attachmentSchema).values({ id: Date.now().toString(), listingId: listing.id, path: attachment })));
+            const listingId = uuid();
+
+            await db.insert(listingSchema).values({ ...listing, id: listingId });
+            await Promise.all(listing.attachments.map(attachment => db.insert(attachmentSchema).values({ id: uuid(), listingId, path: attachment })));
         } catch (error) {
             console.error(error);
         }

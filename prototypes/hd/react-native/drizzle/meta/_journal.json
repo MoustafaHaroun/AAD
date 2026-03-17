@@ -15,6 +15,13 @@
       "when": 1773651393123,
       "tag": "0001_amazing_micromax",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1773751495389,
+      "tag": "0002_pretty_sandman",
+      "breakpoints": true
     }
   ]
 }

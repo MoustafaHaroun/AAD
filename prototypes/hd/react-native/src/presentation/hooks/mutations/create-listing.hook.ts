@@ -1,18 +1,16 @@
-import { CreateListing } from "@/application/usecases";
+import { CreateListing, type CreateListingParams } from "@/application/usecases";
 import type { Listing } from "@/domain/entities";
-import { useImageService } from "@/presentation/hooks";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const createListing = new CreateListing();
 
 /**
- *
+ * Use the create listing mutation.
  */
 export function useCreateListing(): ReturnType<
-  typeof useMutation<void, Error, Listing>
+  typeof useMutation<void, Error, CreateListingParams>
 > {
     const queryClient = useQueryClient();
-    const imageService = useImageService();
 
     return useMutation({
         mutationFn: async ({
@@ -22,21 +20,11 @@ export function useCreateListing(): ReturnType<
             userId: string,
             listing: Listing,
         }) => {
-            const uris = [];
-
-            for (const attachment of listing.attachments) {
-                const uri = await imageService.saveImageLocally(attachment);
-
-                if (uri != null) {
-                    uris.push(uri);
-                }
-            }
-
-            createListing.execute(userId, { ...listing, attachments: uris });
+            await createListing.execute({ userId, listing });
         },
-        onSuccess: (_, variables) => {
-            queryClient.invalidateQueries({
-                queryKey: ["listings.get.byuser", variables.userId],
+        onSuccess: async (_, variables) => {
+            await queryClient.invalidateQueries({
+                queryKey: ["listings.get.by_user", variables.userId],
             });
         },
     });

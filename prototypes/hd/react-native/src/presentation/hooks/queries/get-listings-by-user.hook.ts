@@ -11,7 +11,7 @@ const getListingsByUser = new GetListingsByUser();
  */
 export function useGetListingsByUser(userId: string): ReturnType<typeof useQuery<void, Error, Listing[]>> {
     return useQuery({
-        queryKey: ["listings.get.byuser", userId],
+        queryKey: ["listings.get.by_user", userId],
         queryFn: async () => getListingsByUser.execute(userId),
         enabled: userId != null,
     });

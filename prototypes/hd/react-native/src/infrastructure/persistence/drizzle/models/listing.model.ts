@@ -2,8 +2,8 @@ import { sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const listing = sqliteTable("listing", {
     id: text().primaryKey(),
-    title: text(),
+    title: text().notNull(),
     description: text(),
-    location: text(),
-    user: text(),
+    location: text().notNull(),
+    user: text().notNull(),
 });

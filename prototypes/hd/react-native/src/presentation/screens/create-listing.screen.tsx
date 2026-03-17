@@ -4,7 +4,6 @@ import React, { useState } from "react";
 import { Plus } from "lucide-react-native";
 import { View, ScrollView, Platform, Pressable, Image } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
@@ -13,11 +12,9 @@ import { Button } from "@/presentation/components/primitives/rnreusables/ui/butt
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { Textarea } from "@/presentation/components/primitives/rnreusables/ui/textarea";
-import { Label } from "@/presentation/components/primitives/rnreusables/ui/label";
 import { FormField } from "@/presentation/components/primitives/form-field";
 import { useForm } from "react-hook-form";
 import {
-    useGetListingsByUser,
     useCreateListing,
     useImageService,
 } from "@/presentation/hooks";
@@ -40,11 +37,11 @@ export default function CreateListingScreen(): React.JSX.Element {
         resolver: zodResolver(createListingSchema),
     });
 
-    const [attachments, setAttachments] = useState([]);
+    const [attachments, setAttachments] = useState<string[]>([]);
 
     /**
-     *
-     * @param onChange
+     * Add an attachment to the listing.
+     * @param onChange - The function to call to update the form control.
      */
     async function addAttachment(onChange: (value: string[]) => void) {
         const uri = await imageService.takePhoto();
@@ -60,10 +57,11 @@ export default function CreateListingScreen(): React.JSX.Element {
     }
 
     /**
-     *
-     * @param uri
+     * Remove an attachment from the listing.
+     * @param uri - The uri to remove.
+     * @param onChange - The function to call to update the form control.
      */
-    function removeAttachment(uri: string) {
+    function removeAttachment(uri: string, onChange: (value: string[]) => void) {
         setAttachments(prev => {
             const next = prev.filter(u => u !== uri);
 
@@ -76,13 +74,13 @@ export default function CreateListingScreen(): React.JSX.Element {
      *
      * @param data
      */
-    function onSubmit(data) {
+    function onSubmit(data: z.infer<typeof createListingSchema>) {
         mutate({
             userId: "Tim Timmerman",
             listing: {
-                id: Date.now(),
+                id: "", // Will be set in repository.
                 title: data.title,
-                description: data.description,
+                description: data.description ?? null,
                 location: "Houten",
                 user: "Tim Timmerman",
                 attachments,
@@ -107,10 +105,10 @@ export default function CreateListingScreen(): React.JSX.Element {
                         name="title"
                     >
                         {({ className, value, onChange }) => (<Input
-                                className={className}
-                                onChangeText={onChange}
-                                value={value}
-                            />)}
+                            className={className}
+                            onChangeText={onChange}
+                            value={value}
+                        />)}
                     </FormField>
 
                     <FormField
@@ -119,10 +117,10 @@ export default function CreateListingScreen(): React.JSX.Element {
                         name="description"
                     >
                         {({ className, value, onChange }) => (<Textarea
-                                className={className}
-                                onChangeText={onChange}
-                                value={value}
-                            />)}
+                            className={className}
+                            onChangeText={onChange}
+                            value={value}
+                        />)}
                     </FormField>
 
                     <FormField
@@ -131,31 +129,31 @@ export default function CreateListingScreen(): React.JSX.Element {
                         name="attachments"
                     >
                         {({ onChange }) => (<View className="flex flex-row gap-2">
-                                <Pressable
-                                    className="flex items-center justify-center bg-muted rounded-md h-16 w-16"
-                                    onPress={async () => addAttachment(onChange)}
-                                >
-                                    <Icon
-className="size-5"
-                                        as={Plus}
-                                    />
-                                </Pressable>
+                            <Pressable
+                                className="flex items-center justify-center bg-muted rounded-md h-16 w-16"
+                                onPress={async () => addAttachment(onChange)}
+                            >
+                                <Icon
+                                    className="size-5"
+                                    as={Plus}
+                                />
+                            </Pressable>
 
-                                <ScrollView horizontal>
-                    <View className="flex flex-row gap-2">
-                                        {attachments
-? attachments.map(uri => 
-                        <Image
-                          className="h-16 w-16 rounded-md"
-                          key={uri}
-                          source={{ uri }}
-                          resizeMode="cover"
-                        />
-                      )
-: null}
-                                    </View>
-                </ScrollView>
-                            </View>)}
+                            <ScrollView horizontal>
+                                <View className="flex flex-row gap-2">
+                                    {attachments
+                                        ? attachments.map(uri =>
+                                            <Image
+                                                className="h-16 w-16 rounded-md"
+                                                key={uri}
+                                                source={{ uri }}
+                                                resizeMode="cover"
+                                            />
+                                        )
+                                        : null}
+                                </View>
+                            </ScrollView>
+                        </View>)}
                     </FormField>
                 </ScrollView>
 

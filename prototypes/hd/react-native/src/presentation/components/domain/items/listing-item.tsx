@@ -1,4 +1,4 @@
-import { View } from "react-native";
+import {Image, View} from "react-native";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { MapPin } from "lucide-react-native";
@@ -10,14 +10,18 @@ export interface ListingItemProps {
 
 /**
  * Render the ListingItem component.
+ * @param props - The props
  * @param props.listing - The listing object.
- * @param root0
- * @param root0.listing
  * @returns The ListingItem component.
  */
 export default function ListingItem({ listing }: ListingItemProps) {
     return (
-        <View className="bg-accent rounded-md grow">
+        <View className="flex flex-col bg-accent rounded-md grow">
+            <Image
+                className="w-full aspect-video rounded-t-md"
+                source={{ uri: listing.attachments[0] }}
+                resizeMode="cover"
+            />
             <View className="flex flex-col grow gap-1 p-2">
                 <View className="grow">
                     <Text

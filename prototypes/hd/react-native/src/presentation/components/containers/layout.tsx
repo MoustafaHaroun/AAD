@@ -1,3 +1,4 @@
+import "react-native-get-random-values";
 import "@/presentation/styles/global.css";
 import { NAV_THEME } from "@/presentation/styles/theme";
 import { ThemeProvider } from "@react-navigation/native";
@@ -7,7 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "nativewind";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { ActivityIndicator, Platform } from "react-native";
+import { ActivityIndicator, Platform, Text } from "react-native";
 import { DATABASE_NAME, db } from "@/infrastructure/persistence/drizzle";
 import migrations from "@/../drizzle/migrations";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
@@ -29,6 +30,14 @@ export default function Layout() {
     setColorScheme("light"); // Forcefully set to light theme.
 
     z.config(en());
+
+    if (error) {
+        return (<Text>Shit broke</Text>)
+    }
+
+    if (!success) {
+        return (<Text>Shit is trying</Text>)
+    }
 
     return (
         <Suspense fallback={<ActivityIndicator />}>

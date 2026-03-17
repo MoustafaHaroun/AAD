@@ -65,34 +65,8 @@ export class ImageService implements IImageService {
     }
 
     async saveImageLocally(uri: string): Promise<string> {
-        try {
-            const file = new File(uri);
-
-            if (!file.exists) {
-                throw new Error("File does not exist");
-            }
-
-            const fileName = uri.split("/").pop();
-            const savedFile = new File(Paths.document, fileName);
-
-            await file.copy(savedFile);
-
-            return savedFile.uri;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        }
     }
 
     public async deleteLocalImage(uri: string): Promise<string | null> {
-        try {
-            const file = new File(uri);
-
-            if (!file.exists) {
-                return null;
-            }
-
-
-        }
     }
 }

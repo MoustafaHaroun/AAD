@@ -2,7 +2,6 @@ import { Stack } from "expo-router";
 import * as React from "react";
 import { View, Pressable } from "react-native";
 import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
-import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Button } from "@/presentation/components/primitives/rnreusables/ui/button";
 import { Plus } from "lucide-react-native";
@@ -18,6 +17,8 @@ export default function ListingsScreen(): React.JSX.Element {
     const router = useRouter();
     const { data } = useGetListingsByUser("Tim Timmerman");
 
+    console.log(data?.map(d => `${d.title} -:- ${d.attachments}`));
+
     return (
         <>
             <Stack.Screen options={SCREEN_OPTIONS} />
@@ -26,21 +27,21 @@ export default function ListingsScreen(): React.JSX.Element {
                 <View className="flex flex-wrap flex-row -m-1">
                     {data != null &&
                         data.map(listing => (<Pressable
+                            key={listing.id}
+                            className="w-1/2 p-1"
+                            onPress={() => { router.push(`/listings/${listing.id}`); }}
+                        >
+                            <ListingItem
                                 key={listing.id}
-                                className="w-1/2 p-1"
-                                onPress={() => { router.push(`listings/${listing.id}`); }}
-                            >
-                                <ListingItem
-key={listing.id}
-                          listing={listing}
-                      />
-                            </Pressable>),)}
+                                listing={listing}
+                            />
+                        </Pressable>),)}
                 </View>
 
                 <View className="absolute p-4 bottom-0 right-0">
                     <Button
                         className="shadow-lg! shadow-black h-12 w-12"
-                        onPress={() => { router.push("/create-listing"); }}
+                        onPress={() => { router.push("/listings/new"); }}
                     >
                         <Icon
                             as={Plus}

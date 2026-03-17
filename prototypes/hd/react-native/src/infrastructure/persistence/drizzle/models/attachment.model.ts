@@ -6,5 +6,5 @@ export const attachment = sqliteTable("attachment", {
     listingId: text("listing_id")
         .references(() => listingSchema.id, { onDelete: "cascade" })
         .notNull(),
-    path: text(),
+    path: text().notNull(),
 });
