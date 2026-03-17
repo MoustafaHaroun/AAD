@@ -5,7 +5,14 @@ server:
 
 common:
   path_prefix: /loki
+
+  storage:
+    filesystem:
+      chunks_directory: /loki/chunks
+      rules_directory: /loki/rules
+
   replication_factor: 1
+
   ring:
     kvstore:
       store: inmemory
@@ -14,7 +21,7 @@ schema_config:
   configs:
     - from: 2020-10-24
       store: tsdb
-      object_store: inmemory
+      object_store: filesystem
       schema: v13
       index:
         prefix: index_

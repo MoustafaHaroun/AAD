@@ -47,7 +47,7 @@ services:
     command: -config.file=/etc/loki/loki.yml
     volumes:
       - ./monitoring/loki/loki.yml:/etc/loki/loki.yml
-      - ./monitoring/loki/data:/loki
+      - loki_data:/loki
     restart: unless-stopped
 
   grafana:
@@ -62,3 +62,4 @@ services:
 
 volumes:
   pgdata:
+  loki_data:
