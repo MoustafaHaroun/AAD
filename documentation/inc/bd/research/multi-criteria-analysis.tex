@@ -10,7 +10,7 @@ The to be built software solution requires two types of communication.
 The back-end application will provide an API that follows the REST protocol standards.
 Since the front-end application needs to communicate with the back-end to perform CRUD operations, it must be able to construct and send \emph{RESTful API calls}.
 
-Additionally, the software solution will likely include chat functionality.
+Additionally, the software solution will include chat functionality.
 For real-time communication between users, some sort of socket connection is required.
 This means the application must also be able to establish and maintain a \emph{WebSocket connection}.
 
@@ -197,7 +197,7 @@ For WebSockets, the \emph{gorilla/websocket} package provides a fast, well-teste
 Since this criterion is not assigned any weight, Echo meets the requirements and passes the criterion.
 
 \paragraph{Community}
-The official Echo GitHub repository has over 30.600 stars \cite{bib:echo-github}, there is no dedicated Echo Discord server but the Golang Discord server has over 42.000 members \cite{bib:golang-discord}, and there are at least 6.500 results on GitHub for Echo projects \cite{bib:echo-github-search}.
+The official Echo GitHub repository has over 32.200 stars \cite{bib:echo-github}, there is no dedicated Echo Discord server but the Golang Discord server has over 42.000 members \cite{bib:golang-discord}, and there are at least 6.500 results on GitHub for Echo projects \cite{bib:echo-github-search}.
 
 The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-echo-community}.
 
@@ -208,7 +208,7 @@ The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-ech
 		colspec={lllX},
 	}
 	Sub-criterion & Weight & Function & Normalized score \\
-	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{30600}{30600} = 1$ \\
+	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{32200}{32200} = 1$ \\
 	Number of Discord users & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{42000}{44000} = 0.95$ \\
 	Number of examples & 10 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{6500}{508000} = 0.01$ \\
 \end{htable}
@@ -295,7 +295,7 @@ The normalized total score for this criterion is \emph{0.63}.
 \paragraph{Quality Assurance}
 Echo makes use of the Golang testing platform, which is built into the standard library and supports unit and integration testing. \cite{bib:golang-testing}
 The Go ecosystem provides linting tools such as \emph{golangci-lint}, which bundles multiple linters and integrates with major JetBrains IDEs. \cite{bib:golangci-lint}
-The last major release of the Echo framework was December 19, 2024, which falls within the last six months. \cite{bib:echo-github}
+The last minor release of the Echo framework was the last six months. \cite{bib:echo-github}
 
 The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-echo-quality-assurance}.
 
@@ -333,7 +333,7 @@ For WebSocket connections, Spring Boot includes the \emph{spring-websocket} modu
 Since this criterion is not assigned any weight, Spring Boot meets the requirements and passes the criterion.
 
 \paragraph{Community}
-The official Spring Boot GitHub repository has over 75.000 stars \cite{bib:spring-boot-github}, the official Spring Discord server has over 8.000 members \cite{bib:spring-discord}, and there are at least 400.000 results on GitHub for Spring Boot projects \cite{bib:spring-boot-github-search}.
+The official Spring Boot GitHub repository has over 80.000 stars \cite{bib:spring-boot-github}, the official Spring Discord server has over 8.000 members \cite{bib:spring-discord}, and there are at least 400.000 results on GitHub for Spring Boot projects \cite{bib:spring-boot-github-search}.
 
 The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-spring-boot-community}.
 
@@ -344,7 +344,7 @@ The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-spr
 		colspec={lllX},
 	}
 	Sub-criterion & Weight & Function & Normalized score \\
-	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{75000}{75000} = 1$ \\
+	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{80000}{80000} = 1$ \\
 	Number of Discord users & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{8000}{44000} = 0.18$ \\
 	Number of examples & 10 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{400000}{508000} = 0.79$ \\
 \end{htable}
@@ -431,7 +431,7 @@ The normalized total score for this criterion is \emph{0.75}.
 \paragraph{Quality Assurance}
 Spring Boot integrates with JUnit and provides the \texttt{@SpringBootTest} annotation for integration testing, as well as MockMvc for testing web layers in isolation. \cite{bib:spring-boot-testing}
 The Java ecosystem offers mature static analysis tools such as Checkstyle, PMD, and SpotBugs, all of which integrate well with JetBrains IntelliJ IDEA. \cite{bib:java-linting}
-The last major release of Spring Boot was within the last six months. \cite{bib:spring-boot-github}
+The last minor release of Spring Boot was within the last six months. \cite{bib:spring-boot-github}
 
 The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-spring-boot-quality-assurance}.
 
@@ -469,7 +469,7 @@ For WebSocket connections, NestJS has a built-in WebSockets module that supports
 Since this criterion is not assigned any weight, NestJS meets the requirements and passes the criterion.
 
 \paragraph{Community}
-The official NestJS GitHub repository has over 67.000 stars \cite{bib:nestjs-github}, the official NestJS Discord server has over 30.000 members \cite{bib:nestjs-discord}, and there are at least 80.000 results on GitHub for NestJS projects \cite{bib:nestjs-github-search}.
+The official NestJS GitHub repository has over 75.000 stars \cite{bib:nestjs-github}, the official NestJS Discord server has over 30.000 members \cite{bib:nestjs-discord}, and there are at least 80.000 results on GitHub for NestJS projects \cite{bib:nestjs-github-search}.
 
 The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-nestjs-community}.
 
@@ -480,7 +480,7 @@ The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-nes
 		colspec={lllX},
 	}
 	Sub-criterion & Weight & Function & Normalized score \\
-	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{67000}{75000} = 0.89$ \\
+	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{75000}{75000} = 0.89$ \\
 	Number of Discord users & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{30000}{44000} = 0.68$ \\
 	Number of examples & 10 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{80000}{508000} = 0.16$ \\
 \end{htable}
@@ -567,7 +567,7 @@ The normalized total score for this criterion is \emph{1.00}.
 \paragraph{Quality Assurance}
 NestJS integrates with Jest out of the box and provides utilities for unit testing individual components and end-to-end testing the full application. \cite{bib:nestjs-testing}
 The TypeScript ecosystem provides ESLint with TypeScript-specific rules, and NestJS projects are scaffolded with ESLint configuration by default. \cite{bib:nestjs-linting}
-The last major release of NestJS was within the last six months. \cite{bib:nestjs-github}
+The last minor release of NestJS was within the last six months. \cite{bib:nestjs-github}
 
 The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-nestjs-quality-assurance}.
 
