@@ -27,6 +27,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("com.github.loki4j:loki-logback-appender:2.0.3")
     implementation("io.jsonwebtoken:jjwt-api:0.12.5")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.2")
     developmentOnly("org.springframework.boot:spring-boot-devtools")
     runtimeOnly("io.micrometer:micrometer-registry-prometheus")
     runtimeOnly("org.postgresql:postgresql")
