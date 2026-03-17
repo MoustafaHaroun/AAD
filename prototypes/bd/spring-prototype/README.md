@@ -2,6 +2,8 @@
 
 Spring Boot prototype for the **Advanced Application Development Specialisation** backend assignment 1.
 
+You can test the API using Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
+
 ## Requirements
 
 - JDK 21  
@@ -37,7 +39,7 @@ docker-compose up -d
 ## Sample credentials (demo)
 
 - Username: admin
-- Password: admin
+- Password: admin123
 
 Login endpoint: `POST /auth/login` 
 
@@ -46,7 +48,7 @@ Example JSON:
 ```JSON
 {
     "username": "admin",
-    "password": "admin"
+    "password": "admin123"
 }
 ```
 
@@ -59,3 +61,8 @@ The repository includes a monitoring stack under `monitoring/` and the root `doc
 - Loki (http://localhost:3100)
 
 Configs and dashboards live in the `monitoring/` folder.
+If logs don’t show in Grafana, Loki might not be ready yet. Check readiness with:
+
+```http
+curl -s -X GET http://localhost:3100/ready
+```
