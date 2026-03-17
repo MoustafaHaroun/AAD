@@ -1,6 +1,6 @@
 apiVersion: 1
 
-docker restart grafanaproviders:
+providers:
   - name: "default"
     orgId: 1
     folder: "Spring"
