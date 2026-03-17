@@ -1,0 +1,1 @@
+export * from "@/infrastructure/services/image.service";
