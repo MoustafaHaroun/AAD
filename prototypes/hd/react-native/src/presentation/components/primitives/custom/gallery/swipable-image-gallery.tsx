@@ -58,7 +58,6 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
                 {validUris.map((uri, index) => (
                     <Pressable
                         key={`${uri}-${index}`}
-                        onPress={() => console.log('Pressed image', index)}
                         style={{ width: SCREEN_WIDTH }}
                     >
                         <Image

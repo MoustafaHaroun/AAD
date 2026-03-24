@@ -1,6 +1,7 @@
 import { DeleteListing } from "@/application/usecases";
 import type { Listing } from "@/domain/entities";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {useRouter} from "expo-router";
 
 const deleteListing = new DeleteListing();
 
@@ -11,6 +12,7 @@ export function useDeleteListing(): ReturnType<
     typeof useMutation<void, Error, { listing: Listing }>
 > {
     const queryClient = useQueryClient();
+    const router = useRouter();
 
     return useMutation({
         mutationFn: async ({
@@ -24,6 +26,8 @@ export function useDeleteListing(): ReturnType<
             await queryClient.invalidateQueries({
                 queryKey: ["listings.get.by_user", variables.listing.user],
             });
+
+            router.back()
         },
     });
 }

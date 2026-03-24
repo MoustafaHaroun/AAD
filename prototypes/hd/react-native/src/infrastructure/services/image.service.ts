@@ -1,11 +1,8 @@
 import {
-    MediaTypeOptions,
-    launchCameraAsync,
-    launchImageLibraryAsync,
+    launchCameraAsync, MediaTypeOptions,
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
-import { Paths, File, Directory } from "expo-file-system";
 import { Linking, Platform, Alert } from "react-native";
 import type { IImageService } from "@/domain/services";
 
@@ -20,9 +17,9 @@ export class ImageService implements IImageService {
                 "Camera and gallery access are needed.",
             );
             if (Platform.OS === "ios") {
-                Linking.openURL("app-settings:");
+                await Linking.openURL("app-settings:");
             } else {
-                Linking.openSettings();
+                await Linking.openSettings();
             }
 
             return false;
@@ -34,16 +31,9 @@ export class ImageService implements IImageService {
     async pickImageFromGallery(): Promise<string | null> {
         const hasPermission = await this.requestPermissions();
 
-        if (!hasPermission) { return null; }
-
-        const result = await ImagePickerlaunchImageLibraryAsync({
-            mediaTypes: MediaTypeOptions.Images,
-            quality: 0.8,
-        });
-
-        if (result.canceled || !result.assets.length) { return null; }
-
-        return result.assets[0].uri;
+        if (!hasPermission) {
+            return null;
+        }
     }
 
     async takePhoto(): Promise<string | null> {
@@ -62,11 +52,5 @@ export class ImageService implements IImageService {
         }
 
         return result.assets[0].uri;
-    }
-
-    async saveImageLocally(uri: string): Promise<string> {
-    }
-
-    public async deleteLocalImage(uri: string): Promise<string | null> {
     }
 }

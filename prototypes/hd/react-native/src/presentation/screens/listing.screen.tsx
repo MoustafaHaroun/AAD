@@ -1,15 +1,22 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import {Image, Pressable, View} from "react-native";
+import { Pressable, View } from "react-native";
 import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
-import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
-import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
-import { Button } from "@/presentation/components/primitives/rnreusables/ui/button";
-import {Pencil, MapPin, Trash, EllipsisVertical, Share2} from "lucide-react-native";
+import {
+    Text,
+    Icon,
+    Popover,
+    PopoverTrigger,
+    PopoverContent,
+    AlertDialogTrigger, AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter,
+    AlertDialogCancel, AlertDialogAction
+} from "@/presentation/components/primitives/rnreusables";
+import { Pencil, MapPin, Trash, EllipsisVertical, Share2 } from "lucide-react-native";
 import { useGetListingById } from "@/presentation/hooks";
 import { useDeleteListing } from "@/presentation/hooks/mutations/delete-listing.hook";
 import {SwipableImageGallery} from "@/presentation/components/primitives/custom";
 import {Separator} from "@/presentation/components/primitives/rnreusables";
+import {useSharingService} from "@/presentation/hooks/services/sharing-service.hook";
 
 /**
  * Render the ListingScreen component.
@@ -17,6 +24,7 @@ import {Separator} from "@/presentation/components/primitives/rnreusables";
  */
 export default function ListingScreen(): React.JSX.Element {
     const router = useRouter();
+    const sharing = useSharingService();
     const { id } = useLocalSearchParams<{ id: string }>();
     const { mutate: mutateDeleteListing } = useDeleteListing();
     const { data: listing } = useGetListingById(id);
@@ -30,17 +38,63 @@ export default function ListingScreen(): React.JSX.Element {
         }
     }
 
+    /**
+     * Share the listing.
+     */
+    async function shareListing(): Promise<void> {
+        if (listing != null) {
+            await sharing.shareListing(listing);
+        }
+    }
+
     return (
         <>
             <Stack.Screen options={{ ...SCREEN_OPTIONS, headerRight: () => (
-                <View className="flex flex-row">
-                    <Pressable className="w-8 aspect-square">
-                        <Icon className="size-4" as={Share2} />
+                <View className="flex flex-row items-center justify-center gap-2">
+                    <Pressable className="flex items-center justify-center w-8 aspect-square" onPress={shareListing}>
+                        <Icon className="size-5" as={Share2} />
                     </Pressable>
 
-                    <Pressable className="w-8 aspect-square">
-                        <Icon className="size-4" as={EllipsisVertical} />
-                    </Pressable>
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Pressable className="flex items-center justify-center w-8 aspect-square">
+                                <Icon className="size-5" as={EllipsisVertical} />
+                            </Pressable>
+                        </PopoverTrigger>
+                        <PopoverContent className="w-40">
+                            <View className="flex flex-col grow gap-1">
+                                <Pressable className="flex flex-row items-center gap-1 py-1 px-2">
+                                    <Icon className="size-4" as={Pencil} />
+                                    <Text className="text-sm font-medium">Edit</Text>
+                                </Pressable>
+
+                                <AlertDialog>
+                                    <AlertDialogTrigger>
+                                        <View className="flex flex-row items-center gap-1 py-1 px-2">
+                                            <Icon className="size-4" as={Trash} />
+                                            <Text className="text-sm font-medium">Delete</Text>
+                                        </View>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>Delete Listing</AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                This action cannot be undone. Are you sure you wish to permanently delete your listing?
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                <Text>Cancel</Text>
+                                            </AlertDialogCancel>
+                                            <AlertDialogAction onPress={deleteListing}>
+                                                <Text>Delete</Text>
+                                            </AlertDialogAction>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
+                            </View>
+                        </PopoverContent>
+                    </Popover>
                 </View>
             ) }} />
 
@@ -70,25 +124,6 @@ export default function ListingScreen(): React.JSX.Element {
 
                     </View>
                     : null}
-
-                <View className="absolute p-4 bottom-0 right-0">
-                    <Button
-                        className="shadow-lg! shadow-black h-12 w-12"
-                        onPress={deleteListing}
-                    >
-                        <Icon
-                            as={Trash}
-                            className="text-primary-foreground size-5"
-                        />
-                    </Button>
-
-                    <Button className="shadow-lg! shadow-black h-12 w-12">
-                        <Icon
-                            as={Pencil}
-                            className="text-primary-foreground size-5"
-                        />
-                    </Button>
-                </View>
             </View>
         </>
     );

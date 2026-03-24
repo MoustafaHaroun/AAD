@@ -2,7 +2,7 @@ import type { DIContainer } from "@/infrastructure/di";
 import * as irepositories from "@/domain/repositories";
 import * as iservices from "@/domain/services";
 import { ListingRepository, AttachmentRepository } from "@/infrastructure/persistence/repositories";
-import { ImageService } from "@/infrastructure/services";
+import { ImageService, SharingService } from "@/infrastructure/services";
 
 /**
  * Register implementations.
@@ -28,4 +28,5 @@ function registerRepositories(di: DIContainer) {
  */
 function registerServices(di: DIContainer) {
     di.provide(iservices.IMAGE_SERVICE_TOKEN, new ImageService());
+    di.provide(iservices.SHARING_SERVICE_TOKEN, new SharingService());
 }

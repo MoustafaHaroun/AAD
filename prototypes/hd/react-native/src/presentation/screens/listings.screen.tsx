@@ -17,8 +17,6 @@ export default function ListingsScreen(): React.JSX.Element {
     const router = useRouter();
     const { data } = useGetListingsByUser("Tim Timmerman");
 
-    console.log(data?.map(d => `${d.title} -:- ${d.attachments}`));
-
     return (
         <>
             <Stack.Screen options={SCREEN_OPTIONS} />

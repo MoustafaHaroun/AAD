@@ -1,6 +1,6 @@
 import type { Listing } from "@/domain/entities";
 import type { IListingRepository } from "@/domain/repositories";
-import {db, uuid} from "@/infrastructure/persistence/drizzle";
+import { db, uuid } from "@/infrastructure/persistence/drizzle";
 import { eq } from "drizzle-orm";
 import {
     listingSchema,
