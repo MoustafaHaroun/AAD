@@ -1,2 +1,6 @@
 pubspec.lock
 .idea/
+
+**/dist/
+**/node_modules/
+**/build/
