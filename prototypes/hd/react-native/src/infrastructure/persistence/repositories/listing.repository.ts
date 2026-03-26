@@ -106,6 +106,64 @@ export class ListingRepository implements IListingRepository {
         return listing;
     }
 
+    public async editListing(
+        userId: string,
+        listing: Listing,
+    ): Promise<Listing> {
+        try {
+            await db
+                .update(listingSchema)
+                .set({
+                    title: listing.title,
+                    description: listing.description,
+                    location: listing.location,
+                    user: listing.user,
+                })
+                .where(eq(listingSchema.id, listing.id));
+
+            const existing = await db
+                .select({
+                    id: attachmentSchema.id,
+                    path: attachmentSchema.path,
+                })
+                .from(attachmentSchema)
+                .where(eq(attachmentSchema.listingId, listing.id));
+
+            const existingPaths = existing.map(a => a.path);
+            const newPaths = listing.attachments;
+
+            const toDelete = existing.filter(a => !newPaths.includes(a.path));
+            const toAdd = newPaths.filter(p => !existingPaths.includes(p));
+
+            if (toDelete.length > 0) {
+                await Promise.all(
+                    toDelete.map(a =>
+                        db
+                            .delete(attachmentSchema)
+                            .where(eq(attachmentSchema.id, a.id))
+                    )
+                );
+            }
+
+            if (toAdd.length > 0) {
+                await Promise.all(
+                    toAdd.map(path =>
+                        db.insert(attachmentSchema).values({
+                            id: uuid(),
+                            listingId: listing.id,
+                            path,
+                        })
+                    )
+                );
+            }
+
+            return listing;
+        } catch (error) {
+            console.error(error);
+            return listing;
+        }
+    }
+
     public async deleteListing(listingId: string): Promise<void> {
         try {
             await db.delete(listingSchema).where(eq(listingSchema.id, listingId));

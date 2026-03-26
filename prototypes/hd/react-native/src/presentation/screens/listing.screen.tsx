@@ -8,15 +8,23 @@ import {
     Popover,
     PopoverTrigger,
     PopoverContent,
-    AlertDialogTrigger, AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter,
-    AlertDialogCancel, AlertDialogAction
+    AlertDialogTrigger,
+    AlertDialog,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+    AlertDialogAction,
+    Separator,
+    PopoverClose,
 } from "@/presentation/components/primitives/rnreusables";
 import { Pencil, MapPin, Trash, EllipsisVertical, Share2 } from "lucide-react-native";
 import { useGetListingById } from "@/presentation/hooks";
 import { useDeleteListing } from "@/presentation/hooks/mutations/delete-listing.hook";
-import {SwipableImageGallery} from "@/presentation/components/primitives/custom";
-import {Separator} from "@/presentation/components/primitives/rnreusables";
-import {useSharingService} from "@/presentation/hooks/services/sharing-service.hook";
+import { SwipableImageGallery } from "@/presentation/components/primitives/custom";
+import { useSharingService } from "@/presentation/hooks/services/sharing-service.hook";
 
 /**
  * Render the ListingScreen component.
@@ -63,35 +71,37 @@ export default function ListingScreen(): React.JSX.Element {
                         </PopoverTrigger>
                         <PopoverContent className="w-40">
                             <View className="flex flex-col grow gap-1">
-                                <Pressable className="flex flex-row items-center gap-1 py-1 px-2">
+                                <PopoverClose className="flex flex-row items-center gap-1 py-1 px-2" onPress={() => router.push(`/listings/${id}/edit`)}>
                                     <Icon className="size-4" as={Pencil} />
                                     <Text className="text-sm font-medium">Edit</Text>
-                                </Pressable>
+                                </PopoverClose>
 
-                                <AlertDialog>
-                                    <AlertDialogTrigger>
-                                        <View className="flex flex-row items-center gap-1 py-1 px-2">
-                                            <Icon className="size-4" as={Trash} />
-                                            <Text className="text-sm font-medium">Delete</Text>
-                                        </View>
-                                    </AlertDialogTrigger>
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>Delete Listing</AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                This action cannot be undone. Are you sure you wish to permanently delete your listing?
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>
-                                                <Text>Cancel</Text>
-                                            </AlertDialogCancel>
-                                            <AlertDialogAction onPress={deleteListing}>
-                                                <Text>Delete</Text>
-                                            </AlertDialogAction>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
+                                <PopoverClose>
+                                    <AlertDialog>
+                                        <AlertDialogTrigger>
+                                            <View className="flex flex-row items-center gap-1 py-1 px-2">
+                                                <Icon className="size-4" as={Trash} />
+                                                <Text className="text-sm font-medium">Delete</Text>
+                                            </View>
+                                        </AlertDialogTrigger>
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>Delete Listing</AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    This action cannot be undone. Are you sure you wish to permanently delete your listing?
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                    <Text>Cancel</Text>
+                                                </AlertDialogCancel>
+                                                <AlertDialogAction onPress={deleteListing}>
+                                                    <Text>Delete</Text>
+                                                </AlertDialogAction>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
+                                </PopoverClose>
                             </View>
                         </PopoverContent>
                     </Popover>

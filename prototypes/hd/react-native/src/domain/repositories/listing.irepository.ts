@@ -21,6 +21,11 @@ export interface IListingRepository {
     createListing: (userId: string, listing: Listing) => Promise<Listing>,
 
     /**
+     * Edit a listing.
+     */
+    editListing: (userId: string, listing: Listing) => Promise<Listing>,
+
+    /**
      * Delete a listing.
      */
     deleteListing: (listingId: string) => Promise<void>,
