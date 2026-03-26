@@ -5,6 +5,8 @@
 \usepackage[backend=biber]{biblatex}
 \usepackage[normalem]{ulem}
 \usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{import}
 
 \usepackage{puml}
 \usepackage{longlisting}
@@ -29,8 +31,8 @@
 
 \setrootdepth{2} % Set this to correct nesting from the doc/ directory.
 
-\title{Backend Development}
-\subtitle{A research paper on backend frameworks.}
+\title{Back-end Development}
+\subtitle{A research paper on back-end frameworks, API protocols and Databases.}
 \author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
 \date{\today}
 
@@ -54,7 +56,14 @@
 \newpage
 \tableofcontents
 
-% Your content here.
+\newpage
+\input{bd/research/multi-criteria-analysis.tex}
+
+\newpage
+\input{bd/research/prototyping.tex}
+
+\newpage
+\input{bd/research/conclusion.tex}
 
 \newpage
 \printbibliography
