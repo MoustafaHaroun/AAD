@@ -1,0 +1,26 @@
+\section{Introduction}\label{sec:introduction}
+
+\subsection{Purpose}
+This document describes the software architecture of \textit{Trade2}, a mobile application designed to help retired elderly people combat social isolation and loss of purpose by connecting them with neighbours to exchange skills and knowledge. The document follows the C4 model and is intended for university assessors and lecturers evaluating the architectural decisions made during the design and development of the system.
+
+\subsection{Scope}
+This document covers the architecture of the Trade2 application, including its system context, container structure, and component design. Trade2 allows users to post and browse skill-sharing listings within their local neighbourhood, contact other users, and arrange in-person meetings. The scope of this document is limited to the software architecture of the application itself; it does not cover deployment infrastructure, business models, or future iterations beyond the current design phase.
+
+\subsection{Stakeholders}
+The following stakeholders have been identified as relevant to the Trade2 system:
+
+\begin{htable}[
+    caption = {Stakeholders of the Trade2 system},
+    label = {tab:stakeholders},
+]{
+    colspec={lX},
+}
+    Stakeholder & Interest \\
+    End users & The primary users of the application. They rely on Trade2 to find and share skills within their neighbourhood, and have a direct interest in the usability, accessibility, and reliability of the system. \\
+    Development team & Responsible for the design and development of the system. They define the architectural decisions documented in this report. \\
+\end{htable}
+
+\subsection{Overview of the System}
+Trade2 is a mobile application that addresses the social and psychological challenges faced by retired elderly people. Research indicates that retirement can lead to reduced social contact, loss of purpose, and increased risk of depression \cite{who2023, dang2023}. Trade2 responds to this by enabling users to share and request skills within their local neighbourhood, fostering community engagement and meaningful social interaction.
+
+Users can register an account, set up a personal profile with their name, location, and skills, and post listings either offering or requesting a specific skill. Other users in the same neighbourhood can browse these listings, express interest, and initiate contact to arrange a potential meeting. The interface follows a pinboard-style design, chosen for its familiarity and accessibility for a non-tech-savvy audience.
