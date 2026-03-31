@@ -1,7 +1,7 @@
 # Trade2
 
 ## Prerequisites
-See the [Expo documentation](https://expo.dev/) on how to set up your machine for React Native Expo development.
+See the [React Native documentation on setting up environment](https://reactnative.dev/docs/set-up-your-environment) on how to set up your machine for React Native Expo development.
 
 ## Usage
 The following commands can be used to run the mobile application.
