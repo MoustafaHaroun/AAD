@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "expo start -c --dev-client --tunnel",
-    "android": "expo prebuild; expo run:android",
+    "android": "expo prebuild && expo run:android",
     "ios": "expo run:ios",
     "web": "expo start -c --web",
     "clean": "rm -rf .expo node_modules",
