@@ -1,0 +1,1 @@
+export * from "@/presentation/components/primitives/custom/gallery/swipable-image-gallery";
