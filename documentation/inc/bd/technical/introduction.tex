@@ -1,13 +1,14 @@
 \section{Introduction}\label{sec:introduction}
 
-\subsection{Purpose}
-This document describes the software architecture of \textit{Trade2}, a mobile application designed to help retired elderly people combat social isolation and loss of purpose by connecting them with neighbours to exchange skills and knowledge. The document follows the C4 model and is intended for university assessors and lecturers evaluating the architectural decisions made during the design and development of the system.
+\subsection{Purpose and Scope}
+This document describes the backend software architecture of \textit{Trade2}, a mobile application designed to help retired elderly people combat social isolation and loss of purpose by connecting them with neighbours to exchange skills and knowledge.
 
-\subsection{Scope}
-This document covers the architecture of the Trade2 application, including its system context, container structure, and component design. Trade2 allows users to post and browse skill-sharing listings within their local neighbourhood, contact other users, and arrange in-person meetings. The scope of this document is limited to the software architecture of the application itself; it does not cover deployment infrastructure, business models, or future iterations beyond the current design phase.
+The need for such an application is supported by concerning demographic and health trends. The United Nations projects that the global population aged 65 and older will more than double from approximately 800 million in 2025 to 1.7 billion by 2050 \cite{un-population}. Simultaneously, research indicates that retirement can lead to reduced social contact, loss of purpose, and increased risk of depression \cite{who2023, dang2023}. Furthermore, untreated depression in older adults is linked to higher risks of chronic illnesses, cognitive decline, and premature mortality \cite{chapman2004}. Trade2 addresses these challenges by facilitating meaningful social connections and providing a sense of purpose through skill-sharing within local communities.
+
+The document follows the C4 model and details the architectural decisions made during the design and development of the backend system. This documentation covers the backend architecture of Trade2, including its system context, container structure, component design, deployment strategy, and testing approach. The scope is limited to the backend software architecture and specifically focuses on the \textbf{Robustness \& Availability} advanced track, which encompasses zero-downtime deployment, comprehensive monitoring and logging, and data consistency through transaction management.
 
 \subsection{Stakeholders}
-The following stakeholders have been identified as relevant to the Trade2 system:
+The following stakeholders have been identified as relevant to the Trade2 system, as shown in \cref{tab:stakeholders}.
 
 \begin{htable}[
     caption = {Stakeholders of the Trade2 system},
@@ -18,9 +19,19 @@ The following stakeholders have been identified as relevant to the Trade2 system
     Stakeholder & Interest \\
     End users & The primary users of the application. They rely on Trade2 to find and share skills within their neighbourhood, and have a direct interest in the usability, accessibility, and reliability of the system. \\
     Development team & Responsible for the design and development of the system. They define the architectural decisions documented in this report. \\
+    System administrators & Responsible for monitoring system health, analyzing logs, and ensuring high availability of the application. \\
 \end{htable}
 
-\subsection{Overview of the System}
-Trade2 is a mobile application that addresses the social and psychological challenges faced by retired elderly people. Research indicates that retirement can lead to reduced social contact, loss of purpose, and increased risk of depression \cite{who2023, dang2023}. Trade2 responds to this by enabling users to share and request skills within their local neighbourhood, fostering community engagement and meaningful social interaction.
+\subsection{System Context}
+The Trade2 application enables users to share and request skills within their local neighbourhood, fostering community engagement and meaningful social interaction. The system supports core functionalities including user registration, profile management, skill-sharing listings (offers and requests), location-based discovery, and real-time messaging between users.
 
-Users can register an account, set up a personal profile with their name, location, and skills, and post listings either offering or requesting a specific skill. Other users in the same neighbourhood can browse these listings, express interest, and initiate contact to arrange a potential meeting. The interface follows a pinboard-style design, chosen for its familiarity and accessibility for a non-tech-savvy audience.
+\Cref{fig:c1} illustrates the system context, showing how users interact with the Trade2 mobile application and how the backend system interfaces with external services including authentication, geolocation, file storage, push notifications, and the monitoring/logging infrastructure that supports the Robustness \& Availability advanced track requirements.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/technical/c1-diagram}
+    \caption{C1 System Context Diagram - Trade2 backend system and its external dependencies}
+    \label{fig:c1}
+\end{figure}
+
+The backend architecture prioritizes simplicity for maintainability, scalability to support growing user bases, security for data protection, high availability through redundancy and monitoring, and comprehensive observability through logging and metrics collection. These design principles ensure the system can reliably serve elderly users who depend on consistent and accessible service.
