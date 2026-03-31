@@ -1,0 +1,122 @@
+\section{Container Architecture (C2)}\label{sec:container-architecture}
+
+\subsection{Overview}
+The Trade2 backend architecture is organized into containers that work together to fulfill the functional and non-functional requirements established in \cref{sec:technical-requirements}. The container diagram (C2 level) provides a high-level view of the major structural elements and their interactions.
+
+The architecture follows a three-tier approach with clear separation of concerns: presentation (Mobile App), application logic (Backend API), and data storage (Database). This design supports scalability and maintainability while enabling the integration of monitoring and logging infrastructure required for the Robustness \& Availability advanced track.
+
+As this document focuses exclusively on backend architecture, only the Backend API and Database containers are discussed in detail. The Mobile App and Static Content containers are shown for context but are outside the scope of this documentation.
+
+\subsection{Container Overview}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{bd/technical/c2-diagram}
+    \caption{C2 Container Diagram - Trade2 system containers and their interactions}
+    \label{fig:c2}
+\end{figure}
+
+\Cref{fig:c2} illustrates the core container architecture. The Trade2 system consists of the following primary containers:
+
+\begin{itemize}
+    \item \textbf{Mobile App} [container: JavaScript and React Native]: Mobile application providing listing and chatting functionality for elderly users
+    \item \textbf{Backend API} [container: Java and Spring Boot]: Provides the listing and chat functionality via JSON/HTTP API (focus of this document)
+    \item \textbf{Database} [container: PostgreSQL schema]: Stores user accounts, listings, messages, and related data (focus of this document)
+    \item \textbf{Static Content} [container: Directory]: Delivers HTML, CSS, JavaScript and other static assets
+\end{itemize}
+
+Additionally, the system integrates with the Grafana observability stack supporting the Robustness \& Availability requirements (detailed in \cref{sec:monitoring-logging} and \cref{sec:deployment}):
+
+\begin{itemize}
+    \item \textbf{Prometheus}: Metrics collection and alerting (NFR8)
+    \item \textbf{Loki}: Centralized log aggregation (NFR6)
+    \item \textbf{Grafana}: Unified visualization dashboard for metrics and logs
+\end{itemize}
+
+\subsection{Container Details}
+
+\subsubsection{Backend API}
+\textbf{Technology}: Java and Spring Boot
+
+\textbf{Justification}:
+Spring Boot was selected based on research and prototype evaluation comparing three frameworks: Spring Boot (Java), NestJS (TypeScript/Node.js), and Echo (Go). The selection criteria included transaction support, monitoring integration, logging capabilities, and team expertise.
+
+\textbf{Alternatives Evaluated}:
+\begin{itemize}
+    \item \textbf{NestJS (TypeScript)}: Modern framework with good developer experience, but less mature transaction handling and smaller enterprise ecosystem
+    \item \textbf{Echo (Go)}: Excellent performance and lightweight, but smaller ecosystem and less robust ORM/transaction support compared to Spring Data JPA
+\end{itemize}
+
+The detailed framework comparison and prototype results that informed this decision are documented in the research report.
+
+\textbf{Responsibilities}:
+\begin{itemize}
+    \item User registration and authentication (FR1)
+    \item Profile management (FR2)
+    \item Listing creation, retrieval, update, and deletion (FR3, FR4)
+    \item Interest expression and notification handling (FR6, FR12)
+    \item Search and filtering functionality (FR7, FR10)
+    \item Saved listings management (FR8)
+    \item Real-time messaging via WebSocket (FR9)
+    \item Image upload coordination (FR11)
+    \item Transaction management for data consistency (NFR7)
+    \item Structured logging to Loki (NFR6)
+    \item Metrics exposure for Prometheus (NFR8)
+\end{itemize}
+
+\textbf{Communication}:
+\begin{itemize}
+    \item Receives HTTP requests from Mobile App (RESTful API over HTTPS)
+    \item Reads and writes to Database using PostgreSQL protocol
+    \item Establishes WebSocket connections for real-time messaging
+    \item Pushes logs to Loki via Logback appender
+    \item Exposes /actuator/prometheus endpoint for metrics scraping
+\end{itemize}
+
+\subsubsection{Database}
+\textbf{Technology}: PostgreSQL 15
+
+\textbf{Justification}:
+PostgreSQL was selected for its:
+
+\textbf{Alternatives Considered}:
+\begin{itemize}
+    \item \textbf{MongoDB}: We decided that we like the speration of concer more of postgres + minios
+\end{itemize}
+
+\textbf{Responsibilities}:
+\begin{itemize}
+    \item Persist user accounts, profiles, and authentication credentials
+    \item Store skill listings with geospatial data
+    \item Maintain message history
+    \item Store user interests and saved listings
+    \item Maintain referential integrity through foreign key constraints
+    \item Support transactional operations for data consistency
+\end{itemize}
+
+\textbf{Data Organization}:
+The database schema includes the following primary tables:
+\begin{itemize}
+    \item \texttt{users}: User accounts and authentication
+    \item \texttt{profiles}: User profile information including skills and location
+    \item \texttt{listings}: Skill offers and requests with geospatial data
+    \item \texttt{messages}: Chat messages between users
+    \item \texttt{interests}: User expressions of interest in listings
+    \item \texttt{saved\_listings}: User-saved listings for later reference
+\end{itemize}
+
+Detailed schema design and component-level details are provided in \cref{sec:components}.
+
+\subsection{Observability Stack Integration}
+
+The Grafana observability stack provides unified monitoring and logging:
+
+\begin{itemize}
+    \item \textbf{Prometheus}: Scrapes metrics from Backend API's /actuator/prometheus endpoint every 15 seconds, stores time-series data, and evaluates alert rules
+    \item \textbf{Loki}: Receives structured logs from Backend API via Logback appender, indexes log metadata for fast querying
+    \item \textbf{Grafana}: Provides unified dashboards combining Prometheus metrics and Loki logs, enabling administrators to correlate system behavior with log events
+\end{itemize}
+
+This integrated approach eliminates the need for separate visualization tools and simplifies the administrator experience. Detailed configuration and usage are described in \cref{sec:monitoring-logging} and the administrator manual (\cref{sec:admin-manual}).
+
+These architectural decisions directly support the Robustness \& Availability advanced track requirements, with detailed implementation described in \cref{sec:high-availability} and \cref{sec:deployment}.
