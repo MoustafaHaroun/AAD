@@ -1,11 +1,6 @@
 import { v4 } from 'uuid';
-import {
-  AttachmentModel, ListingModel,
-} from '@/infrastructure/persistence/typeorm/models';
-import {
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { AttachmentModel } from '@/infrastructure/persistence/typeorm/models';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   AttachmentRepository,
   ListingRepository,
@@ -27,19 +22,19 @@ export class AddAttachmentToListingUseCase {
   async execute(
     dto: AddAttachmentToListingRequest & { listingId: string },
   ): Promise<AddAttachmentToListingResponse> {
-    let listing: ListingModel;
+    const listing = await this.listingRepository.findById(dto.listingId);
 
-    try {
-      listing = await this.listingRepository.findById(dto.listingId);
-    } catch {
-      throw new NotFoundException(`Listing with id '${dto.listingId}' does not exist.`);
+    if (listing == null) {
+      throw new NotFoundException(
+        `Listing with id '${dto.listingId}' does not exist.`,
+      );
     }
 
-    const minioClient = this.minio.getClient()
+    const minioClient = this.minio.getClient();
     const minioBucketName = this.minio.getBucketName();
     const fileName = `${dto.listingId}/${v4()}-${dto.binary.originalname}`;
 
-    await minioClient.putObject(minioBucketName, fileName, dto.binary.buffer)
+    await minioClient.putObject(minioBucketName, fileName, dto.binary.buffer);
 
     const attachment = new AttachmentModel();
 
@@ -50,7 +45,7 @@ export class AddAttachmentToListingUseCase {
     const created = await this.attachmentRepository.create(attachment);
 
     return {
-      attachment: (created).toDomain(),
+      attachment: created.toDomain(),
     };
   }
 }

@@ -1,1 +1,1 @@
-export * from "@/infrastructure/services/auth.service";
+export * from '@/infrastructure/services/auth.service';

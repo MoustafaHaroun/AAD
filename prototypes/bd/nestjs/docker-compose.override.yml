@@ -20,6 +20,6 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       MINIO_BUCKET: ${MINIO_BUCKET}
-    command: sh -c "./wait-for-db.sh && npm run start:dev"
+    command: sh -c "npm run start:dev"
     ports:
-      - "80:3000"
+      - '80:3000'

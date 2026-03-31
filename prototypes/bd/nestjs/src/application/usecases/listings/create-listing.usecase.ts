@@ -4,10 +4,7 @@ import {
   ListingModel,
   UserModel,
 } from '@/infrastructure/persistence/typeorm/models';
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import {
   CreateListingRequest,
@@ -21,7 +18,9 @@ export class CreateListingUseCase {
     private readonly userRepository: UserRepository,
   ) {}
 
-  async execute(dto: CreateListingRequest & { userId: string }): Promise<CreateListingResponse> {
+  async execute(
+    dto: CreateListingRequest & { userId: string },
+  ): Promise<CreateListingResponse> {
     let user: UserModel;
 
     try {

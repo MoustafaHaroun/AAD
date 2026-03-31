@@ -5,6 +5,6 @@ export class HealthController {
   @HttpCode(HttpStatus.OK)
   @Get()
   getUser(): Promise<string> {
-    return Promise.resolve("healthy");
+    return Promise.resolve('healthy');
   }
 }

@@ -19,7 +19,7 @@ export class ListingModel {
   @Column()
   title: string;
 
-  @Column({ type: "text", nullable: true })
+  @Column({ type: 'text', nullable: true })
   description: string | null;
 
   @OneToMany(() => AttachmentModel, (attachment) => attachment.listing)
@@ -34,7 +34,8 @@ export class ListingModel {
     model.id = listing.id;
     model.title = listing.title;
     model.description = listing.description;
-    model.attachments = listing.attachments.map(AttachmentModel.fromDomain);
+    model.attachments =
+      listing.attachments?.map(AttachmentModel.fromDomain) ?? [];
     model.user = UserModel.fromDomain(listing.user);
 
     return model;
@@ -45,7 +46,7 @@ export class ListingModel {
       id: this.id,
       title: this.title,
       description: this.description,
-      attachments: this.attachments.map((a) => a.toDomain()),
+      attachments: this.attachments?.map((a) => a.toDomain()) ?? [],
       user: this.user.toDomain(),
     } satisfies Listing;
   }

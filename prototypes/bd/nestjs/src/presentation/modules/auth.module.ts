@@ -1,4 +1,4 @@
-import "dotenv";
+import 'dotenv';
 import { Module } from '@nestjs/common';
 import { AuthService } from '@/infrastructure/services';
 import { UserModule } from '@/presentation/modules/user.module';

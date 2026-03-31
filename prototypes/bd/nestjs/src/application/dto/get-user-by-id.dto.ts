@@ -5,5 +5,5 @@ export type GetUserByIdRequest = {
 };
 
 export type GetUserByIdResponse = {
-  user: User | null
+  user: User | null;
 };

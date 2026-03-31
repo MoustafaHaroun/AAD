@@ -8,12 +8,7 @@ import {
   UserModule,
 } from '@/presentation/modules';
 
-const FEATURE_MODULES = [
-  AuthModule,
-  HealthModule,
-  ListingModule,
-  UserModule
-];
+const FEATURE_MODULES = [AuthModule, HealthModule, ListingModule, UserModule];
 
 @Module({
   imports: [DatabaseModule, ...FEATURE_MODULES],

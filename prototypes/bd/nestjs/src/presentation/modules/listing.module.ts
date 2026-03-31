@@ -4,6 +4,10 @@ import { ListingController } from '@/presentation/controllers';
 import {
   AddAttachmentToListingUseCase,
   CreateListingUseCase,
+  DeleteListingUseCase,
+  GetListingByIdUseCase,
+  GetListingsByUserUseCase,
+  UpdateListingUseCase,
 } from '@/application/usecases';
 import {
   AttachmentRepository,
@@ -18,9 +22,22 @@ import {
 import { MinioClient } from '@/infrastructure/persistence/minio';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserModel, ListingModel, AttachmentModel])],
+  imports: [
+    TypeOrmModule.forFeature([UserModel, ListingModel, AttachmentModel]),
+  ],
   controllers: [ListingController],
-  providers: [ListingRepository, AttachmentRepository, UserRepository, AddAttachmentToListingUseCase, CreateListingUseCase, MinioClient],
+  providers: [
+    ListingRepository,
+    AttachmentRepository,
+    UserRepository,
+    AddAttachmentToListingUseCase,
+    CreateListingUseCase,
+    DeleteListingUseCase,
+    GetListingByIdUseCase,
+    GetListingsByUserUseCase,
+    UpdateListingUseCase,
+    MinioClient,
+  ],
   exports: [ListingRepository, AttachmentRepository, UserRepository],
 })
 export class ListingModule {}

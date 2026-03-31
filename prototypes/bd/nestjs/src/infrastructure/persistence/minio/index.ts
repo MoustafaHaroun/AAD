@@ -1,4 +1,4 @@
-import 'dotenv'
+import 'dotenv';
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as Minio from 'minio';
 
@@ -16,13 +16,13 @@ export class MinioClient implements OnModuleInit {
       secretKey: process.env.MINIO_ROOT_PASSWORD,
     });
 
-    this.bucketName = process.env.MINIO_BUCKET ?? "";
+    this.bucketName = process.env.MINIO_BUCKET ?? '';
   }
 
   async onModuleInit(): Promise<void> {
     for (let i = 0; i < 10; i++) {
       try {
-        if (!await this.client.bucketExists(this.bucketName)) {
+        if (!(await this.client.bucketExists(this.bucketName))) {
           await this.client.makeBucket(this.bucketName);
         }
       } catch (err) {

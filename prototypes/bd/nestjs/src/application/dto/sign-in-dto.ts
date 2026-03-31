@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 export class SignInRequest {
-  @ApiProperty({ example: "timtimmerman@email.com" })
+  @ApiProperty({ example: 'timtimmerman@email.com' })
   email: string;
 
-  @ApiProperty({ example: "UnsafePassword123!"})
+  @ApiProperty({ example: 'UnsafePassword123!' })
   password: string;
 }
 
 export class SignInResponse {
-  token: string
+  token: string;
 }

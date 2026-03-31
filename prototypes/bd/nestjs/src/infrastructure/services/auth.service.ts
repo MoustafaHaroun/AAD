@@ -1,7 +1,4 @@
-import {
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
 
@@ -23,5 +20,4 @@ export class AuthService {
 
     return await this.jwtService.signAsync(payload);
   }
-
 }

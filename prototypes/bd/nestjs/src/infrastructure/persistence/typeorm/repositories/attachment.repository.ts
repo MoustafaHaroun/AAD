@@ -1,9 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import {
-  AttachmentModel,
-} from '@/infrastructure/persistence/typeorm/models';
+import { AttachmentModel } from '@/infrastructure/persistence/typeorm/models';
 
 @Injectable()
 export class AttachmentRepository {
@@ -21,6 +19,8 @@ export class AttachmentRepository {
   }
 
   async findAllByListingId(listingId: string): Promise<AttachmentModel[]> {
-    return await this.repository.find({ where: { listing: { id: listingId } } });
+    return await this.repository.find({
+      where: { listing: { id: listingId } },
+    });
   }
 }
