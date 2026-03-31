@@ -1,0 +1,14 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "Trade2 Postgres",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "${POSTGRES_NAME}",
+      "Username": "${POSTGRES_USER}",
+      "SSLMode": "prefer",
+      "PassFile": "/pgpass/.pgpass"
+    }
+  }
+}
