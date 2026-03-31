@@ -21,4 +21,12 @@ export class UserRepository {
   async findByEmail(email: string): Promise<UserModel | null> {
     return await this.repository.findOne({ where: { email } });
   }
+
+  async update(user: UserModel): Promise<UserModel> {
+    return await this.repository.save(user);
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
 }

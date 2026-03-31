@@ -4,6 +4,8 @@ export * from '@/application/dto/create-user.dto';
 export * from '@/application/dto/delete-listing.dto';
 export * from '@/application/dto/get-listing-by-id.dto';
 export * from '@/application/dto/get-listings-by-user.dto';
+export * from '@/application/dto/delete-user.dto';
 export * from '@/application/dto/get-user-by-id.dto';
 export * from '@/application/dto/sign-in-dto';
 export * from '@/application/dto/update-listing.dto';
+export * from '@/application/dto/update-user.dto';
