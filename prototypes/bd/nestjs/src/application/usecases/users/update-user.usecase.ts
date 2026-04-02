@@ -10,7 +10,7 @@ export class UpdateUserUseCase {
   async execute(
     dto: UpdateUserRequest & { id: string },
   ): Promise<UpdateUserResponse> {
-    const user: UserModel = await this.userRepository.findById(dto.id);
+    const user: UserModel | null = await this.userRepository.findById(dto.id);
 
     if (user == null) {
       throw new NotFoundException(`User with id '${dto.id}' does not exist.`);
