@@ -1,4 +1,5 @@
 import { Listing } from '@/domain/entities';
+import { Notification } from '@/domain/entities/notification.entity';
 
 export interface User {
   id: string;
@@ -6,4 +7,5 @@ export interface User {
   firstname: string;
   surname: string;
   listings: Listing[];
+  notifications: Notification[];
 }

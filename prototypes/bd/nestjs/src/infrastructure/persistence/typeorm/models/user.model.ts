@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ListingModel } from '@/infrastructure/persistence/typeorm/models';
 import { User } from '@/domain/entities';
+import { NotificationModel } from './notification.model';
 
 @Entity('users')
 export class UserModel {
@@ -22,6 +23,9 @@ export class UserModel {
   @OneToMany(() => ListingModel, (listing) => listing.user)
   listings: ListingModel[];
 
+  @OneToMany(() => NotificationModel, (notification) => notification.user)
+  notifications: NotificationModel[];
+
   static fromDomain(this: void, user: User): UserModel {
     const model = new UserModel();
 
@@ -41,6 +45,7 @@ export class UserModel {
       firstname: this.firstname,
       surname: this.surname,
       listings: this.listings,
+      notifications: this.notifications,
     } satisfies User;
   }
 }
