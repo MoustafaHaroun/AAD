@@ -25,7 +25,7 @@ export class MinioClient implements OnModuleInit {
         if (!(await this.client.bucketExists(this.bucketName))) {
           await this.client.makeBucket(this.bucketName);
         }
-      } catch (err) {
+      } catch {
         console.info('Waiting for MinIO to be ready...', i + 1);
         await new Promise((res) => setTimeout(res, 2000));
       }
