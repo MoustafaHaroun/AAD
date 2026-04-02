@@ -7,6 +7,9 @@ export class UpdateUserRequest {
 
   @ApiProperty({ example: 'Timmerman', required: false })
   surname?: string;
+
+  @ApiProperty({ example: 'timmerman@email.com', required: false })
+  email?: string;
 }
 
 export class UpdateUserResponse {
