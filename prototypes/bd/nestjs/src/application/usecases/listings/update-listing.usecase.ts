@@ -20,9 +20,8 @@ export class UpdateListingUseCase {
       );
     }
 
-    if (dto.title !== undefined) listing.title = dto.title;
-    if (dto.description !== undefined)
-      listing.description = dto.description ?? null;
+    if (dto.title != null) listing.title = dto.title;
+    if (dto.description != null) listing.description = dto.description ?? null;
 
     return {
       listing: (await this.listingRepository.update(listing)).toDomain(),

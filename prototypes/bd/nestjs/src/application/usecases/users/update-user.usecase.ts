@@ -15,9 +15,9 @@ export class UpdateUserUseCase {
       throw new NotFoundException(`User with id '${dto.id}' does not exist.`);
     }
 
-    if (dto.firstname !== undefined) user.firstname = dto.firstname;
-    if (dto.surname !== undefined) user.surname = dto.surname;
-    if (dto.email != undefined) user.email = dto.email;
+    if (dto.firstname != null) user.firstname = dto.firstname;
+    if (dto.surname != null) user.surname = dto.surname;
+    if (dto.email != null) user.email = dto.email;
 
     return {
       user: (await this.userRepository.update(user)).toDomain(),
