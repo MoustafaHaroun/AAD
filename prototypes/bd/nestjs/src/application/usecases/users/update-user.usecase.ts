@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import { UpdateUserRequest, UpdateUserResponse } from '@/application/dto';
+import { UserModel } from '@/infrastructure/persistence/typeorm/models';
 
 @Injectable()
 export class UpdateUserUseCase {
@@ -9,7 +10,7 @@ export class UpdateUserUseCase {
   async execute(
     dto: UpdateUserRequest & { id: string },
   ): Promise<UpdateUserResponse> {
-    const user = await this.userRepository.findById(dto.id);
+    const user: UserModel = await this.userRepository.findById(dto.id);
 
     if (user == null) {
       throw new NotFoundException(`User with id '${dto.id}' does not exist.`);

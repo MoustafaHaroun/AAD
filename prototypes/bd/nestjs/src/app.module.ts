@@ -5,11 +5,18 @@ import {
   AuthModule,
   HealthModule,
   ListingModule,
+  NotificationModule,
   UserModule,
 } from '@/presentation/modules';
 import { MetricsModule } from '@/infrastructure/monitoring/metrics.module';
 
-const FEATURE_MODULES = [AuthModule, HealthModule, ListingModule, UserModule];
+const FEATURE_MODULES = [
+  AuthModule,
+  HealthModule,
+  ListingModule,
+  UserModule,
+  NotificationModule,
+];
 
 @Module({
   imports: [DatabaseModule, MetricsModule, ...FEATURE_MODULES],

@@ -13,7 +13,8 @@ export class AppLogger implements LoggerService {
           winston.format.timestamp(),
           winston.format.colorize(),
           winston.format.printf(({ timestamp, level, message, context }) => {
-            return `${String(timestamp)} [${String(context ?? 'App')}] ${level}: ${String(message)}`;
+            const ctx = typeof context === 'string' ? context : 'App';
+            return `${String(timestamp)} [${ctx}] ${level}: ${String(message)}`;
           }),
         ),
       }),
