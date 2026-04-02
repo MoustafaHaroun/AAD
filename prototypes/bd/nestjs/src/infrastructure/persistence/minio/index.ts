@@ -9,7 +9,7 @@ export class MinioClient implements OnModuleInit {
 
   constructor() {
     this.client = new Minio.Client({
-      endPoint: 'minio',
+      endPoint: process.env.MINIO_HOST ?? 'minio',
       port: 9000,
       useSSL: false,
       accessKey: process.env.MINIO_ROOT_USER,
@@ -51,6 +51,6 @@ export class MinioClient implements OnModuleInit {
   }
 
   toEndpoint(fileName: string): string {
-    return `http://minio/${this.bucketName}/${fileName}`;
+    return `http://${process.env.MINIO_HOST ?? 'minio'}/${this.bucketName}/${fileName}`;
   }
 }
