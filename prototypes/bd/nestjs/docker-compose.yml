@@ -19,9 +19,11 @@ services:
       MINIO_ROOT_USER: ${MINIO_ROOT_USER}
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       MINIO_BUCKET: ${MINIO_BUCKET}
+      LOKI_URL: http://loki:3100
     depends_on:
       - postgres
       - minio
+      - loki
     restart: unless-stopped
 
   minio:
