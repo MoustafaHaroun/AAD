@@ -1,4 +1,4 @@
-export * from '@/application/usecases/add-attachment-to-listing.usecase';
+export * from '@/application/usecases/listings/add-attachment-to-listing.usecase';
 export * from '@/application/usecases/listings/create-listing.usecase';
 export * from '@/application/usecases/users/create-user.usecase';
 export * from '@/application/usecases/listings/delete-listing.usecase';

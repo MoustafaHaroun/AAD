@@ -7,10 +7,11 @@ import {
   ListingModule,
   UserModule,
 } from '@/presentation/modules';
+import { MetricsModule } from '@/infrastructure/monitoring/metrics.module';
 
 const FEATURE_MODULES = [AuthModule, HealthModule, ListingModule, UserModule];
 
 @Module({
-  imports: [DatabaseModule, ...FEATURE_MODULES],
+  imports: [DatabaseModule, MetricsModule, ...FEATURE_MODULES],
 })
 export class AppModule {}

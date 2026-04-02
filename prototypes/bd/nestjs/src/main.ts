@@ -1,9 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from '@/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { AppLogger } from '@/infrastructure/monitoring/logger.service';
+import { HttpMetricsInterceptor } from '@/infrastructure/monitoring/http-metrics.interceptor';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+
+  app.useLogger(app.get(AppLogger));
+  app.useGlobalInterceptors(app.get(HttpMetricsInterceptor));
 
   const swagger = new DocumentBuilder()
     .setTitle('Trade2')

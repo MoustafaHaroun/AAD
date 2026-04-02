@@ -1,8 +1,8 @@
 scrape_configs:
-  - job_name: 'trade2'
-    metrics_path: '/actuator/prometheus'
-    scrape_interval: 3s
+  - job_name: 'trade2-nestjs'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
     static_configs:
-      - targets: ['host.docker.internal:8080']
+      - targets: ['nestjs:3000']
         labels:
-          application: 'Trade2 Back-end'
+          application: 'Trade2 NestJS'
