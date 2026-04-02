@@ -1,7 +1,20 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { SignInRequest, type SignInResponse } from '@/application/dto';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
+import {
+  signInApi,
+  type SignInRequest,
+  type SignInResponse,
+  signInSchema,
+} from '@/application/dto';
 import { SignInUseCase } from '@/application/usecases';
 import { ApiBody } from '@nestjs/swagger';
+import { ZodValidationPipe} from '@/infrastructure/validation/zod.pipe';
 
 @Controller('auth')
 export class AuthController {
@@ -9,7 +22,8 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Post()
-  @ApiBody({ type: SignInRequest })
+  @UsePipes(new ZodValidationPipe(signInSchema))
+  @ApiBody(signInApi)
   signIn(@Body() dto: SignInRequest): Promise<SignInResponse> {
     return this.signInUseCase.execute(dto);
   }

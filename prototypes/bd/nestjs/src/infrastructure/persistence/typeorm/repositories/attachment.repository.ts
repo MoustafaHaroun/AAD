@@ -23,4 +23,8 @@ export class AttachmentRepository {
       where: { listing: { id: listingId } },
     });
   }
+
+  async delete(id: string): Promise<void> {
+    await this.repository.delete(id);
+  }
 }

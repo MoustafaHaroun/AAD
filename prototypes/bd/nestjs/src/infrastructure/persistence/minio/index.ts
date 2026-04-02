@@ -40,6 +40,16 @@ export class MinioClient implements OnModuleInit {
     return this.bucketName;
   }
 
+  toObjectName(path: string): string | null {
+    const sections = path.split('/');
+
+    if (sections.length > 1) {
+      return sections[path.length - 1];
+    }
+
+    return null;
+  }
+
   toEndpoint(fileName: string): string {
     return `http://minio/${this.bucketName}/${fileName}`;
   }

@@ -1,3 +1,4 @@
+import { z } from 'zod';
 import {
   Body,
   Controller,
@@ -16,31 +17,40 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import {
-  CreateListingRequest,
-  CreateListingResponse,
-  DeleteListingResponse,
-  GetListingByIdResponse,
-  GetListingsByUserResponse,
-  UpdateListingRequest,
-  UpdateListingResponse,
+  addAttachmentToListingApi,
+  createListingApi,
+  type CreateListingRequest,
+  type CreateListingResponse,
+  createListingSchema,
+  type DeleteListingResponse,
+  type GetListingByIdResponse,
+  type GetListingsByUserIdResponse,
+  updateListingApi,
+  type UpdateListingRequest,
+  type UpdateListingResponse,
+  updateListingSchema,
 } from '@/application/dto';
 import {
   AddAttachmentToListingUseCase,
   CreateListingUseCase,
   DeleteListingUseCase,
   GetListingByIdUseCase,
-  GetListingsByUserUseCase,
+  GetListingsByUserIdUseCase,
   UpdateListingUseCase,
 } from '@/application/usecases/';
 import * as authGuard from '@/presentation/guards/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
+import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
+import { imageSchema } from '@/application/schemas/image.schema';
 
 @Controller('listings')
 export class ListingController {
   constructor(
     private readonly createListingUseCase: CreateListingUseCase,
     private readonly addAttachmentToListingUseCase: AddAttachmentToListingUseCase,
-    private readonly getListingsByUserUseCase: GetListingsByUserUseCase,
+    private readonly removeAttachmentFromListingUseCase: RemoveAttachmentFromListingUseCase,
+    private readonly getListingsByUserIdUseCase: GetListingsByUserIdUseCase,
     private readonly getListingByIdUseCase: GetListingByIdUseCase,
     private readonly updateListingUseCase: UpdateListingUseCase,
     private readonly deleteListingUseCase: DeleteListingUseCase,
@@ -48,35 +58,35 @@ export class ListingController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @ApiBearerAuth()
   @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
   getListings(
     @Req() request: authGuard.AuthenticatedRequest,
-  ): Promise<GetListingsByUserResponse> {
+  ): Promise<GetListingsByUserIdResponse> {
     const userId = request.user.sub;
 
     if (!userId) {
       throw new UnauthorizedException('User not authenticated');
     }
-    return this.getListingsByUserUseCase.execute({ userId });
+    return this.getListingsByUserIdUseCase.execute({ userId });
   }
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  @ApiBearerAuth()
   @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
   getListing(@Param('id') id: string): Promise<GetListingByIdResponse> {
     return this.getListingByIdUseCase.execute({ id });
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiBearerAuth()
-  @ApiBody({ type: CreateListingRequest })
   @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
+  @ApiBody(createListingApi)
   createListing(
     @Req() request: authGuard.AuthenticatedRequest,
-    @Body() dto: CreateListingRequest,
+    @Body(new ZodValidationPipe(createListingSchema)) dto: CreateListingRequest,
   ): Promise<CreateListingResponse> {
     const userId = request.user.sub;
 
@@ -88,24 +98,15 @@ export class ListingController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post(':id/attachments')
-  @ApiBearerAuth()
-  @ApiConsumes('multipart/form-data')
-  @ApiBody({
-    schema: {
-      type: 'object',
-      properties: {
-        binaries: {
-          type: 'array',
-          items: { type: 'string', format: 'binary' },
-        },
-      },
-    },
-  })
   @UseGuards(authGuard.AuthGuard)
   @UseInterceptors(FilesInterceptor('binaries', 10))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody(addAttachmentToListingApi)
   async uploadAttachment(
     @Param('id') listingId: string,
-    @UploadedFiles() binaries: Express.Multer.File[],
+    @UploadedFiles(new ZodValidationPipe(z.array(imageSchema)))
+    binaries: Express.Multer.File[],
   ) {
     const results = await Promise.all(
       binaries.map((binary) =>
@@ -118,22 +119,37 @@ export class ListingController {
     };
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id/attachments/:attachmentId')
+  @UseGuards(authGuard.AuthGuard)
+  @UseInterceptors(FilesInterceptor('binaries', 10))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  async removeAttachment(
+    @Param('id') listingId: string,
+    @Param('attachmentId') attachmentId: string,
+  ) {
+    await this.removeAttachmentFromListingUseCase.execute({
+      attachmentId,
+    });
+  }
+
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  @ApiBearerAuth()
-  @ApiBody({ type: UpdateListingRequest })
   @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
+  @ApiBody(updateListingApi)
   updateListing(
     @Param('id') id: string,
-    @Body() dto: UpdateListingRequest,
+    @Body(new ZodValidationPipe(updateListingSchema)) dto: UpdateListingRequest,
   ): Promise<UpdateListingResponse> {
     return this.updateListingUseCase.execute({ ...dto, id });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  @ApiBearerAuth()
   @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
   deleteListing(@Param('id') id: string): Promise<DeleteListingResponse> {
     return this.deleteListingUseCase.execute({ id });
   }

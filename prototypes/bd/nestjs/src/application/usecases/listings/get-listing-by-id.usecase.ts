@@ -9,7 +9,9 @@ import {
 export class GetListingByIdUseCase {
   constructor(private readonly listingRepository: ListingRepository) {}
 
-  async execute(dto: GetListingByIdRequest): Promise<GetListingByIdResponse> {
+  async execute(
+    dto: GetListingByIdRequest & { id: string },
+  ): Promise<GetListingByIdResponse> {
     const listing = await this.listingRepository.findById(dto.id);
 
     if (listing == null) {

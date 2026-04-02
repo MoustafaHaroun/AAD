@@ -9,7 +9,9 @@ import {
 export class DeleteListingUseCase {
   constructor(private readonly listingRepository: ListingRepository) {}
 
-  async execute(dto: DeleteListingRequest): Promise<DeleteListingResponse> {
+  async execute(
+    dto: DeleteListingRequest & { id: string },
+  ): Promise<DeleteListingResponse> {
     const listing = await this.listingRepository.findById(dto.id);
 
     if (listing == null) {

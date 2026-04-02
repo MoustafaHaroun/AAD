@@ -1,16 +1,26 @@
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories/user.repository';
 import { GetUserByIdRequest, GetUserByIdResponse } from '@/application/dto';
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 @Injectable()
 export class GetUserByIdUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(dto: GetUserByIdRequest): Promise<GetUserByIdResponse> {
+  async execute(
+    dto: GetUserByIdRequest & { id: string },
+  ): Promise<GetUserByIdResponse> {
     const user = await this.userRepository.findById(dto.id);
 
+    if (user == null) {
+      throw new NotFoundException();
+    }
+
     return {
-      user: user != null ? user.toDomain() : null,
+      user: user.toDomain(),
     };
   }
 }

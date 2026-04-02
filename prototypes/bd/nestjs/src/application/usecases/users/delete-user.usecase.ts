@@ -6,7 +6,9 @@ import { DeleteUserRequest, DeleteUserResponse } from '@/application/dto';
 export class DeleteUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async execute(dto: DeleteUserRequest): Promise<DeleteUserResponse> {
+  async execute(
+    dto: DeleteUserRequest & { id: string },
+  ): Promise<DeleteUserResponse> {
     const user = await this.userRepository.findById(dto.id);
 
     if (user == null) {

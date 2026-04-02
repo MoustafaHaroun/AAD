@@ -6,8 +6,9 @@ import {
   CreateListingUseCase,
   DeleteListingUseCase,
   GetListingByIdUseCase,
-  GetListingsByUserUseCase,
+  GetListingsByUserIdUseCase,
   UpdateListingUseCase,
+  RemoveAttachmentFromListingUseCase,
 } from '@/application/usecases';
 import {
   AttachmentRepository,
@@ -31,10 +32,11 @@ import { MinioClient } from '@/infrastructure/persistence/minio';
     AttachmentRepository,
     UserRepository,
     AddAttachmentToListingUseCase,
+    RemoveAttachmentFromListingUseCase,
     CreateListingUseCase,
     DeleteListingUseCase,
     GetListingByIdUseCase,
-    GetListingsByUserUseCase,
+    GetListingsByUserIdUseCase,
     UpdateListingUseCase,
     MinioClient,
   ],

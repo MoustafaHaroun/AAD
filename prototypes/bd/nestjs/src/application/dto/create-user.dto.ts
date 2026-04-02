@@ -1,27 +1,42 @@
 import { User } from '@/domain/entities';
-import { ApiProperty } from '@nestjs/swagger';
+import { z } from 'zod';
+import { userSchema } from '@/application/schemas/user.schema';
 
-export class CreateUserRequest {
-  @ApiProperty({
-    example: 'timtimmerman@email.com',
-  })
-  email: string;
+export const createUserSchema = z.object({
+  email: userSchema.email,
+  password: userSchema.password,
+  firstname: userSchema.firstname,
+  surname: userSchema.surname,
+});
 
-  @ApiProperty({
-    example: 'UnsafePassword123!',
-  })
-  password: string;
+export const createUserApi = {
+  schema: {
+    type: 'object',
+    properties: {
+      email: {
+        type: 'string',
+        format: 'email',
+        example: 'timtimmerman@email.com',
+      },
+      password: {
+        type: 'string',
+        format: 'password',
+        example: 'UnsafePassword123!',
+      },
+      firstname: {
+        type: 'string',
+        example: 'Tim',
+      },
+      surname: {
+        type: 'string',
+        example: 'Timmerman',
+      },
+    },
+    required: ['email', 'password', 'firstname', 'surname'],
+  },
+};
 
-  @ApiProperty({
-    example: 'Tim',
-  })
-  firstname: string;
-
-  @ApiProperty({
-    example: 'Timmerman',
-  })
-  surname: string;
-}
+export type CreateUserRequest = z.infer<typeof createUserSchema>;
 
 export class CreateUserResponse {
   user: User;

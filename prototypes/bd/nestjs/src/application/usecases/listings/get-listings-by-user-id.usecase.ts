@@ -1,17 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import {
-  GetListingsByUserRequest,
-  GetListingsByUserResponse,
-} from '@/application/dto/get-listings-by-user.dto';
+  GetListingsByUserIdRequest,
+  GetListingsByUserIdResponse,
+} from '@/application/dto';
 
 @Injectable()
-export class GetListingsByUserUseCase {
+export class GetListingsByUserIdUseCase {
   constructor(private readonly listingRepository: ListingRepository) {}
 
   async execute(
-    dto: GetListingsByUserRequest,
-  ): Promise<GetListingsByUserResponse> {
+    dto: GetListingsByUserIdRequest & { userId: string },
+  ): Promise<GetListingsByUserIdResponse> {
     const listings = await this.listingRepository.findAllByUserId(dto.userId);
 
     return {

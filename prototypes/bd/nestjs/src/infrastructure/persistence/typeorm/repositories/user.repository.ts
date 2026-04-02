@@ -14,8 +14,8 @@ export class UserRepository {
     return await this.repository.save(user);
   }
 
-  async findById(id: string): Promise<UserModel> {
-    return await this.repository.findOneOrFail({ where: { id } });
+  async findById(id: string): Promise<UserModel | null> {
+    return await this.repository.findOne({ where: { id } });
   }
 
   async findByEmail(email: string): Promise<UserModel | null> {

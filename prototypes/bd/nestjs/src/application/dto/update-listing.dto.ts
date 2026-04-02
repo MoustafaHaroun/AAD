@@ -1,13 +1,29 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { Listing } from '@/domain/entities';
+import { z } from 'zod';
+import { listingSchema } from '@/application/schemas';
 
-export class UpdateListingRequest {
-  @ApiProperty({ example: 'My updated listing', required: false })
-  title?: string;
+export const updateListingSchema = z.object({
+  title: listingSchema.title.optional(),
+  description: listingSchema.description.optional(),
+});
 
-  @ApiProperty({ example: 'An updated description.', required: false })
-  description?: string | null;
-}
+export const updateListingApi = {
+  schema: {
+    type: 'object',
+    properties: {
+      title: {
+        type: 'string',
+        example: 'My First Listing (Edited)',
+      },
+      description: {
+        type: 'string',
+        example: 'The title and description of this listing were edited.',
+      },
+    },
+  },
+};
+
+export type UpdateListingRequest = z.infer<typeof updateListingSchema>;
 
 export class UpdateListingResponse {
   listing: Listing;

@@ -12,6 +12,9 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<string> {
     const user = await this.userRepository.findByEmail(email);
 
+
+    console.log(user)
+
     if (user == null || user.password != password) {
       throw new UnauthorizedException();
     }

@@ -16,14 +16,19 @@ import {
   UpdateUserUseCase,
 } from '@/application/usecases';
 import {
-  CreateUserRequest,
+  createUserApi,
+  createUserSchema,
+  type CreateUserRequest,
   type CreateUserResponse,
   type DeleteUserResponse,
   type GetUserByIdResponse,
-  UpdateUserRequest,
+  type UpdateUserRequest,
   type UpdateUserResponse,
+  updateUserApi,
+  updateUserSchema,
 } from '@/application/dto';
 import { ApiBody } from '@nestjs/swagger';
+import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
 
 @Controller('users')
 export class UserController {
@@ -36,8 +41,8 @@ export class UserController {
 
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  @ApiBody({ type: CreateUserRequest })
-  createUser(@Body() dto: CreateUserRequest): Promise<CreateUserResponse> {
+  @ApiBody(createUserApi)
+  createUser(@Body(new ZodValidationPipe((createUserSchema))) dto: CreateUserRequest): Promise<CreateUserResponse> {
     return this.createUserUseCase.execute(dto);
   }
 
@@ -49,10 +54,10 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  @ApiBody({ type: UpdateUserRequest })
+  @ApiBody(updateUserApi)
   updateUser(
     @Param('id') id: string,
-    @Body() dto: UpdateUserRequest,
+    @Body(new ZodValidationPipe(updateUserSchema)) dto: UpdateUserRequest,
   ): Promise<UpdateUserResponse> {
     return this.updateUserUseCase.execute({ ...dto, id });
   }

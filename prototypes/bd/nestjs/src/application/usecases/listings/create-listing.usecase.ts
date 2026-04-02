@@ -21,11 +21,9 @@ export class CreateListingUseCase {
   async execute(
     dto: CreateListingRequest & { userId: string },
   ): Promise<CreateListingResponse> {
-    let user: UserModel;
+    const user = await this.userRepository.findById(dto.userId);
 
-    try {
-      user = await this.userRepository.findById(dto.userId);
-    } catch {
+    if (user == null) {
       throw new UnauthorizedException();
     }
 
