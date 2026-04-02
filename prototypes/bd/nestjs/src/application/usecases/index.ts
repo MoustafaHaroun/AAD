@@ -1,4 +1,5 @@
 export * from '@/application/usecases/listings/add-attachment-to-listing.usecase';
+export * from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
 export * from '@/application/usecases/notifications/create-notification.usecase';
 export * from '@/application/usecases/notifications/delete-notification.usecase';
 export * from '@/application/usecases/notifications/get-notification-by-id.usecase';

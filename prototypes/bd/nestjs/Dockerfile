@@ -3,7 +3,7 @@ WORKDIR /app
 COPY package*.json ./
 
 FROM base AS deps
-RUN npm ci
+RUN npm i
 
 FROM deps AS build
 COPY . .
