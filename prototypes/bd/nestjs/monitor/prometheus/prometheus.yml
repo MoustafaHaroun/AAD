@@ -1,0 +1,8 @@
+scrape_configs:
+  - job_name: 'trade2-nestjs'
+    metrics_path: '/metrics'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['nestjs:3000']
+        labels:
+          application: 'Trade2 NestJS'

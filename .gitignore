@@ -1,2 +1,7 @@
 pubspec.lock
 .idea/
+.claude/
+
+**/dist/
+**/node_modules/
+**/build/
