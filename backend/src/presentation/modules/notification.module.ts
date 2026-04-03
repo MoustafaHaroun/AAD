@@ -1,4 +1,6 @@
 import { Module } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { NotificationController } from '@/presentation/controllers/notification.controller';
 import { CreateNotificationUseCase } from '@/application/usecases/notifications/create-notification.usecase';
@@ -18,6 +20,8 @@ import { UserModel } from '@/infrastructure/persistence/typeorm/models';
     DeleteNotificationUseCase,
     GetNotificationByIdUseCase,
     UpdateNotificationUseCase,
+    RolesGuard,
+    Reflector,
   ],
   exports: [NotificationRepository],
 })

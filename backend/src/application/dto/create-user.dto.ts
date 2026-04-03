@@ -1,12 +1,14 @@
 import { User } from '@/domain/entities';
 import { z } from 'zod';
 import { userSchema } from '@/application/schemas/user.schema';
+import { Role } from '@/domain/enums/role.enum';
 
 export const createUserSchema = z.object({
   email: userSchema.email,
   password: userSchema.password,
   firstname: userSchema.firstname,
   surname: userSchema.surname,
+  role: z.nativeEnum(Role).optional().default(Role.User),
 });
 
 export const createUserApi = {

@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { ListingModel } from '@/infrastructure/persistence/typeorm/models';
 import { User } from '@/domain/entities';
 import { NotificationModel } from './notification.model';
+import { Role } from '@/domain/enums/role.enum';
 
 @Entity('users')
 export class UserModel {
@@ -19,6 +20,9 @@ export class UserModel {
 
   @Column()
   surname: string;
+
+  @Column({ type: 'enum', enum: Role, default: Role.User })
+  role: Role;
 
   @OneToMany(() => ListingModel, (listing) => listing.user)
   listings: ListingModel[];
@@ -44,6 +48,7 @@ export class UserModel {
       email: this.email,
       firstname: this.firstname,
       surname: this.surname,
+      role: this.role,
       listings: this.listings,
       notifications: this.notifications,
     } satisfies User;

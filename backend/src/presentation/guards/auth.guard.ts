@@ -7,9 +7,10 @@ import {
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { JwtPayload } from 'jsonwebtoken';
+import { Role } from '@/domain/enums/role.enum';
 
 export interface AuthenticatedRequest extends Request {
-  user: JwtPayload;
+  user: JwtPayload & { sub: string; email: string; role: Role };
 }
 
 @Injectable()

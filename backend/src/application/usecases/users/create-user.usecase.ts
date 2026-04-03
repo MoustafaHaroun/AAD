@@ -25,6 +25,7 @@ export class CreateUserUseCase {
     newUser.password = dto.password;
     newUser.firstname = dto.firstname;
     newUser.surname = dto.surname;
+    newUser.role = dto.role;
 
     return {
       user: (await this.userRepository.create(newUser)).toDomain(),

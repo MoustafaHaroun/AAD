@@ -25,6 +25,9 @@ import { DeleteNotificationUseCase } from '@/application/usecases/notifications/
 import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get-notification-by-id.usecase';
 import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update-notification.usecase';
 import { AuthGuard } from '@/presentation/guards/auth.guard';
+import { RolesGuard } from '@/presentation/guards/roles.guard';
+import { Roles } from '@/presentation/decorators/roles.decorator';
+import { Role } from '@/domain/enums/role.enum';
 
 @Controller('notifications')
 export class NotificationController {
@@ -49,7 +52,8 @@ export class NotificationController {
   @Post()
   @ApiBearerAuth()
   @ApiBody({ type: CreateNotificationRequest })
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   createNotification(
     @Body() dto: CreateNotificationRequest,
   ): Promise<CreateNotificationResponse> {
@@ -60,7 +64,8 @@ export class NotificationController {
   @Patch(':id')
   @ApiBearerAuth()
   @ApiBody({ type: UpdateNotificationRequest })
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   updateNotification(
     @Param('id') id: string,
     @Body() dto: UpdateNotificationRequest,
@@ -71,7 +76,8 @@ export class NotificationController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @ApiBearerAuth()
-  @UseGuards(AuthGuard)
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
   deleteNotification(@Param('id') id: string): Promise<void> {
     return this.deleteNotificationUseCase.execute({ id });
   }
