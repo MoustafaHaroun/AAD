@@ -4,31 +4,10 @@ Spring Boot prototype for the **Advanced Application Development Specialisation*
 
 You can test the API using Swagger UI: [http://localhost:8080/swagger-ui/index.html](http://localhost:8080/swagger-ui/index.html)
 
-## Requirements
-
-- JDK 21  
-- Gradle wrapper (`gradlew` / `gradlew.bat`)  
+## Minimal Requirements
 - Docker  
 
-## Running Locally
-
-**Windows:**
-
-```powershell
-.\gradlew.bat clean build
-.\gradlew.bat bootRun
-```
-
-Unix/macOS:
-
-```bash
-./gradlew clean build
-./gradlew bootRun
-```
-
-The app runs on the port in `src/main/resources/application.properties` (default `8080`).
-
-## Run with Docker
+## Installation 
 
 Start app and monitoring stack together:
 
@@ -36,7 +15,9 @@ Start app and monitoring stack together:
 docker-compose up -d
 ```
 
-## Sample credentials (demo)
+The app runs on the port in `src/main/resources/application.properties` (default `8080`).
+
+## Sample credentials 
 
 - Username: admin
 - Password: admin123
@@ -52,7 +33,7 @@ Example JSON:
 }
 ```
 
-## Monitoring (brief)
+## Monitoring 
 
 The repository includes a monitoring stack under `monitoring/` and the root `docker-compose.yml` runs:
 

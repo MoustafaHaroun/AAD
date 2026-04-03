@@ -1,0 +1,46 @@
+\section{Technical Requirements}\label{sec:technical-requirements}
+The backend must support the following functional/non requirements derived from the design essentials user requirements:
+
+\subsection{Functional Requirements}
+
+\begin{htable}[
+    caption = {Backend Functional Requirements},
+    label = {tab:functional-requirements},
+]
+    {
+        colspec={lXl},
+    }
+        ID & Requirement & Priority \\
+        FR1 & Provide user registration and authentication endpoints (U1) & Must \\
+        FR2 & Support profile creation and management (U2, U3) & Must \\
+        FR3 & Enable skill listing creation for offers and requests (U4, U5) & Must \\
+        FR4 & Support listing deletion and editing (U6, U12) & Must \\
+        FR5 & Provide location-based listing discovery (U7) & Could \\
+        FR6 & Enable users to express interest in listings (U8) & Must \\
+        FR7 & Support skill-based search functionality (U9) & Should \\
+        FR8 & Enable saving and retrieving favorite listings (U10, U13) & Could \\
+        FR9 & Provide real-time or near-real-time messaging (U11) & Could \\
+        FR10 & Support filtering of listings by criteria (U14) & Must \\
+        FR11 & Handle image uploads for profiles and listings & Must \\
+        FR12 & Send notifications for messages and listing interest & Should \\
+\end{htable}
+
+\subsection{Non-Functional Requirements}
+
+\begin{htable}[
+    caption = {Backend Non-Functional Requirements},
+    label = {tab:non-functional-requirements},
+]
+    {
+        colspec={lXl},
+    }
+        ID & Requirement & Priority \\
+        NFR1 & All passwords must be hashed using bcrypt with minimum 10 salt rounds & Must \\
+        NFR2 & API must use HTTPS for all communications & Must \\
+        NFR3 & User location data must be stored with appropriate privacy measures & Must \\
+        NFR4 & API documentation must be automatically generated and maintained & Should \\
+        NFR5 & Zero-downtime deployments must be possible & Must \\
+        NFR6 & All critical operations must be logged with appropriate detail levels & Must \\
+        NFR7 & Database operations must use transactions to maintain data consistency & Must \\
+        NFR8 & It Should be possible for the admins to be notified & Must \\
+\end{htable}
