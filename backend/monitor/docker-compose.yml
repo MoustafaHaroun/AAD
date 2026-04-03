@@ -3,7 +3,7 @@ services:
     image: prom/prometheus:latest
     container_name: trade2_prometheus
     ports:
-      - "9090:9090"
+      - '9090:9090'
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - trade2_prometheus_data:/prometheus
@@ -13,7 +13,7 @@ services:
     image: grafana/loki:2.9.8
     container_name: trade2_loki
     ports:
-      - "3100:3100"
+      - '3100:3100'
     command: -config.file=/etc/loki/loki.yml
     volumes:
       - ./loki/loki.yml:/etc/loki/loki.yml
@@ -23,8 +23,9 @@ services:
   grafana:
     image: grafana/grafana:11.4.0
     container_name: trade2_grafana
-    ports:
-      - "3001:3000"
+    # REMOVE the ports section when using Traefik
+    # ports:
+    #   - "3001:3000"
     volumes:
       - trade2_grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -32,6 +33,8 @@ services:
     environment:
       GF_SECURITY_ADMIN_USER: ${GF_ADMIN_USER:-admin}
       GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD:-admin}
+      GF_SERVER_ROOT_URL: https://trade2-monitoring-8vjke2-41ab39-157-90-114-60.traefik.me
+      GF_SERVER_SERVE_FROM_SUB_PATH: 'false'
     depends_on:
       - prometheus
       - loki
