@@ -1,35 +1,69 @@
 import 'dotenv';
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as Minio from 'minio';
 
 @Injectable()
 export class MinioClient implements OnModuleInit {
   private readonly client: Minio.Client;
   private readonly bucketName: string;
+  private readonly logger = new Logger(MinioClient.name);
 
   constructor() {
+    const endPoint = process.env.MINIO_HOST ?? 'minio';
+    const accessKey = process.env.MINIO_ROOT_USER;
+    const bucketName = process.env.MINIO_BUCKET ?? '';
+
+    this.logger.log(
+      `Initializing MinIO client — endpoint: ${endPoint}:9000, bucket: "${bucketName}", accessKey: ${accessKey ? accessKey : '(not set)'}`,
+    );
+
+    if (!accessKey) this.logger.warn('MINIO_ROOT_USER is not set');
+    if (!process.env.MINIO_ROOT_PASSWORD)
+      this.logger.warn('MINIO_ROOT_PASSWORD is not set');
+    if (!bucketName) this.logger.warn('MINIO_BUCKET is not set');
+
     this.client = new Minio.Client({
-      endPoint: process.env.MINIO_HOST ?? 'minio',
+      endPoint,
       port: 9000,
       useSSL: false,
       accessKey: process.env.MINIO_ROOT_USER,
       secretKey: process.env.MINIO_ROOT_PASSWORD,
     });
 
-    this.bucketName = process.env.MINIO_BUCKET ?? '';
+    this.bucketName = bucketName;
   }
 
   async onModuleInit(): Promise<void> {
+    this.logger.log(
+      `Connecting to MinIO at ${process.env.MINIO_HOST ?? 'minio'}:9000...`,
+    );
+
     for (let i = 0; i < 10; i++) {
       try {
-        if (!(await this.client.bucketExists(this.bucketName))) {
+        const exists = await this.client.bucketExists(this.bucketName);
+        if (!exists) {
+          this.logger.log(
+            `Bucket "${this.bucketName}" not found — creating it`,
+          );
           await this.client.makeBucket(this.bucketName);
+          this.logger.log(`Bucket "${this.bucketName}" created successfully`);
+        } else {
+          this.logger.log(
+            `Bucket "${this.bucketName}" already exists — ready`,
+          );
         }
-      } catch {
-        console.info('Waiting for MinIO to be ready...', i + 1);
+        return;
+      } catch (err) {
+        this.logger.warn(
+          `MinIO not ready (attempt ${i + 1}/10): ${(err as Error).message}`,
+        );
         await new Promise((res) => setTimeout(res, 2000));
       }
     }
+
+    this.logger.error(
+      'Failed to connect to MinIO after 10 attempts — giving up',
+    );
   }
 
   getClient(): Minio.Client {
