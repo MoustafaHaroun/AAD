@@ -48,9 +48,7 @@ export class MinioClient implements OnModuleInit {
           await this.client.makeBucket(this.bucketName);
           this.logger.log(`Bucket "${this.bucketName}" created successfully`);
         } else {
-          this.logger.log(
-            `Bucket "${this.bucketName}" already exists — ready`,
-          );
+          this.logger.log(`Bucket "${this.bucketName}" already exists — ready`);
         }
         return;
       } catch (err) {

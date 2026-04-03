@@ -42,7 +42,9 @@ export class UserController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @ApiBody(createUserApi)
-  createUser(@Body(new ZodValidationPipe((createUserSchema))) dto: CreateUserRequest): Promise<CreateUserResponse> {
+  createUser(
+    @Body(new ZodValidationPipe(createUserSchema)) dto: CreateUserRequest,
+  ): Promise<CreateUserResponse> {
     return this.createUserUseCase.execute(dto);
   }
 

@@ -14,7 +14,7 @@ import {
 } from '@/application/dto';
 import { SignInUseCase } from '@/application/usecases';
 import { ApiBody } from '@nestjs/swagger';
-import { ZodValidationPipe} from '@/infrastructure/validation/zod.pipe';
+import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
 
 @Controller('auth')
 export class AuthController {

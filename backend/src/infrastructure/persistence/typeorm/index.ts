@@ -15,6 +15,13 @@ export default TypeOrmModule.forRoot({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_NAME,
-  entities: [AttachmentModel, FavoriteModel, ListingModel, MessageModel, NotificationModel, UserModel],
+  entities: [
+    AttachmentModel,
+    FavoriteModel,
+    ListingModel,
+    MessageModel,
+    NotificationModel,
+    UserModel,
+  ],
   synchronize: process.env.NODE_ENV === 'development',
 });

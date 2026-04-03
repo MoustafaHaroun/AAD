@@ -1,13 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { DataSource } from 'typeorm';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import {
   DeleteListingRequest,
   DeleteListingResponse,
 } from '@/application/dto/delete-listing.dto';
+import { AttachmentModel } from '@/infrastructure/persistence/typeorm/models/attachment.model';
+import { FavoriteModel } from '@/infrastructure/persistence/typeorm/models/favorite.model';
+import { ListingModel } from '@/infrastructure/persistence/typeorm/models/listing.model';
 
 @Injectable()
 export class DeleteListingUseCase {
-  constructor(private readonly listingRepository: ListingRepository) {}
+  constructor(
+    private readonly listingRepository: ListingRepository,
+    private readonly dataSource: DataSource,
+  ) {}
 
   async execute(
     dto: DeleteListingRequest & { id: string },
@@ -20,6 +27,10 @@ export class DeleteListingUseCase {
       );
     }
 
-    await this.listingRepository.delete(dto.id);
+    await this.dataSource.transaction(async (manager) => {
+      await manager.delete(AttachmentModel, { listing: { id: dto.id } });
+      await manager.delete(FavoriteModel, { listing: { id: dto.id } });
+      await manager.delete(ListingModel, { id: dto.id });
+    });
   }
 }

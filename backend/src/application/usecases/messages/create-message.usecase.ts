@@ -1,7 +1,12 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { v4 } from 'uuid';
+import { DataSource } from 'typeorm';
 import { MessageModel } from '@/infrastructure/persistence/typeorm/models/message.model';
-import { MessageRepository } from '@/infrastructure/persistence/typeorm/repositories/message.repository';
+import { NotificationModel } from '@/infrastructure/persistence/typeorm/models/notification.model';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories/user.repository';
 import {
   CreateMessageRequest,
@@ -11,8 +16,8 @@ import {
 @Injectable()
 export class CreateMessageUseCase {
   constructor(
-    private readonly messageRepository: MessageRepository,
     private readonly userRepository: UserRepository,
+    private readonly dataSource: DataSource,
   ) {}
 
   async execute(
@@ -32,15 +37,28 @@ export class CreateMessageUseCase {
       );
     }
 
-    const message = new MessageModel();
+    const savedMessage = await this.dataSource.transaction(async (manager) => {
+      const message = new MessageModel();
+      message.id = v4();
+      message.content = dto.content;
+      message.sender = sender;
+      message.recipient = recipient;
 
-    message.id = v4();
-    message.content = dto.content;
-    message.sender = sender;
-    message.recipient = recipient;
+      const createdMessage = await manager.save(message);
+
+      const notification = new NotificationModel();
+      notification.id = v4();
+      notification.title = `New message from ${sender.firstname} ${sender.surname}`;
+      notification.message = dto.content.substring(0, 100);
+      notification.user = recipient;
+
+      await manager.save(notification);
+
+      return createdMessage;
+    });
 
     return {
-      message: (await this.messageRepository.create(message)).toDomain(),
+      message: savedMessage.toDomain(),
     };
   }
 }

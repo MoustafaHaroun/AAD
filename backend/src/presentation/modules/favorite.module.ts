@@ -14,7 +14,12 @@ import { AttachmentModel } from '@/infrastructure/persistence/typeorm/models/att
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([FavoriteModel, UserModel, ListingModel, AttachmentModel]),
+    TypeOrmModule.forFeature([
+      FavoriteModel,
+      UserModel,
+      ListingModel,
+      AttachmentModel,
+    ]),
   ],
   controllers: [FavoriteController],
   providers: [

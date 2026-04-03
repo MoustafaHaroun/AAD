@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { v4 } from 'uuid';
 import { FavoriteModel } from '@/infrastructure/persistence/typeorm/models/favorite.model';
 import { FavoriteRepository } from '@/infrastructure/persistence/typeorm/repositories/favorite.repository';
