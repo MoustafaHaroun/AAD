@@ -18,6 +18,10 @@ export class UserRepository {
     return await this.repository.findOne({ where: { id } });
   }
 
+  async findAll(): Promise<UserModel[]> {
+    return await this.repository.find();
+  }
+
   async findByEmail(email: string): Promise<UserModel | null> {
     return await this.repository.findOne({ where: { email } });
   }

@@ -5,6 +5,7 @@ export * from '@/application/dto/delete-listing.dto';
 export * from '@/application/dto/get-listing-by-id.dto';
 export * from '@/application/dto/get-listings-by-user-id.dto';
 export * from '@/application/dto/delete-user.dto';
+export * from '@/application/dto/get-all-users.dto';
 export * from '@/application/dto/get-user-by-id.dto';
 export * from '@/application/dto/remove-attachment-from-listing.dto';
 export * from '@/application/dto/sign-in-dto';

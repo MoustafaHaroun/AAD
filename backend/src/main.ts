@@ -3,11 +3,13 @@ import { AppModule } from '@/app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppLogger } from '@/infrastructure/monitoring/logger.service';
 import { HttpMetricsInterceptor } from '@/infrastructure/monitoring/http-metrics.interceptor';
+import { AllExceptionsFilter } from '@/infrastructure/monitoring/all-exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
 
   app.useLogger(app.get(AppLogger));
+  app.useGlobalFilters(app.get(AllExceptionsFilter));
   app.useGlobalInterceptors(app.get(HttpMetricsInterceptor));
 
   if (process.env.NODE_ENV !== 'production') {

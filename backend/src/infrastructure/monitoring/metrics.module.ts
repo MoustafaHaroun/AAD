@@ -10,6 +10,7 @@ import {
   HttpMetricsInterceptor,
 } from '@/infrastructure/monitoring/http-metrics.interceptor';
 import { AppLogger } from '@/infrastructure/monitoring/logger.service';
+import { AllExceptionsFilter } from '@/infrastructure/monitoring/all-exceptions.filter';
 
 @Global()
 @Module({
@@ -21,6 +22,7 @@ import { AppLogger } from '@/infrastructure/monitoring/logger.service';
   ],
   providers: [
     AppLogger,
+    AllExceptionsFilter,
     HttpMetricsInterceptor,
     makeCounterProvider({
       name: HTTP_REQUEST_TOTAL,
@@ -34,6 +36,6 @@ import { AppLogger } from '@/infrastructure/monitoring/logger.service';
       buckets: [0.005, 0.01, 0.025, 0.05, 0.1, 0.25, 0.5, 1, 2.5, 5],
     }),
   ],
-  exports: [AppLogger, HttpMetricsInterceptor],
+  exports: [AppLogger, AllExceptionsFilter, HttpMetricsInterceptor],
 })
 export class MetricsModule {}

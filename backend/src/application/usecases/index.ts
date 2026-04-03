@@ -17,6 +17,7 @@ export * from '@/application/usecases/messages/delete-message.usecase';
 export * from '@/application/usecases/messages/get-message-by-id.usecase';
 export * from '@/application/usecases/messages/get-messages-by-user-id.usecase';
 export * from '@/application/usecases/users/delete-user.usecase';
+export * from '@/application/usecases/users/get-all-users.usecase';
 export * from '@/application/usecases/users/get-user-by-id.usecase';
 export * from '@/application/usecases/sign-in.usecase';
 export * from '@/application/usecases/listings/update-listing.usecase';

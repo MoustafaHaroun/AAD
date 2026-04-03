@@ -8,10 +8,12 @@ import {
   Param,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import {
   CreateUserUseCase,
   DeleteUserUseCase,
+  GetAllUsersUseCase,
   GetUserByIdUseCase,
   UpdateUserUseCase,
 } from '@/application/usecases';
@@ -21,23 +23,38 @@ import {
   type CreateUserRequest,
   type CreateUserResponse,
   type DeleteUserResponse,
+  type GetAllUsersResponse,
   type GetUserByIdResponse,
   type UpdateUserRequest,
   type UpdateUserResponse,
   updateUserApi,
   updateUserSchema,
 } from '@/application/dto';
-import { ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
+import { AuthGuard } from '@/presentation/guards/auth.guard';
+import { RolesGuard } from '@/presentation/guards/roles.guard';
+import { Roles } from '@/presentation/decorators/roles.decorator';
+import { Role } from '@/domain/enums/role.enum';
 
 @Controller('users')
 export class UserController {
   constructor(
     private readonly createUserUseCase: CreateUserUseCase,
+    private readonly getAllUsersUseCase: GetAllUsersUseCase,
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
   ) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  @Roles(Role.Admin)
+  @UseGuards(AuthGuard, RolesGuard)
+  @ApiBearerAuth()
+  getAllUsers(): Promise<GetAllUsersResponse> {
+    return this.getAllUsersUseCase.execute();
+  }
 
   @HttpCode(HttpStatus.CREATED)
   @Post()

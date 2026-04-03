@@ -4,23 +4,20 @@ import { UserRepository } from '@/infrastructure/persistence/typeorm/repositorie
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private userRepository: UserRepository,
-    private jwtService: JwtService,
-  ) {}
+    constructor(
+        private userRepository: UserRepository,
+        private jwtService: JwtService,
+    ) {}
 
-  async signIn(email: string, password: string): Promise<string> {
-    const user = await this.userRepository.findByEmail(email);
+    async signIn(email: string, password: string): Promise<string> {
+        const user = await this.userRepository.findByEmail(email);
 
+        if (user == null || user.password != password) {
+            throw new UnauthorizedException();
+        }
 
-    console.log(user)
+        const payload = { sub: user.id, email: user.email };
 
-    if (user == null || user.password != password) {
-      throw new UnauthorizedException();
+        return await this.jwtService.signAsync(payload);
     }
-
-    const payload = { sub: user.id, email: user.email };
-
-    return await this.jwtService.signAsync(payload);
-  }
 }
