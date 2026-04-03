@@ -1,7 +1,9 @@
 import { TypeOrmModule } from '@nestjs/typeorm';
 import {
   AttachmentModel,
+  FavoriteModel,
   ListingModel,
+  MessageModel,
   NotificationModel,
   UserModel,
 } from '@/infrastructure/persistence/typeorm/models';
@@ -13,6 +15,6 @@ export default TypeOrmModule.forRoot({
   username: process.env.POSTGRES_USER,
   password: process.env.POSTGRES_PASSWORD,
   database: process.env.POSTGRES_NAME,
-  entities: [AttachmentModel, ListingModel, NotificationModel, UserModel],
+  entities: [AttachmentModel, FavoriteModel, ListingModel, MessageModel, NotificationModel, UserModel],
   synchronize: process.env.NODE_ENV === 'development',
 });

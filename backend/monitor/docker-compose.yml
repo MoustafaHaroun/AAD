@@ -2,18 +2,14 @@ services:
   prometheus:
     image: prom/prometheus:latest
     container_name: trade2_prometheus
-    ports:
-      - '9090:9090'
     volumes:
       - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - trade2_prometheus_data:/prometheus
     restart: unless-stopped
 
   loki:
-    image: grafana/loki:2.9.8
+    image: grafana/loki:latest
     container_name: trade2_loki
-    ports:
-      - '3100:3100'
     command: -config.file=/etc/loki/loki.yml
     volumes:
       - ./loki/loki.yml:/etc/loki/loki.yml
@@ -21,11 +17,8 @@ services:
     restart: unless-stopped
 
   grafana:
-    image: grafana/grafana:11.4.0
+    image: grafana/grafana:latest
     container_name: trade2_grafana
-    # REMOVE the ports section when using Traefik
-    # ports:
-    #   - "3001:3000"
     volumes:
       - trade2_grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning

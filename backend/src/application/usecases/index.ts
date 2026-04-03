@@ -1,3 +1,6 @@
+export * from '@/application/usecases/favorites/create-favorite.usecase';
+export * from '@/application/usecases/favorites/delete-favorite.usecase';
+export * from '@/application/usecases/favorites/get-favorites-by-user-id.usecase';
 export * from '@/application/usecases/listings/add-attachment-to-listing.usecase';
 export * from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
 export * from '@/application/usecases/notifications/create-notification.usecase';
@@ -9,6 +12,10 @@ export * from '@/application/usecases/users/create-user.usecase';
 export * from '@/application/usecases/listings/delete-listing.usecase';
 export * from '@/application/usecases/listings/get-listing-by-id.usecase';
 export * from '@/application/usecases/listings/get-listings-by-user-id.usecase';
+export * from '@/application/usecases/messages/create-message.usecase';
+export * from '@/application/usecases/messages/delete-message.usecase';
+export * from '@/application/usecases/messages/get-message-by-id.usecase';
+export * from '@/application/usecases/messages/get-messages-by-user-id.usecase';
 export * from '@/application/usecases/users/delete-user.usecase';
 export * from '@/application/usecases/users/get-user-by-id.usecase';
 export * from '@/application/usecases/sign-in.usecase';
