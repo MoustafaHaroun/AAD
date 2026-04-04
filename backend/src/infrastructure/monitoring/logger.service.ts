@@ -39,7 +39,6 @@ export class AppLogger implements LoggerService {
           connected = true;
           console.log(`Loki connection successful (${lokiUrl})`);
         }
-        console.log('Sending logs to Loki');
       });
 
       transports.push(lokiTransport);
