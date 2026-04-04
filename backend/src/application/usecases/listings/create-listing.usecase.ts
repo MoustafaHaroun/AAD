@@ -1,9 +1,6 @@
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories/user.repository';
 import { v4 } from 'uuid';
-import {
-  ListingModel,
-  UserModel,
-} from '@/infrastructure/persistence/typeorm/models';
+import { ListingModel } from '@/infrastructure/persistence/typeorm/models';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import {
