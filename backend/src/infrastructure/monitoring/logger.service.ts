@@ -23,17 +23,26 @@ export class AppLogger implements LoggerService {
     const lokiUrl = process.env.LOKI_URL;
 
     if (lokiUrl) {
-      transports.push(
-        new LokiTransport({
-          host: lokiUrl,
-          labels: { app: 'trade2-nestjs' },
-          json: true,
-          format: winston.format.json(),
-          replaceTimestamp: true,
-          onConnectionError: (err) =>
-            console.error('Loki connection error:', err),
-        }),
-      );
+      const lokiTransport = new LokiTransport({
+        host: lokiUrl,
+        labels: { app: 'trade2-nestjs' },
+        json: true,
+        format: winston.format.json(),
+        replaceTimestamp: true,
+        onConnectionError: (err) =>
+          console.error('Loki connection error:', err),
+      });
+
+      let connected = false;
+      lokiTransport.on('logged', () => {
+        if (!connected) {
+          connected = true;
+          console.log(`Loki connection successful (${lokiUrl})`);
+        }
+        console.log('Sending logs to Loki');
+      });
+
+      transports.push(lokiTransport);
     }
 
     this.logger = winston.createLogger({
