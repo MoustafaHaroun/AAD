@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { GetUserByIdUseCase } from './get-user-by-id.usecase';
 
 const mockUserDomain = {
@@ -26,11 +27,11 @@ describe('GetUserByIdUseCase', () => {
     expect(result).toEqual({ user: mockUserDomain });
   });
 
-  it('returns null when user does not exist', async () => {
+  it('throws NotFoundException when user does not exist', async () => {
     mockUserRepo.findById.mockResolvedValue(null);
 
-    const result = await useCase.execute({ id: 'missing' });
-
-    expect(result).toEqual({ user: null });
+    await expect(useCase.execute({ id: 'missing' })).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });

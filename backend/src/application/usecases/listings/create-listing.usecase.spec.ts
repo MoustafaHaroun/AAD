@@ -49,7 +49,7 @@ describe('CreateListingUseCase', () => {
   });
 
   it('throws UnauthorizedException when user is not found', async () => {
-    mockUserRepo.findById.mockRejectedValue(new Error('not found'));
+    mockUserRepo.findById.mockResolvedValue(null);
 
     await expect(
       useCase.execute({

@@ -1,9 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { CreateUserUseCase } from '@/application/usecases/users/create-user.usecase';
+import { GetAllUsersUseCase } from '@/application/usecases/users/get-all-users.usecase';
 import { GetUserByIdUseCase } from '@/application/usecases/users/get-user-by-id.usecase';
 import { UpdateUserUseCase } from '@/application/usecases/users/update-user.usecase';
 import { DeleteUserUseCase } from '@/application/usecases/users/delete-user.usecase';
+import { AuthGuard } from '@/presentation/guards/auth.guard';
+import { RolesGuard } from '@/presentation/guards/roles.guard';
 
 const mockUser = {
   id: 'user-1',
@@ -17,6 +20,7 @@ const mockUser = {
 describe('UserController', () => {
   let controller: UserController;
   const mockCreateUseCase = { execute: jest.fn() };
+  const mockGetAllUsersUseCase = { execute: jest.fn() };
   const mockGetByIdUseCase = { execute: jest.fn() };
   const mockUpdateUseCase = { execute: jest.fn() };
   const mockDeleteUseCase = { execute: jest.fn() };
@@ -27,11 +31,17 @@ describe('UserController', () => {
       controllers: [UserController],
       providers: [
         { provide: CreateUserUseCase, useValue: mockCreateUseCase },
+        { provide: GetAllUsersUseCase, useValue: mockGetAllUsersUseCase },
         { provide: GetUserByIdUseCase, useValue: mockGetByIdUseCase },
         { provide: UpdateUserUseCase, useValue: mockUpdateUseCase },
         { provide: DeleteUserUseCase, useValue: mockDeleteUseCase },
       ],
-    }).compile();
+    })
+      .overrideGuard(AuthGuard)
+      .useValue({ canActivate: () => true })
+      .overrideGuard(RolesGuard)
+      .useValue({ canActivate: () => true })
+      .compile();
 
     controller = module.get(UserController);
   });

@@ -3,7 +3,8 @@ import { AuthGuard } from '@/presentation/guards/auth.guard';
 import { ListingController } from './listing.controller';
 import { CreateListingUseCase } from '@/application/usecases/listings/create-listing.usecase';
 import { GetListingByIdUseCase } from '@/application/usecases/listings/get-listing-by-id.usecase';
-import { GetListingsByUserUseCase } from '@/application/usecases/listings/get-listings-by-user.usecase';
+import { GetListingsByUserIdUseCase } from '@/application/usecases/listings/get-listings-by-user-id.usecase';
+import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
 import { UpdateListingUseCase } from '@/application/usecases/listings/update-listing.usecase';
 import { DeleteListingUseCase } from '@/application/usecases/listings/delete-listing.usecase';
 import { AddAttachmentToListingUseCase } from '@/application/usecases/listings/add-attachment-to-listing.usecase';
@@ -26,6 +27,7 @@ describe('ListingController', () => {
   const mockCreateUseCase = { execute: jest.fn() };
   const mockAddAttachmentUseCase = { execute: jest.fn() };
   const mockGetByUserUseCase = { execute: jest.fn() };
+  const mockRemoveAttachmentUseCase = { execute: jest.fn() };
   const mockGetByIdUseCase = { execute: jest.fn() };
   const mockUpdateUseCase = { execute: jest.fn() };
   const mockDeleteUseCase = { execute: jest.fn() };
@@ -40,7 +42,11 @@ describe('ListingController', () => {
           provide: AddAttachmentToListingUseCase,
           useValue: mockAddAttachmentUseCase,
         },
-        { provide: GetListingsByUserUseCase, useValue: mockGetByUserUseCase },
+        { provide: GetListingsByUserIdUseCase, useValue: mockGetByUserUseCase },
+        {
+          provide: RemoveAttachmentFromListingUseCase,
+          useValue: mockRemoveAttachmentUseCase,
+        },
         { provide: GetListingByIdUseCase, useValue: mockGetByIdUseCase },
         { provide: UpdateListingUseCase, useValue: mockUpdateUseCase },
         { provide: DeleteListingUseCase, useValue: mockDeleteUseCase },

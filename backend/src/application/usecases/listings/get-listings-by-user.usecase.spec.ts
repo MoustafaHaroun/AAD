@@ -1,4 +1,4 @@
-import { GetListingsByUserUseCase } from './get-listings-by-user.usecase';
+import { GetListingsByUserIdUseCase } from './get-listings-by-user-id.usecase';
 
 const mockListingDomain = {
   id: 'listing-1',
@@ -8,13 +8,13 @@ const mockListingDomain = {
   user: { id: 'user-1' },
 };
 
-describe('GetListingsByUserUseCase', () => {
-  let useCase: GetListingsByUserUseCase;
+describe('GetListingsByUserIdUseCase', () => {
+  let useCase: GetListingsByUserIdUseCase;
   const mockListingRepo = { findAllByUserId: jest.fn() };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    useCase = new GetListingsByUserUseCase(mockListingRepo as any);
+    useCase = new GetListingsByUserIdUseCase(mockListingRepo as any);
   });
 
   it('returns mapped listings for a user', async () => {

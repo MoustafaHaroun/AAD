@@ -4,10 +4,22 @@ import { DeleteListingUseCase } from './delete-listing.usecase';
 describe('DeleteListingUseCase', () => {
   let useCase: DeleteListingUseCase;
   const mockListingRepo = { findById: jest.fn(), delete: jest.fn() };
+  const mockManager = { delete: jest.fn() };
+  const mockDataSource = {
+    transaction: jest
+      .fn()
+      .mockImplementation(async (cb: any) => cb(mockManager)),
+  };
 
   beforeEach(() => {
     jest.clearAllMocks();
-    useCase = new DeleteListingUseCase(mockListingRepo as any);
+    mockDataSource.transaction.mockImplementation(async (cb: any) =>
+      cb(mockManager),
+    );
+    useCase = new DeleteListingUseCase(
+      mockListingRepo as any,
+      mockDataSource as any,
+    );
   });
 
   it('deletes the listing when found', async () => {
@@ -15,7 +27,7 @@ describe('DeleteListingUseCase', () => {
     mockListingRepo.delete.mockResolvedValue(undefined);
 
     await expect(useCase.execute({ id: 'listing-1' })).resolves.toBeUndefined();
-    expect(mockListingRepo.delete).toHaveBeenCalledWith('listing-1');
+    expect(mockDataSource.transaction).toHaveBeenCalled();
   });
 
   it('throws NotFoundException when listing does not exist', async () => {
