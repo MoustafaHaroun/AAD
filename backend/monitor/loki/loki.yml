@@ -19,8 +19,7 @@ common:
 
 ingester:
   wal:
-    enabled: true
-    dir: /loki/wal
+    enabled: false
   chunk_idle_period: 1m
   chunk_retain_period: 30s
 
