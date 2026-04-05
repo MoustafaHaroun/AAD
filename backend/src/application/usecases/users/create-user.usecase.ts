@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import { UserModel } from '@/infrastructure/persistence/typeorm/models';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class CreateUserUseCase {
@@ -22,7 +23,7 @@ export class CreateUserUseCase {
 
     newUser.id = v4();
     newUser.email = dto.email;
-    newUser.password = dto.password;
+    newUser.password = await bcrypt.hash(dto.password, 10);
     newUser.firstname = dto.firstname;
     newUser.surname = dto.surname;
     newUser.role = dto.role;

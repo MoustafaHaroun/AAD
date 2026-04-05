@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
   async signIn(email: string, password: string): Promise<string> {
     const user = await this.userRepository.findByEmail(email);
 
-    if (user == null || user.password != password) {
+    if (user == null || !(await bcrypt.compare(password, user.password))) {
       throw new UnauthorizedException();
     }
 
