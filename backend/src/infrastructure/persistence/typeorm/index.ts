@@ -23,5 +23,7 @@ export default TypeOrmModule.forRoot({
     NotificationModel,
     UserModel,
   ],
-  synchronize: process.env.NODE_ENV === 'development',
+  migrations: ['dist/database/migrations/*.js'],
+  migrationsRun: true,
+  synchronize: false,
 });
