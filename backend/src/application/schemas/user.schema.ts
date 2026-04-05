@@ -17,4 +17,5 @@ export const userSchema = {
     }),
   firstname: z.string().min(1).max(128),
   surname: z.string().min(1).max(128),
+  location: z.string().min(1).max(256),
 };
