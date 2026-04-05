@@ -58,6 +58,7 @@ describe('Notifications (e2e)', () => {
     authToken = await jwtService.signAsync({
       sub: 'user-1',
       email: 'test@test.com',
+      role: 'admin',
     });
   });
 

@@ -10,10 +10,14 @@ import { UserRepository } from '@/infrastructure/persistence/typeorm/repositorie
 
 const TEST_JWT_SECRET = 'test-secret';
 
+const VALID_PASSWORD = 'Password123!';
+const VALID_PASSWORD_HASH =
+  '$2b$10$IXtZ1TWBMd0zK34STBK0p.GbYMXe1GZNx6FWNvng8kTbyyN2hW3dG';
+
 const mockUserModel = {
   id: 'user-1',
   email: 'user@test.com',
-  password: 'password123',
+  password: VALID_PASSWORD_HASH,
   firstname: 'John',
   surname: 'Doe',
   listings: [],
@@ -56,7 +60,7 @@ describe('Auth (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .post('/auth')
-        .send({ email: 'user@test.com', password: 'password123' });
+        .send({ email: 'user@test.com', password: VALID_PASSWORD });
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body).toHaveProperty('token');
@@ -68,7 +72,7 @@ describe('Auth (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .post('/auth')
-        .send({ email: 'user@test.com', password: 'wrong' });
+        .send({ email: 'user@test.com', password: 'Wr0ng!Wrong1' });
 
       expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });
@@ -78,7 +82,7 @@ describe('Auth (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .post('/auth')
-        .send({ email: 'nobody@test.com', password: 'pass' });
+        .send({ email: 'nobody@test.com', password: 'Password123!' });
 
       expect(response.status).toBe(HttpStatus.UNAUTHORIZED);
     });

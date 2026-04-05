@@ -6,14 +6,16 @@ import { App } from 'supertest/types';
 import { ListingController } from '@/presentation/controllers/listing.controller';
 import { CreateListingUseCase } from '@/application/usecases/listings/create-listing.usecase';
 import { GetListingByIdUseCase } from '@/application/usecases/listings/get-listing-by-id.usecase';
-import { GetListingsByUserUseCase } from '@/application/usecases/listings/get-listings-by-user.usecase';
+import { GetListingsByUserIdUseCase } from '@/application/usecases/listings/get-listings-by-user-id.usecase';
 import { UpdateListingUseCase } from '@/application/usecases/listings/update-listing.usecase';
 import { DeleteListingUseCase } from '@/application/usecases/listings/delete-listing.usecase';
 import { AddAttachmentToListingUseCase } from '@/application/usecases/listings/add-attachment-to-listing.usecase';
+import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories/listing.repository';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories/user.repository';
 import { AttachmentRepository } from '@/infrastructure/persistence/typeorm/repositories/attachment.repository';
 import { MinioClient } from '@/infrastructure/persistence/minio';
+import { DataSource } from 'typeorm';
 
 const TEST_SECRET = 'test-secret';
 
@@ -52,7 +54,7 @@ describe('Listings (e2e)', () => {
     delete: jest.fn(),
   };
   const mockUserRepo = { findById: jest.fn() };
-  const mockAttachmentRepo = { create: jest.fn() };
+  const mockAttachmentRepo = { create: jest.fn(), findById: jest.fn(), delete: jest.fn() };
   const mockMinioClient = { upload: jest.fn() };
 
   beforeEach(async () => {
@@ -68,7 +70,8 @@ describe('Listings (e2e)', () => {
       providers: [
         CreateListingUseCase,
         AddAttachmentToListingUseCase,
-        GetListingsByUserUseCase,
+        RemoveAttachmentFromListingUseCase,
+        GetListingsByUserIdUseCase,
         GetListingByIdUseCase,
         UpdateListingUseCase,
         DeleteListingUseCase,
@@ -76,6 +79,7 @@ describe('Listings (e2e)', () => {
         { provide: UserRepository, useValue: mockUserRepo },
         { provide: AttachmentRepository, useValue: mockAttachmentRepo },
         { provide: MinioClient, useValue: mockMinioClient },
+        { provide: DataSource, useValue: { transaction: jest.fn() } },
       ],
     }).compile();
 
@@ -103,7 +107,7 @@ describe('Listings (e2e)', () => {
 
       expect(response.status).toBe(HttpStatus.OK);
       expect(response.body).toMatchObject({
-        listings: expect.arrayContaining([{}]),
+        listings: [{ id: 'listing-1' }],
       });
     });
 
@@ -144,7 +148,7 @@ describe('Listings (e2e)', () => {
       const response = await request(app.getHttpServer())
         .post('/listings')
         .set('Authorization', `Bearer ${authToken}`)
-        .send({ title: 'Test Listing' });
+        .send({ title: 'Test Listing', description: 'A test listing' });
 
       expect(response.status).toBe(HttpStatus.CREATED);
       expect(response.body).toMatchObject({
