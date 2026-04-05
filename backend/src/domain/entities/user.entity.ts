@@ -8,6 +8,7 @@ export interface User {
   firstname: string;
   surname: string;
   role: Role;
+  location: string | null;
   listings: Listing[];
   notifications: Notification[];
 }
