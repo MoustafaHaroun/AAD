@@ -1,0 +1,22 @@
+\section{Monitoring \& Alerting}\label{sec:monitoring}
+
+\subsection{Requirement}
+\textit{"It should be possible for admins to be notified."}
+
+Administrators need a live overview of system health and must be warned when something goes wrong. This is implemented using Prometheus for metrics collection and Grafana for visualisation and alerting. The full stack runs in a separate Docker Compose application alongside the backend.
+
+\subsection{The Dashboard}
+The Grafana dashboard comes pre-configured out of the box, no manual setup required after deployment.
+For local installation, simply run the Docker Compose file located in the monitor folder.
+You can view the live Grafana dashboard at http://trade2-monitoring-pnmbxk-6650ff-157-90-114-60.traefik.me using the credentials admin/admin. Navigate to the dashboard tab to find the NestJS dashboard.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/grafana-dashboard}
+    \caption{Grafana dashboard}
+    \label{fig:grafana-dashboard}
+\end{figure}
+
+\subsection{Configuring Alerts}
+
+Grafana allows administrators to create alert rules on any panel. When a threshold is breached, Grafana can notify via e-mail, Slack, or any webhook. For this project there were no alerts configured but this is possible through grafana.

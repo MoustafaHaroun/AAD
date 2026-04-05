@@ -1,0 +1,17 @@
+\section{Logging \& Reports}\label{sec:logging}
+
+\subsection{Requirement}
+\textit{"All critical operations must be logged with appropriate detail levels."}
+
+The application logs on multiple levels using Winston. In production all logs are shipped to Grafana Loki, where administrators can search, filter, and build graphs. This section first shows the logs being produced, then walks through how an administrator uses Grafana to query them.
+
+\subsection{Proof --- Logs Are Being Produced}
+
+Every HTTP request that results in an error is caught by the global \texttt{AllExceptionsFilter}, which logs the method, URL, status code, message, and full stack trace at \texttt{error} level. Successful requests and application events are logged at \texttt{info} level.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/grafana-loki}
+    \caption{Grafana Loki --- all log lines from the Trade2 backend arriving in real time}
+    \label{fig:loki-alllogs}
+\end{figure}

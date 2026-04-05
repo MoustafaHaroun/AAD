@@ -1,0 +1,41 @@
+\section{Zero-Downtime Deployments}\label{sec:ci-cd}
+
+\subsection{Requirement}
+\textit{"Zero-downtime deployments must be possible."}
+
+Users should never experience downtime when the application is updated. The following section walks through exactly how this is achieved, from pushing a release to the updated container running in production.
+
+\subsection{How It Works}
+
+Every time a GitHub release is published, the pipeline in \texttt{.github/workflows/backend-publish.yml} runs automatically. It has two jobs that run in sequence.
+
+\begin{enumerate}
+    \item \textbf{build-and-push} --- builds the Docker image and pushes it to the GitHub Container Registry (GHCR).
+    \item \textbf{deploy} --- only runs after the image is successfully pushed. It calls the Dokploy API, which pulls the new image and performs a rolling container replacement.
+\end{enumerate}
+
+During a rolling update, Dokploy starts the new container alongside the old one. Only once the new container is healthy does it remove the old one. At no point is the application unreachable.
+This was setup using docker swarms health checkup and tested by running a loop to see the health of the application.
+
+\subsection{Proof --- Pipeline Running}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/cicd-deployment}
+    \caption{GitHub Actions --- both jobs completed successfully}
+    \label{fig:cicd-actions}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/cicd-registry}
+    \caption{GitHub Container Registry showing the pushed image tagged with version and sha}
+    \label{fig:cicd-registry}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/cicd-dokploy}
+    \caption{Dokploy showing the application redeployed with the new image}
+    \label{fig:cicd-dokploy}
+\end{figure}
