@@ -33,6 +33,10 @@ export const createUserApi = {
         type: 'string',
         example: 'Timmerman',
       },
+      role: {
+        type: 'string',
+        example: 'user',
+      },
     },
     required: ['email', 'password', 'firstname', 'surname'],
   },

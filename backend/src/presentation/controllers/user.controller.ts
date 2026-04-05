@@ -49,7 +49,7 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   @ApiBearerAuth()
   getAllUsers(): Promise<GetAllUsersResponse> {

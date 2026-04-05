@@ -52,7 +52,7 @@ export class NotificationController {
   @Post()
   @ApiBearerAuth()
   @ApiBody({ type: CreateNotificationRequest })
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   createNotification(
     @Body() dto: CreateNotificationRequest,
@@ -64,7 +64,7 @@ export class NotificationController {
   @Patch(':id')
   @ApiBearerAuth()
   @ApiBody({ type: UpdateNotificationRequest })
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   updateNotification(
     @Param('id') id: string,
@@ -76,7 +76,7 @@ export class NotificationController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @ApiBearerAuth()
-  @Roles(Role.Admin)
+  @Roles(Role.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   deleteNotification(@Param('id') id: string): Promise<void> {
     return this.deleteNotificationUseCase.execute({ id });
