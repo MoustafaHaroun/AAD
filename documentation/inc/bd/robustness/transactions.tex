@@ -12,7 +12,7 @@ When a user sends a message, the recipient must also receive a notification. Bot
     \centering
     \includegraphics[width=\textwidth]{bd/robustness/create-message-transaction}
     \caption{Transaction implementation for message creation with notification}
-    \label{fig:tx-message}
+    \label{fig:create-message-transaction}
 \end{figure}
 
 \subsection{Transaction 2 --- Deleting a User}
@@ -22,5 +22,15 @@ Deleting a user requires removing their attachments, favourites, messages, notif
     \centering
     \includegraphics[width=\textwidth]{bd/robustness/delete-user-transaction}
     \caption{Transaction implementation for cascading user deletion}
-    \label{fig:tx-delete}
+    \label{fig:delete-user-transaction}
+\end{figure}
+
+\subsection{Transaction 3 --- Deleting a Listing}
+Deleting a listing requires removing their attachments and favourites in the correct order before the listing record itself can be deleted. All of these deletes run inside one transaction. If any step fails, the entire operation is rolled back and the listing record is left untouched.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/delete-listing-transaction}
+    \caption{Transaction implementation for cascading listing deletion}
+    \label{fig:delete-listing-transaction}
 \end{figure}
