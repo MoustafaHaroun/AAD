@@ -12,7 +12,7 @@ async function bootstrap() {
   app.useGlobalFilters(app.get(AllExceptionsFilter));
   app.useGlobalInterceptors(app.get(HttpMetricsInterceptor));
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.SWAGGER_ENABLED === 'true') {
     const swagger = new DocumentBuilder()
       .setTitle('Trade2')
       .setDescription('API Documentation for Trade2')
