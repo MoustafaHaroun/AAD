@@ -2,6 +2,7 @@
 
 REST API for the Trade2 platform. Built with NestJS, PostgreSQL, and MinIO.
 
+
 ## Tech Stack
 
 - **Runtime** — Node.js 20, NestJS
@@ -121,8 +122,6 @@ docker compose up -d
 | Swagger  | http://localhost:80/documentation |
 | pgAdmin  | http://localhost:5050         |
 | MinIO    | http://localhost:9001         |
-
-Migrations run automatically on startup via `migrationsRun: true`.
 
 ---
 

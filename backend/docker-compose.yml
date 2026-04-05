@@ -23,6 +23,7 @@ services:
     depends_on:
       - postgres
       - minio
+      - loki
     restart: unless-stopped
 
   minio:
@@ -64,7 +65,48 @@ services:
       - ./pgadmin.json:/pgadmin4/servers.json:ro
     restart: unless-stopped
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: trade2_prometheus
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./monitor/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - trade2_prometheus_data:/prometheus
+    restart: unless-stopped
+
+  loki:
+    image: grafana/loki:3.4.2
+    container_name: trade2_loki
+    user: '0'
+    ports:
+      - '3100:3100'
+    command: -config.file=/etc/loki/loki.yml -target=all
+    volumes:
+      - ./monitor/loki/loki.yml:/etc/loki/loki.yml
+      - trade2_loki_data:/loki
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: trade2_grafana
+    volumes:
+      - trade2_grafana_data:/var/lib/grafana
+      - ./monitor/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitor/grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GF_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD:-admin}
+      GF_SERVER_ROOT_URL: http://localhost:3001
+    depends_on:
+      - prometheus
+      - loki
+    restart: unless-stopped
+
 volumes:
   trade2_minio_data:
   trade2_postgres_data:
   trade2_pgadmin_data:
+  trade2_prometheus_data:
+  trade2_loki_data:
+  trade2_grafana_data:
