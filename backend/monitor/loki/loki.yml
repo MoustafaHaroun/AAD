@@ -19,9 +19,12 @@ common:
 
 ingester:
   wal:
-    enabled: false
-  chunk_idle_period: 1m
-  chunk_retain_period: 30s
+    enabled: true
+    dir: /loki/wal
+  chunk_idle_period: 5m
+  chunk_retain_period: 1m
+  lifecycler:
+    final_sleep: 0s
 
 compactor:
   working_directory: /loki/compactor
