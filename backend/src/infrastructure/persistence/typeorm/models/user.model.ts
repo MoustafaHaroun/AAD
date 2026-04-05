@@ -24,6 +24,9 @@ export class UserModel {
   @Column({ type: 'enum', enum: Role, default: Role.User })
   role: Role;
 
+  @Column({ type: 'varchar', nullable: true })
+  location: string | null;
+
   @OneToMany(() => ListingModel, (listing) => listing.user)
   listings: ListingModel[];
 
@@ -49,6 +52,7 @@ export class UserModel {
       firstname: this.firstname,
       surname: this.surname,
       role: this.role,
+      location: this.location ?? null,
       listings: this.listings,
       notifications: this.notifications,
     } satisfies User;
