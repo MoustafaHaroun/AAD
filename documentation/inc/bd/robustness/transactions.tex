@@ -1,0 +1,36 @@
+\section{Data Consistency via Transactions}\label{sec:transactions}
+
+\subsection{Requirement}
+\textit{"Database operations must use transactions to maintain data consistency."}
+
+A transaction ensures that a group of database operations either all succeed or all fail together. Without transactions, a crash at the wrong moment can leave the database in a broken state—for example, a message stored without a notification, or a deleted user whose listings remain in the database.
+
+\subsection{Transaction 1 --- Sending a Message}
+When a user sends a message, the recipient must also receive a notification. Both records are written in a single transaction. If saving the notification fails for any reason, the message is also rolled back.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/create-message-transaction}
+    \caption{Transaction implementation for message creation with notification}
+    \label{fig:create-message-transaction}
+\end{figure}
+
+\subsection{Transaction 2 --- Deleting a User}
+Deleting a user requires removing their attachments, favourites, messages, notifications, and listings in the correct order before the user record itself can be deleted. All of these deletes run inside one transaction. If any step fails, the entire operation is rolled back and the user record is left untouched.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/delete-user-transaction}
+    \caption{Transaction implementation for cascading user deletion}
+    \label{fig:delete-user-transaction}
+\end{figure}
+
+\subsection{Transaction 3 --- Deleting a Listing}
+Deleting a listing requires removing their attachments and favourites in the correct order before the listing record itself can be deleted. All of these deletes run inside one transaction. If any step fails, the entire operation is rolled back and the listing record is left untouched.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/delete-listing-transaction}
+    \caption{Transaction implementation for cascading listing deletion}
+    \label{fig:delete-listing-transaction}
+\end{figure}
