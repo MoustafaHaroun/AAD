@@ -3,7 +3,7 @@ import { ListingRepository } from '@/infrastructure/persistence/typeorm/reposito
 import {
   GetListingByIdRequest,
   GetListingByIdResponse,
-} from '@/application/dto/get-listing-by-id.dto';
+} from '@/application/dto/listings/get-listing-by-id.dto';
 
 @Injectable()
 export class GetListingByIdUseCase {

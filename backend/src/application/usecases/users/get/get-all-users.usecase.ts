@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
-import { GetAllUsersResponse } from '@/application/dto/get-all-users.dto';
+import { GetAllUsersResponse } from '@/application/dto/users/get-all-users.dto';
 
 @Injectable()
 export class GetAllUsersUseCase {

@@ -1,12 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
-import { CreateUserUseCase } from '@/application/usecases/users/create-user.usecase';
-import { GetAllUsersUseCase } from '@/application/usecases/users/get-all-users.usecase';
-import { GetUserByIdUseCase } from '@/application/usecases/users/get-user-by-id.usecase';
-import { UpdateUserUseCase } from '@/application/usecases/users/update-user.usecase';
-import { DeleteUserUseCase } from '@/application/usecases/users/delete-user.usecase';
+import { CreateUserUseCase } from '@/application/usecases/users/create/create-user.usecase';
+import { GetAllUsersUseCase } from '@/application/usecases/users/get/get-all-users.usecase';
+import { GetUserByIdUseCase } from '@/application/usecases/users/get/get-user-by-id.usecase';
+import { UpdateUserUseCase } from '@/application/usecases/users/patch/update-user.usecase';
+import { DeleteUserUseCase } from '@/application/usecases/users/delete/delete-user.usecase';
 import { AuthGuard } from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
+import { Role } from '@/domain/enums/role.enum';
 
 const mockUser = {
   id: 'user-1',
@@ -54,6 +55,8 @@ describe('UserController', () => {
       password: 'pass',
       firstname: 'John',
       surname: 'Doe',
+      location: 'Enschede, Saxion',
+      role: Role.ADMIN,
     });
 
     expect(result).toEqual({ user: mockUser });

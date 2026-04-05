@@ -6,7 +6,7 @@ import { ListingRepository } from '@/infrastructure/persistence/typeorm/reposito
 import {
   CreateListingRequest,
   CreateListingResponse,
-} from '@/application/dto/create-listing.dto';
+} from '@/application/dto/listings/create-listing.dto';
 
 @Injectable()
 export class CreateListingUseCase {

@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from '@/presentation/guards/auth.guard';
 import { NotificationController } from './notification.controller';
-import { CreateNotificationUseCase } from '@/application/usecases/notifications/create-notification.usecase';
-import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get-notification-by-id.usecase';
-import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update-notification.usecase';
-import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete-notification.usecase';
+import { CreateNotificationUseCase } from '@/application/usecases/notifications/create/create-notification.usecase';
+import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get/get-notification-by-id.usecase';
+import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update/update-notification.usecase';
+import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete/delete-notification.usecase';
 
 const mockNotification = { id: 'notif-1', title: 'Alert', message: 'Hello' };
 

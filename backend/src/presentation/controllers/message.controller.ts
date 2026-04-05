@@ -18,10 +18,10 @@ import {
 } from '@/application/dto/messages/create-message.dto';
 import { GetMessageByIdResponse } from '@/application/dto/messages/get-message-by-id.dto';
 import { GetMessagesByUserIdResponse } from '@/application/dto/messages/get-messages-by-user-id.dto';
-import { CreateMessageUseCase } from '@/application/usecases/messages/create-message.usecase';
-import { GetMessageByIdUseCase } from '@/application/usecases/messages/get-message-by-id.usecase';
-import { GetMessagesByUserIdUseCase } from '@/application/usecases/messages/get-messages-by-user-id.usecase';
-import { DeleteMessageUseCase } from '@/application/usecases/messages/delete-message.usecase';
+import { CreateMessageUseCase } from '@/application/usecases/messages/create/create-message.usecase';
+import { GetMessageByIdUseCase } from '@/application/usecases/messages/get/get-message-by-id.usecase';
+import { GetMessagesByUserIdUseCase } from '@/application/usecases/messages/get/get-messages-by-user-id.usecase';
+import { DeleteMessageUseCase } from '@/application/usecases/messages/delete/delete-message.usecase';
 import * as authGuard from '@/presentation/guards/auth.guard';
 
 @Controller('messages')

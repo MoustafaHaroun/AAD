@@ -41,7 +41,7 @@ import {
 import * as authGuard from '@/presentation/guards/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
-import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
+import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/attachments/remove-attachment-from-listing.usecase';
 import { imageSchema } from '@/application/schemas/image.schema';
 
 @Controller('listings')

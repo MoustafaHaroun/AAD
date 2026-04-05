@@ -1,7 +1,7 @@
 import {
   CreateUserRequest,
   CreateUserResponse,
-} from '@/application/dto/create-user.dto';
+} from '@/application/dto/listings/create-user.dto';
 import { v4 } from 'uuid';
 import { UserModel } from '@/infrastructure/persistence/typeorm/models';
 import { ConflictException, Injectable } from '@nestjs/common';

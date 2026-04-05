@@ -4,7 +4,7 @@ import { ListingRepository } from '@/infrastructure/persistence/typeorm/reposito
 import {
   DeleteListingRequest,
   DeleteListingResponse,
-} from '@/application/dto/delete-listing.dto';
+} from '@/application/dto/listings/delete-listing.dto';
 import { AttachmentModel } from '@/infrastructure/persistence/typeorm/models/attachment.model';
 import { FavoriteModel } from '@/infrastructure/persistence/typeorm/models/favorite.model';
 import { ListingModel } from '@/infrastructure/persistence/typeorm/models/listing.model';

@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { MessageController } from '@/presentation/controllers/message.controller';
-import { CreateMessageUseCase } from '@/application/usecases/messages/create-message.usecase';
-import { GetMessageByIdUseCase } from '@/application/usecases/messages/get-message-by-id.usecase';
-import { GetMessagesByUserIdUseCase } from '@/application/usecases/messages/get-messages-by-user-id.usecase';
-import { DeleteMessageUseCase } from '@/application/usecases/messages/delete-message.usecase';
+import { CreateMessageUseCase } from '@/application/usecases/messages/create/create-message.usecase';
+import { GetMessageByIdUseCase } from '@/application/usecases/messages/get/get-message-by-id.usecase';
+import { GetMessagesByUserIdUseCase } from '@/application/usecases/messages/get/get-messages-by-user-id.usecase';
+import { DeleteMessageUseCase } from '@/application/usecases/messages/delete/delete-message.usecase';
 import { MessageRepository } from '@/infrastructure/persistence/typeorm/repositories/message.repository';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories/user.repository';
 import { MessageModel } from '@/infrastructure/persistence/typeorm/models/message.model';
