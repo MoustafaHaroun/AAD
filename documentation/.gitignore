@@ -2,3 +2,7 @@
 .vscode
 out/
 ltxe/
+**/**.fls
+**/**.aux
+**/**.fdb_latexmk
+**/**.log

@@ -32,7 +32,7 @@
 \setrootdepth{2} % Set this to correct nesting from the doc/ directory.
 
 \title{Back-end Development}
-\subtitle{A Technical Overview of the Back-end Implementation for Trade2}
+\subtitle{A Technical Specification of the Back-End for Trade2}
 \author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
 \date{\today}
 
@@ -57,9 +57,26 @@
 \tableofcontents
 
 \newpage
-\input{bd/technical/introduction.tex}
-\input{bd/technical/requirements.tex}
-\input{bd/technical/container-architecture.tex}
+\input{bd/technical-specification/system-context.tex}
+
+\newpage
+\input{bd/technical-specification/container-architecture.tex}
+
+\newpage
+\input{bd/technical-specification/component-architecture.tex}
+
+% \newpage
+% \input{bd/technical-specification/introduction.tex}
+
+% \newpage
+% \input{bd/technical-specification/context.tex}
+
+
+
+
+% \newpage
+% \input{bd/technical-specification/requirements.tex}
+
 
 % \newpage
 % \section{System Context}
@@ -80,9 +97,6 @@
 % \newpage
 % \section{Non-functional Requirements}
 % \input{bd/technical/non_functional.tex}
-
-\newpage
-\input{bd/technical/conclusion.tex}
 
 \newpage
 \printbibliography
