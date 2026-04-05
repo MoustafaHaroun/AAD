@@ -1,81 +1,22 @@
-\section{Monitoring}\label{sec:monitoring}
+\section{Monitoring \& Alerting}\label{sec:monitoring}
 
-\subsection{Overview}
-Administrators need to be able to observe the health of the system at a glance and be alerted about problems. The monitoring stack runs as a separate Docker Compose application alongside the backend. It consists of three services: Prometheus for collecting metrics, Loki for aggregating logs, and Grafana for visualisation. The Grafana dashboard is fully pre-provisioned, meaning it requires no manual configuration after deployment.
+\subsection{Requirement}
+\textit{"It should be possible for admins to be notified."}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{bd/robustness/monitoring-stack}
-    \caption{Monitoring stack --- Prometheus and Loki as datasources, Grafana as the unified UI}
-    \label{fig:monitoring-stack}
-\end{figure}
+Administrators need a live overview of system health and must be warned when something goes wrong. This is implemented using Prometheus for metrics collection and Grafana for visualisation and alerting. The full stack runs in a separate Docker Compose application alongside the backend.
 
-\subsection{Prometheus --- Metrics Collection}
-Prometheus scrapes the \texttt{/metrics} endpoint of the NestJS application every 5 seconds. The application exposes metrics using the \texttt{@willsoto/nestjs-prometheus} package backed by \texttt{prom-client}.
-
-Two custom metrics are recorded by the \texttt{HttpMetricsInterceptor}, a NestJS interceptor that wraps every incoming HTTP request:
-
-\begin{htable}[
-    caption = {Custom Prometheus metrics},
-    label = {tab:metrics},
-]{
-    colspec={llX},
-}
-    Metric & Type & Labels \\
-    \texttt{http\_requests\_total} & Counter & method, path, status \\
-    \texttt{http\_request\_duration\_seconds} & Histogram & method, path, status \\
-\end{htable}
-
-In addition, \texttt{prom-client} automatically collects standard Node.js runtime metrics, including heap memory usage, active handles, garbage collection duration, and event loop lag.
-
-\subsection{Grafana Dashboard}
-The dashboard is provisioned automatically from files in \texttt{monitor/grafana/provisioning/}. It contains ten panels divided between Prometheus metrics and Loki log streams.
-
-\begin{htable}[
-    caption = {Grafana dashboard panels},
-    label = {tab:dashboard-panels},
-]{
-    colspec={llX},
-}
-    Panel & Source & Description \\
-    Request Rate & Prometheus & Requests per second grouped by method and path \\
-    Error Rate 4xx & Prometheus & Rate of client errors over time \\
-    Error Rate 5xx & Prometheus & Rate of server errors over time \\
-    Request Duration p50/p95/p99 & Prometheus & Latency percentiles for all endpoints \\
-    Node.js Heap Usage & Prometheus & Used and total heap memory in bytes \\
-    Active Handles & Prometheus & Number of active Node.js handles \\
-    Event Loop Lag & Prometheus & Event loop delay in milliseconds \\
-    Total Requests (last 1h) & Prometheus & Aggregated request count over the past hour \\
-    Application Logs & Loki & Live stream of all application log lines \\
-    Error Logs & Loki & Filtered stream showing only error-level entries \\
-\end{htable}
+\subsection{The Dashboard}
+The Grafana dashboard comes pre-configured out of the box—no manual setup required after deployment.
+For local installation, simply run the Docker Compose file located in the monitor folder.
+You can view the live Grafana dashboard at http://trade2-monitoring-pnmbxk-6650ff-157-90-114-60.traefik.me using the credentials admin/admin. Navigate to the dashboard tab to find the NestJS dashboard.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{bd/robustness/grafana-dashboard}
-    \caption{Grafana dashboard showing request metrics and duration percentiles}
+    \caption{Grafana dashboard}
     \label{fig:grafana-dashboard}
 \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{bd/robustness/grafana-logs}
-    \caption{Grafana dashboard log panels showing application and error log streams}
-    \label{fig:grafana-logs}
-\end{figure}
+\subsection{Configuring Alerts}
 
-\subsection{Verifying the Monitoring Setup}
-The Prometheus targets page at \texttt{/targets} shows the scrape status of every configured job. The \texttt{trade2-nestjs} job must show \textbf{State: UP} for metrics to be collected. Running the following query in Grafana Explore confirms that the target is reachable:
-
-\begin{longlisting}[caption={PromQL query to verify scrape health}, label={lst:prom-up}]
-up{job="trade2-nestjs"}
-\end{longlisting}
-
-A result of \texttt{1} confirms that Prometheus is successfully scraping the application.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=\textwidth]{bd/robustness/prometheus-targets}
-    \caption{Prometheus targets page showing the trade2-nestjs job as UP}
-    \label{fig:prometheus-targets}
-\end{figure}
+Grafana allows administrators to create alert rules on any panel. When a threshold is breached, Grafana can notify via e-mail, Slack, or any webhook. For this project there were no alerts configured but this is possible through grafana.

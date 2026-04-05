@@ -1,57 +1,41 @@
 \section{Zero-Downtime Deployments}\label{sec:ci-cd}
 
-\subsection{Overview}
-Users should never notice when the application is being updated. This is achieved by combining a GitHub Actions CI/CD pipeline with Dokploy, which handles rolling container replacements on the server. When a new release is published, the pipeline builds a fresh Docker image, pushes it to the registry, and instructs Dokploy to redeploy. Dokploy starts the new container and waits for it to be healthy before removing the old one, meaning there is no period where the application is unreachable.
+\subsection{Requirement}
+\textit{"Zero-downtime deployments must be possible."}
 
-\subsection{Pipeline Structure}
-The pipeline is defined in \texttt{.github/workflows/backend-publish.yml} and is triggered on every published GitHub release. It consists of two jobs with a strict dependency between them.
+Users should never experience downtime when the application is updated. The following section walks through exactly how this is achieved, from pushing a release to the updated container running in production.
+
+\subsection{How It Works}
+
+Every time a GitHub release is published, the pipeline in \texttt{.github/workflows/backend-publish.yml} runs automatically. It has two jobs that run in sequence.
+
+\begin{enumerate}
+    \item \textbf{build-and-push} --- builds the Docker image and pushes it to the GitHub Container Registry (GHCR).
+    \item \textbf{deploy} --- only runs after the image is successfully pushed. It calls the Dokploy API, which pulls the new image and performs a rolling container replacement.
+\end{enumerate}
+
+During a rolling update, Dokploy starts the new container alongside the old one. Only once the new container is healthy does it remove the old one. At no point is the application unreachable.
+This was setup using docker swarms health checkup and tested by running a loop to see the health of the application.
+
+\subsection{Proof --- Pipeline Running}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{bd/robustness/cicd-pipeline}
-    \caption{GitHub Actions pipeline --- build-and-push followed by deploy}
-    \label{fig:cicd-pipeline}
+    \includegraphics[width=\textwidth]{bd/robustness/cicd-deployment}
+    \caption{GitHub Actions --- both jobs completed successfully}
+    \label{fig:cicd-actions}
 \end{figure}
 
-\subsubsection{Job 1 --- build-and-push}
-This job builds the production Docker image and pushes it to the GitHub Container Registry (GHCR). The image is tagged with three identifiers simultaneously: a \texttt{sha-} prefix for traceability, a semantic version derived from the release tag, and \texttt{latest} for convenience. Layer caching via \texttt{type=gha} is used to avoid rebuilding unchanged layers on every run.
-
-The application uses a multi-stage \texttt{Dockerfile} with a dedicated \texttt{production} target. The build stage compiles the TypeScript source, and the production stage copies only the compiled output and production dependencies into the final image, keeping it small.
-
-\subsubsection{Job 2 --- deploy}
-The deploy job declares \texttt{needs: build-and-push}, so it only runs after the image has been successfully pushed. It calls the Dokploy API using the \texttt{benbristow/dokploy-deploy-action} action, which triggers a pull of the new image and a rolling container replacement on the server.
-
-\begin{longlisting}[caption={deploy job in backend-publish.yml}, label={lst:deploy-job}]
-deploy:
-  runs-on: ubuntu-latest
-  needs: build-and-push
-  steps:
-    - name: Dokploy Deployment
-      uses: benbristow/dokploy-deploy-action@0.2.2
-      with:
-        api_token: ${{ secrets.DOKPLOY_AUTH_TOKEN }}
-        application_id: ${{ secrets.DOKPLOY_APPLICATION_ID }}
-        dokploy_url: ${{ secrets.DOKPLOY_URL }}
-        service_type: application
-\end{longlisting}
-
-\subsection{Database Migrations on Startup}
-Schema changes are applied automatically when the new container starts, before it begins accepting requests. TypeORM is configured with \texttt{migrationsRun: true}, which runs all pending migration files found in \texttt{dist/database/migrations/}. Each migration file implements an \texttt{up} method for applying the change and a \texttt{down} method for reverting it, making every schema change fully reversible.
-
-\begin{longlisting}[caption={TypeORM module --- migrations configuration}, label={lst:typeorm-migrations}]
-TypeOrmModule.forRoot({
-  // ...
-  migrations: ['dist/database/migrations/*.js'],
-  migrationsRun: true,
-  synchronize: false,
-})
-\end{longlisting}
-
-TypeORM tracks which migrations have already been applied in a \texttt{migrations} table in the database. On every startup it compares the pending files against this table and only runs the ones that have not yet been applied, making the process safe to repeat.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/cicd-registry}
+    \caption{GitHub Container Registry showing the pushed image tagged with version and sha}
+    \label{fig:cicd-registry}
+\end{figure}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=\textwidth]{bd/robustness/migration-log}
-    \caption{Container startup log showing migrations being applied}
-    \label{fig:migration-log}
+    \includegraphics[width=\textwidth]{bd/robustness/cicd-dokploy}
+    \caption{Dokploy showing the application redeployed with the new image}
+    \label{fig:cicd-dokploy}
 \end{figure}

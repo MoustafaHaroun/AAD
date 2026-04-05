@@ -1,58 +1,26 @@
-\section{Data Consistency}\label{sec:transactions}
+\section{Data Consistency via Transactions}\label{sec:transactions}
 
-\subsection{Overview}
-The application uses database transactions to guarantee that related writes either all succeed or all fail together. Without transactions, a partial failure could leave the database in an inconsistent state, for example a message being stored without its corresponding notification, or a user being deleted while their listings remain in the database.
+\subsection{Requirement}
+\textit{"Database operations must use transactions to maintain data consistency."}
 
-TypeORM's \texttt{DataSource.transaction()} method is used to wrap multiple database operations in a single atomic unit. All operations within the callback share the same \texttt{EntityManager}, and if any of them throw an error the entire transaction is rolled back automatically.
+A transaction ensures that a group of database operations either all succeed or all fail together. Without transactions, a crash at the wrong moment can leave the database in a broken state—for example, a message stored without a notification, or a deleted user whose listings remain in the database.
 
-\subsection{Sending a Message}
-When a user sends a message, the recipient must also receive a notification. Both records are written inside one transaction. If saving the notification fails, the message is also rolled back, ensuring the two are always created together.
+\subsection{Transaction 1 --- Sending a Message}
+When a user sends a message, the recipient must also receive a notification. Both records are written in a single transaction. If saving the notification fails for any reason, the message is also rolled back.
 
-\begin{longlisting}[caption={CreateMessageUseCase --- transactional write of message and notification}, label={lst:tx-message}]
-const savedMessage = await this.dataSource.transaction(async (manager) => {
-  const message = new MessageModel();
-  message.id = v4();
-  message.content = dto.content;
-  message.sender = sender;
-  message.recipient = recipient;
-  const createdMessage = await manager.save(message);
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/create-message-transaction}
+    \caption{Transaction implementation for message creation with notification}
+    \label{fig:tx-message}
+\end{figure}
 
-  const notification = new NotificationModel();
-  notification.title =
-    `New message from ${sender.firstname} ${sender.surname}`;
-  notification.message = dto.content.substring(0, 100);
-  notification.user = recipient;
-  await manager.save(notification);
+\subsection{Transaction 2 --- Deleting a User}
+Deleting a user requires removing their attachments, favourites, messages, notifications, and listings in the correct order before the user record itself can be deleted. All of these deletes run inside one transaction. If any step fails, the entire operation is rolled back and the user record is left untouched.
 
-  return createdMessage;
-});
-\end{longlisting}
-
-\subsection{Deleting a User}
-Deleting a user requires removing all of their associated data across multiple tables in the correct order to respect foreign key constraints. All deletes run inside a single transaction. If any step fails, none of the deletes are committed and the user record remains intact.
-
-\begin{longlisting}[caption={DeleteUserUseCase --- cascading transactional delete}, label={lst:tx-delete}]
-await this.dataSource.transaction(async (manager) => {
-  const listings = await manager.find(ListingModel, {
-    where: { user: { id: dto.id } },
-    select: ['id'],
-  });
-  const listingIds = listings.map((l) => l.id);
-
-  if (listingIds.length > 0) {
-    await manager.delete(AttachmentModel,
-      { listing: { id: In(listingIds) } });
-    await manager.delete(FavoriteModel,
-      { listing: { id: In(listingIds) } });
-  }
-
-  await manager.delete(FavoriteModel,   { user: { id: dto.id } });
-  await manager.delete(MessageModel,    { sender: { id: dto.id } });
-  await manager.delete(MessageModel,    { recipient: { id: dto.id } });
-  await manager.delete(NotificationModel, { user: { id: dto.id } });
-  await manager.delete(ListingModel,    { user: { id: dto.id } });
-  await manager.delete(UserModel,       { id: dto.id });
-});
-\end{longlisting}
-
-The deletion order ensures that child records (attachments, favourites) are removed before their parent records (listings, user), which prevents foreign key constraint violations during the transaction.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/delete-user-transaction}
+    \caption{Transaction implementation for cascading user deletion}
+    \label{fig:tx-delete}
+\end{figure}
