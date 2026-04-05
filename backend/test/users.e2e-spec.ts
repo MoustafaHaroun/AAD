@@ -3,8 +3,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtModule } from '@nestjs/jwt';
 import request from 'supertest';
 import { App } from 'supertest/types';
+import { DataSource } from 'typeorm';
 import { UserController } from '@/presentation/controllers/user.controller';
 import { CreateUserUseCase } from '@/application/usecases/users/create-user.usecase';
+import { GetAllUsersUseCase } from '@/application/usecases/users/get-all-users.usecase';
 import { GetUserByIdUseCase } from '@/application/usecases/users/get-user-by-id.usecase';
 import { UpdateUserUseCase } from '@/application/usecases/users/update-user.usecase';
 import { DeleteUserUseCase } from '@/application/usecases/users/delete-user.usecase';
@@ -21,7 +23,7 @@ const mockUserDomain = {
 
 const mockUserModel = {
   ...mockUserDomain,
-  password: 'pass',
+  password: 'Password123!',
   toDomain: jest.fn().mockReturnValue(mockUserDomain),
 };
 
@@ -47,10 +49,12 @@ describe('Users (e2e)', () => {
       controllers: [UserController],
       providers: [
         CreateUserUseCase,
+        GetAllUsersUseCase,
         GetUserByIdUseCase,
         UpdateUserUseCase,
         DeleteUserUseCase,
         { provide: UserRepository, useValue: mockUserRepo },
+        { provide: DataSource, useValue: { transaction: jest.fn() } },
       ],
     }).compile();
 
@@ -69,7 +73,7 @@ describe('Users (e2e)', () => {
 
       const response = await request(app.getHttpServer()).post('/users').send({
         email: 'test@test.com',
-        password: 'pass',
+        password: 'Password123!',
         firstname: 'John',
         surname: 'Doe',
       });
@@ -85,7 +89,7 @@ describe('Users (e2e)', () => {
 
       const response = await request(app.getHttpServer()).post('/users').send({
         email: 'test@test.com',
-        password: 'pass',
+        password: 'Password123!',
         firstname: 'John',
         surname: 'Doe',
       });
@@ -104,13 +108,12 @@ describe('Users (e2e)', () => {
       expect(response.body).toMatchObject({ user: { id: 'user-1' } });
     });
 
-    it('returns 200 with null when user not found', async () => {
+    it('returns 404 when user not found', async () => {
       mockUserRepo.findById.mockResolvedValue(null);
 
       const response = await request(app.getHttpServer()).get('/users/missing');
 
-      expect(response.status).toBe(HttpStatus.OK);
-      expect(response.body).toMatchObject({ user: null });
+      expect(response.status).toBe(HttpStatus.NOT_FOUND);
     });
   });
 
