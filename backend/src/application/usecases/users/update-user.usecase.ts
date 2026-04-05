@@ -19,6 +19,7 @@ export class UpdateUserUseCase {
     if (dto.firstname != null) user.firstname = dto.firstname;
     if (dto.surname != null) user.surname = dto.surname;
     if (dto.email != null) user.email = dto.email;
+    if (dto.location !== undefined) user.location = dto.location;
 
     return {
       user: (await this.userRepository.update(user)).toDomain(),

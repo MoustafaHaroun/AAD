@@ -6,6 +6,7 @@ export const updateUserSchema = z.object({
   email: userSchema.email.optional(),
   firstname: userSchema.firstname.optional(),
   surname: userSchema.surname.optional(),
+  location: userSchema.location.nullable().optional(),
 });
 
 export const updateUserApi = {
@@ -24,6 +25,11 @@ export const updateUserApi = {
       surname: {
         type: 'string',
         example: 'Timmerman',
+      },
+      location: {
+        type: 'string',
+        nullable: true,
+        example: 'Brussels, Belgium',
       },
     },
   },
