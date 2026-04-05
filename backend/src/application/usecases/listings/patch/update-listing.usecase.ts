@@ -3,7 +3,7 @@ import { ListingRepository } from '@/infrastructure/persistence/typeorm/reposito
 import {
   UpdateListingRequest,
   UpdateListingResponse,
-} from '@/application/dto/update-listing.dto';
+} from '@/application/dto/users/update-listing.dto';
 
 @Injectable()
 export class UpdateListingUseCase {

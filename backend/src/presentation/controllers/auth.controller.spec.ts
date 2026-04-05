@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthController } from './auth.controller';
-import { SignInUseCase } from '@/application/usecases/sign-in.usecase';
+import { SignInUseCase } from '@/application/usecases/auth/sign-in.usecase';
 
 describe('AuthController', () => {
   let controller: AuthController;

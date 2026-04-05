@@ -1,13 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthGuard } from '@/presentation/guards/auth.guard';
 import { ListingController } from './listing.controller';
-import { CreateListingUseCase } from '@/application/usecases/listings/create-listing.usecase';
-import { GetListingByIdUseCase } from '@/application/usecases/listings/get-listing-by-id.usecase';
-import { GetListingsByUserIdUseCase } from '@/application/usecases/listings/get-listings-by-user-id.usecase';
-import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/remove-attachment-from-listing.usecase';
-import { UpdateListingUseCase } from '@/application/usecases/listings/update-listing.usecase';
-import { DeleteListingUseCase } from '@/application/usecases/listings/delete-listing.usecase';
-import { AddAttachmentToListingUseCase } from '@/application/usecases/listings/add-attachment-to-listing.usecase';
+import { CreateListingUseCase } from '@/application/usecases/listings/create/create-listing.usecase';
+import { GetListingByIdUseCase } from '@/application/usecases/listings/get/get-listing-by-id.usecase';
+import { GetListingsByUserIdUseCase } from '@/application/usecases/listings/get/get-listings-by-user-id.usecase';
+import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/attachments/remove-attachment-from-listing.usecase';
+import { UpdateListingUseCase } from '@/application/usecases/listings/patch/update-listing.usecase';
+import { DeleteListingUseCase } from '@/application/usecases/listings/delete/delete-listing.usecase';
+import { AddAttachmentToListingUseCase } from '@/application/usecases/listings/attachments/add-attachment-to-listing.usecase';
 import { AuthenticatedRequest } from '@/presentation/guards/auth.guard';
 
 const mockListing = {

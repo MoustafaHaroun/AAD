@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { FavoriteController } from '@/presentation/controllers/favorite.controller';
-import { CreateFavoriteUseCase } from '@/application/usecases/favorites/create-favorite.usecase';
-import { GetFavoritesByUserIdUseCase } from '@/application/usecases/favorites/get-favorites-by-user-id.usecase';
-import { DeleteFavoriteUseCase } from '@/application/usecases/favorites/delete-favorite.usecase';
+import { CreateFavoriteUseCase } from '@/application/usecases/favorites/create/create-favorite.usecase';
+import { GetFavoritesByUserIdUseCase } from '@/application/usecases/favorites/get/get-favorites-by-user-id.usecase';
+import { DeleteFavoriteUseCase } from '@/application/usecases/favorites/delete/delete-favorite.usecase';
 import { FavoriteRepository } from '@/infrastructure/persistence/typeorm/repositories/favorite.repository';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories/user.repository';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories/listing.repository';

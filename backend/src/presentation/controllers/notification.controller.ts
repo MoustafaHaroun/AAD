@@ -20,10 +20,10 @@ import {
   UpdateNotificationRequest,
   UpdateNotificationResponse,
 } from '@/application/dto/notifications/update-notification.dto';
-import { CreateNotificationUseCase } from '@/application/usecases/notifications/create-notification.usecase';
-import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete-notification.usecase';
-import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get-notification-by-id.usecase';
-import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update-notification.usecase';
+import { CreateNotificationUseCase } from '@/application/usecases/notifications/create/create-notification.usecase';
+import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete/delete-notification.usecase';
+import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get/get-notification-by-id.usecase';
+import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update/update-notification.usecase';
 import { AuthGuard } from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Roles } from '@/presentation/decorators/roles.decorator';

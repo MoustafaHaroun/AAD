@@ -17,9 +17,9 @@ import {
   CreateFavoriteResponse,
 } from '@/application/dto/favorites/create-favorite.dto';
 import { GetFavoritesByUserIdResponse } from '@/application/dto/favorites/get-favorites-by-user-id.dto';
-import { CreateFavoriteUseCase } from '@/application/usecases/favorites/create-favorite.usecase';
-import { GetFavoritesByUserIdUseCase } from '@/application/usecases/favorites/get-favorites-by-user-id.usecase';
-import { DeleteFavoriteUseCase } from '@/application/usecases/favorites/delete-favorite.usecase';
+import { CreateFavoriteUseCase } from '@/application/usecases/favorites/create/create-favorite.usecase';
+import { GetFavoritesByUserIdUseCase } from '@/application/usecases/favorites/get/get-favorites-by-user-id.usecase';
+import { DeleteFavoriteUseCase } from '@/application/usecases/favorites/delete/delete-favorite.usecase';
 import * as authGuard from '@/presentation/guards/auth.guard';
 
 @Controller('favorites')

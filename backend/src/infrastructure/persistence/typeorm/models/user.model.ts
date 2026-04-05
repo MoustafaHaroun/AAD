@@ -21,7 +21,7 @@ export class UserModel {
   @Column()
   surname: string;
 
-  @Column({ type: 'enum', enum: Role, default: Role.User })
+  @Column({ type: 'enum', enum: Role, default: Role.USER })
   role: Role;
 
   @Column({ type: 'varchar', nullable: true })

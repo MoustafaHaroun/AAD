@@ -8,7 +8,7 @@ export const createUserSchema = z.object({
   password: userSchema.password,
   firstname: userSchema.firstname,
   surname: userSchema.surname,
-  role: z.nativeEnum(Role).optional().default(Role.User),
+  role: z.nativeEnum(Role).optional().default(Role.USER),
   location: userSchema.location.nullable().optional().default(null),
 });
 
@@ -40,7 +40,7 @@ export const createUserApi = {
       },
       location: {
         type: 'string',
-        example: 'Brussels, Belgium',
+        example: 'Enschede, Nederland',
       },
     },
     required: ['email', 'password', 'firstname', 'surname'],
