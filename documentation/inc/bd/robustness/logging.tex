@@ -1,0 +1,81 @@
+\section{Logging}\label{sec:logging}
+
+\subsection{Overview}
+The application logs on multiple levels using Winston. In production, logs are shipped to Grafana Loki via the \texttt{winston-loki} transport and can be queried, filtered, and visualised in Grafana. In development, a formatted console transport is used instead.
+
+\subsection{Log Levels}
+Winston is configured to use \texttt{info} level in production and \texttt{debug} in development. The five levels used in the application are listed below.
+
+\begin{htable}[
+    caption = {Log levels and their usage},
+    label = {tab:log-levels},
+]{
+    colspec={llX},
+}
+    Level & Method & When used \\
+    error & \texttt{logger.error()} & Unhandled exceptions and HTTP errors caught by the exception filter \\
+    warn & \texttt{logger.warn()} & Recoverable issues that do not affect the response \\
+    info & \texttt{logger.log()} & Startup events and significant application events \\
+    debug & \texttt{logger.debug()} & Detailed flow information, development only \\
+    verbose & \texttt{logger.verbose()} & Fine-grained tracing \\
+\end{htable}
+
+\subsection{Global Exception Filter}
+The \texttt{AllExceptionsFilter} is registered globally and intercepts every unhandled exception before it reaches the client. It logs the HTTP method, URL, response status code, error message, and full stack trace at \texttt{error} level, then returns a structured JSON error response.
+
+\begin{longlisting}[caption={AllExceptionsFilter --- logging every unhandled exception}, label={lst:exception-filter}]
+this.logger.error(
+  `${request.method} ${request.url} -> ${status}: ${message}`,
+  stack,
+  'ExceptionFilter',
+);
+\end{longlisting}
+
+\subsection{Loki Configuration}
+Loki runs in monolithic mode (\texttt{-target=all}) with filesystem storage. Two issues commonly cause the Loki ingester to crash in production on Docker: file permission errors caused by the container running as a non-root user, and data loss on unclean shutdown because the Write-Ahead Log is disabled by default. Both have been addressed in the configuration.
+
+\begin{longlisting}[caption={Loki ingester configuration in loki.yml}, label={lst:loki-config}]
+ingester:
+  wal:
+    enabled: true
+    dir: /loki/wal
+  chunk_idle_period: 5m
+  chunk_retain_period: 1m
+  lifecycler:
+    final_sleep: 0s
+\end{longlisting}
+
+The container is set to \texttt{user: "0"} in \texttt{docker-compose.yml} to run as root, preventing write failures on the volume. The image is pinned to a specific version (\texttt{grafana/loki:3.4.2}) to avoid silent breaking changes from a \texttt{:latest} update.
+
+\subsection{Viewing and Filtering Logs in Grafana}
+Logs are queried using LogQL in the Grafana Explore view. The table below shows common queries an administrator would use.
+
+\begin{htable}[
+    caption = {LogQL queries for filtering logs in Grafana},
+    label = {tab:logql},
+]{
+    colspec={lX},
+}
+    Filter & LogQL query \\
+    All logs & \texttt{\{app="trade2-nestjs"\}} \\
+    Errors only & \texttt{\{app="trade2-nestjs"\} |= `error`} \\
+    Specific endpoint & \texttt{\{app="trade2-nestjs"\} |= `/users`} \\
+    By log level & \texttt{\{app="trade2-nestjs"\} | json | level=`warn`} \\
+    Within a time window & Use the Grafana time range picker \\
+\end{htable}
+
+Each log line can be expanded to reveal the full JSON payload, including the context field that identifies which NestJS module produced the entry. The time range picker in Grafana allows filtering to any custom window, enabling administrators to trace the origin of a problem back to a specific time.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/loki-explore}
+    \caption{Grafana Explore view --- filtering error logs with LogQL}
+    \label{fig:loki-explore}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=\textwidth]{bd/robustness/loki-expanded}
+    \caption{Expanded log entry showing full JSON payload and stack trace}
+    \label{fig:loki-expanded}
+\end{figure}

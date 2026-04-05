@@ -1,0 +1,18 @@
+\section{Conclusion}\label{sec:robustness-conclusion}
+
+The table below summarises how each grading requirement has been addressed.
+
+\begin{htable}[
+    caption = {Requirements coverage},
+    label = {tab:requirements-coverage},
+]{
+    colspec={lX},
+}
+    Requirement & Implementation \\
+    Zero-downtime updates & Dokploy rolling updates triggered by GitHub Actions after the image is pushed to GHCR. The old container is only removed once the new one is healthy. \\
+    Monitoring system & Prometheus scrapes the \texttt{/metrics} endpoint every 5 seconds. A pre-provisioned Grafana dashboard with ten panels provides a real-time overview of request rates, error rates, latency percentiles, and Node.js runtime health. \\
+    Data consistency & TypeORM transactions are used in \texttt{CreateMessageUseCase} (message and notification written atomically) and \texttt{DeleteUserUseCase} (all user data deleted in a single transaction to prevent orphaned records). \\
+    Multi-level logging & Winston is configured with five log levels. The global \texttt{AllExceptionsFilter} logs every unhandled exception including the full stack trace. \\
+    Log visualisation and filtering & Grafana Loki stores all log output. Administrators can filter by log level, endpoint, time window, or any keyword using LogQL in the Grafana Explore view. \\
+    Technical documentation & This document and the backend \texttt{README.md} describe all measures, configuration details, and an administrator guide for using the monitoring and logging system. \\
+\end{htable}
