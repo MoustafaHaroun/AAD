@@ -1,14 +1,12 @@
 \section{Container Architecture (C2)}
-The Trade2 backend architecture is organized into containers that work together to fulfill the functional and non-functional requirements established in \cref{sec:technical-requirements}.
+The Trade2 backend architecture is organized into containers that work together.
 The architecture follows a three-tier approach with clear separation of concerns: presentation (Mobile App), application logic (Backend API), and data storage (Database).
 This design supports scalability and maintainability while enabling the integration of monitoring and logging infrastructure required for the \emph{Robustness \& Availability} advanced track.
 
-As this document focuses exclusively on backend architecture, only the Backend API and Database containers are discussed in detail. The mobile application is shown for context and is outside the scope of this documentation.
+As this document focuses exclusively on backend architecture, only the Backend API and Database containers are discussed in detail.
+The mobile application is only shown for context and is outside the scope of this documentation.
 
 \subsection{Overview}
-The Trade2 system is split into a small number of containers that each handle a specific part of the application.
-These containers work together to support the functionality described in the previous section.
-
 The mobile application is used by end users to interact with the system.
 It is responsible for presenting data and sending requests to the backend.
 All communication with the backend happens over HTTP for standard operations and WebSocket connections for messaging.
@@ -26,18 +24,18 @@ Metrics are collected and exposed for scraping by Prometheus.
 Logs are aggregated using Loki.
 Grafana is used to visualize both logs and metrics, allowing administrators to monitor system health and behaviour.
 
-\Cref{fig:c2-trade2} and \cref{fig:c2-monitoring} show the container diagrams, illustrating how the mobile application, backend, database, storage, and monitoring system interact.
+\Cref{fig:c2-ts} and \cref{fig:c2-ms} show the container diagrams, illustrating how the mobile application, backend, database, storage, and monitoring system interact.
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{bd/technical/c2-trade2-system}
-    \caption{C2 container diagram (trade2 system)}
-    \label{fig:c2-trade2}
+    \includegraphics[width=\textwidth]{bd/technical/c2-ts}
+    \caption{C2 container diagram (Trade2 System)}
+    \label{fig:c2-ts}
 \end{figure}
 
 \begin{figure}[H]
-    \includegraphics[width=\textwidth]{bd/technical/c2-monitoring-system}
-    \caption{C2 container diagram (monitoring system)}
-    \label{fig:c2-monitoring}
+    \includegraphics[width=\textwidth]{bd/technical/c2-ms}
+    \caption{C2 container diagram (Monitoring System)}
+    \label{fig:c2-ms}
 \end{figure}
 
 \subsection{Containers}
@@ -85,13 +83,11 @@ MySQL was considered for familiarity with team skills, but PostgreSQL was chosen
     colspec = {lX},
 }
     Entity & Description \\
-    users User accounts and authentication. \\
-    listings Skill offers and requests with metadata. \\
-    notifications User notifications. \\
-    messages Real-time chat between users. \\
+    users & User accounts and authentication. \\
+    listings & Skill offers and requests with metadata. \\
+    notifications & User notifications. \\
+    messages & Real-time chat between users. \\
 \end{htable}
-\begin{itemize}
-\end{itemize}
 
 \subsubsection{Object Storage (MinIO)}
 
