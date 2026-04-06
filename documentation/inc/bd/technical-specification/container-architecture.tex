@@ -1,0 +1,112 @@
+\section{Container Architecture (C2)}
+The Trade2 backend architecture is organized into containers that work together.
+The architecture follows a three-tier approach with clear separation of concerns: presentation (Mobile App), application logic (Backend API), and data storage (Database).
+This design supports scalability and maintainability while enabling the integration of monitoring and logging infrastructure required for the \emph{Robustness \& Availability} advanced track.
+
+As this document focuses exclusively on backend architecture, only the Backend API and Database containers are discussed in detail.
+The mobile application is only shown for context and is outside the scope of this documentation.
+
+\subsection{Overview}
+The mobile application is used by end users to interact with the system.
+It is responsible for presenting data and sending requests to the backend.
+All communication with the backend happens over HTTP for standard operations and WebSocket connections for messaging.
+
+The backend API is the core of the system.
+It handles incoming requests, applies business logic, and coordinates data between the different parts of the system.
+It also manages authentication and ensures that users can only access data they are allowed to.
+
+The database is used to persist application data such as users, listings, notifications, and messages.
+It ensures that data remains consistent and available between requests.
+Object storage from MinIO is used for storing files such as profile images and listing images.
+
+To support the \emph{Robustness \& Availability} track, the backend integrates with a monitoring and logging stack.
+Metrics are collected and exposed for scraping by Prometheus.
+Logs are aggregated using Loki.
+Grafana is used to visualize both logs and metrics, allowing administrators to monitor system health and behaviour.
+
+\Cref{fig:c2-ts} and \cref{fig:c2-ms} show the container diagrams, illustrating how the mobile application, backend, database, storage, and monitoring system interact.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{bd/technical/c2-ts}
+    \caption{C2 container diagram (Trade2 System)}
+    \label{fig:c2-ts}
+\end{figure}
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{bd/technical/c2-ms}
+    \caption{C2 container diagram (Monitoring System)}
+    \label{fig:c2-ms}
+\end{figure}
+
+\subsection{Containers}
+
+\subsubsection{Backend API (NestJS)}
+
+\paragraph{Justification}
+NestJS was selected based on prototype evaluation comparing NestJS, Spring Boot (Java), and Echo (Go).
+Selection criteria included community, developer experience, ecosystem, and quality assurance.
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Handles incoming HTTP and WebSocket requests.
+    \item Implements business logic and enforces access control.
+    \item Manages user authentication and authorization.
+    \item Coordinates data between Database and Object Storage.
+    \item Pushes structured logs to Loki and exposes metrics for Prometheus.
+\end{itemize}
+
+\paragraph{Communication}
+\begin{itemize}
+    \item Receives HTTP and WebSocket requests from the Mobile Application.
+    \item Reads and writes data to the Database using PostgreSQL.
+    \item Stores and retrieves files from Object Storage (MinIO).
+    \item Sends metrics to Prometheus and logs to Loki.
+\end{itemize}
+
+\subsubsection{Database (PostgreSQL)}
+
+\paragraph{Justification}
+MySQL was considered for familiarity with team skills, but PostgreSQL was chosen for its richer feature set, better support for advanced queries and transactional operations, and extensibility.
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Persists users, listings, notifications, and messages.
+    \item Maintains data consistency and transactional integrity.
+    \item Supports queries for search, filtering, and message history.
+\end{itemize}
+
+\paragraph{Data Organization}
+\begin{htable}[
+    caption = {Data Organization},
+    label = {tab:data-org}
+] {
+    colspec = {lX},
+}
+    Entity & Description \\
+    users & User accounts and authentication. \\
+    listings & Skill offers and requests with metadata. \\
+    notifications & User notifications. \\
+    messages & Real-time chat between users. \\
+\end{htable}
+
+\subsubsection{Object Storage (MinIO)}
+
+\paragraph{Justification}
+MinIO was selected to handle object storage for the Trade2 system due to its compatibility with the S3 API, high performance, scalability, and ease of deployment.
+Ceph would have also been a good option, but MinIO was chosen because of team familiarity.
+Amazon S3 was considered too, but not chosen due to it introducing a dependency on a cloud provider and its costs.
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Stores files such as profile images and listing images.
+    \item Provides reliable, scalable object storage accessible by the Backend API.
+\end{itemize}
+
+\subsubsection{Observability Stack (Prometheus, Loki \& Grafana)}
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item \textbf{Prometheus}: Scrapes metrics from the Backend API and stores time-series data
+    \item \textbf{Loki}: Aggregates and indexes structured logs from the Backend API
+    \item \textbf{Grafana}: Visualizes both logs and metrics, enabling administrators to monitor system health and behaviour
+\end{itemize}

@@ -1,230 +1,5 @@
-\section{Multi-Criteria Analysis}\label{sec:multi-criteria-analysis}
-
-\subsection{Criteria}\label{subsec:criteria}
-A set of criteria was established to evaluate the back-end frameworks.
-The reasoning behind each criterion, as well as their assigned weights, are explained below.
-
-\subsubsection{Communication Protocols}\label{subsubsec:communication-protocols}
-The to be built software solution requires two types of communication.
-
-The back-end application will provide an API that follows the REST protocol standards.
-Since the front-end application needs to communicate with the back-end to perform CRUD operations, it must be able to construct and send \emph{RESTful API calls}.
-
-Additionally, the software solution will include chat functionality.
-For real-time communication between users, some sort of socket connection is required.
-This means the application must also be able to establish and maintain a \emph{WebSocket connection}.
-
-\paragraph{Method of evaluation}
-To score this criterion, packages or built-in solutions will be looked up for both RESTful API calls and WebSocket connections.
-In case any of these functionalities are not supported, the framework will be disqualified.
-
-\paragraph{Weight}
-This criterion is not assigned any weight.
-
-If the framework does not give the option to perform both acts of communication, the functionality of the software solution cannot be realized, meaning the application cannot be built using that framework.
-
-\subsubsection{Community}\label{subsubsec:community}
-The larger the community, the more online resources and support will be available for learning and troubleshooting the framework.
-To assess the size of the community, several metrics will be considered:
-
-\begin{itemize}
-	\item The \emph{number of stars} on the official framework GitHub repository.
-	      While not a direct measure of usage, it gives a rough indication of how many developers are interested in or actively using the framework.
-	      The more developers using the framework, the more questions that will have been asked and answered online.
-	\item The number of \emph{Discord users} in the official or related Discord servers.
-	      A larger user count means more potential help when asking questions.
-	\item The number of \emph{examples} online.
-	      Examples of implementations, tutorials, and blog posts can be very helpful when learning a new framework.
-	      If the framework is unopinionated, a big variety of examples can help in deciding how to structure the application.
-\end{itemize}
-
-\paragraph{Method of evaluation}
-To score this criterion, the stars from the official GitHub repository will be counted, the official or related Discord servers will be joined to view the member count, and a search on GitHub will be performed to find the number of repositories using the framework.
-
-\paragraph{Weight}
-This criterion is assigned a weight of \emph{20}, derived from the above sub-criteria, which are \emph{5}, \emph{5}, and \emph{10}.
-
-Both the number of stars and the number of Discord users are not very important, because an application can be built without community support as well.
-It would just be more difficult.
-
-The number of available examples holds slightly more value, as it provides real-world insights into project structure and professional best practices.
-That said, while they can speed up the learning process, an application can still be built without them.
-
-For these reasons, the community criterion is not assigned a very high weight.
-
-\subsubsection{Developer Experience}\label{subsubsec:developer-experience}
-A good developer experience is important for productivity and ease of use.
-Even if a framework is powerful and flexible, if it is difficult to use, it will slow down development and may frustrate the developer.
-It should be easy to work with, so developers can focus on building the application rather than struggling with the tooling.
-The following aspects will be considered to determine good developer experience:
-
-\begin{itemize}
-	\item The framework and the programming language it uses should not have a high \emph{learning curve}.
-	      If a framework differs significantly from other frameworks, one which the developer is not yet familiar with, building an application within a short time becomes challenging.
-	\item There should be built-in support for \emph{debugging} the application during runtime using a Jetbrains IDE.
-	      Without proper debugging tools, identifying and fixing issues can be time-consuming and difficult.
-	\item High quality \emph{documentation} should be readily available.
-	      Poor documentation forces developers to rely on user discussions and examples, which may not always be accurate or up-to-date.
-	      Good documentation should include clear explanations, code examples, and guides on best practices.
-\end{itemize}
-
-\paragraph{Method of evaluation}
-To score this criterion, the existence of a debugging solution as well as the presence of proper documentation will be checked.
-To validate that the documentation is proper, the website must have some sort of installation guide, and documentation on specific parts of the framework, such as routing and middleware.
-
-The other part, the learning curve, will be determined subjectively based on the developer's prior experience with similar frameworks and programming languages.
-The proficiency scale is as follows:
-
-\begin{itemize}
-	\item \textbf{0.00} - No prior experience with the framework or programming language.
-	\item \textbf{0.25} - Limited experience with the framework or programming language.
-	      The developer has worked with it on small projects or has only read about it.
-	\item \textbf{0.50} - Moderate experience with the framework or programming language.
-	      The developer has worked with it on a few projects and has a basic understanding of its features and best practices.
-	\item \textbf{0.75} - Good experience with the framework or programming language.
-	      The developer has worked with it on several projects and is familiar with its features and best practices.
-	\item \textbf{1.00} - Extensive experience with the framework or programming language.
-	      The developer has worked with it on many projects and is considered an expert in its use.
-\end{itemize}
-
-\paragraph{Weight}
-This criterion is assigned a weight of \emph{45}, derived from the above sub-criteria, which are \emph{20}, \emph{10}, and \emph{15}.
-
-The learning curve is quite important.
-Time is the limiting factor in this project, and both prototypes and the final application need to be built within a few weeks.
-If a framework takes too long to learn, it will not be feasible to use it.
-
-Debugging is also important, but even without it, development is still very doable.
-Most programming languages have some sort of logging functionality, which can be used to identify issues instead.
-
-Documentation is very important, especially when working with a framework for the first time.
-While a large and proficient community can provide answers, it is better to have standardized information readily available rather than having to rely solely on other users.
-
-For these reasons, the developer experience criterion is assigned a relatively high weight.
-
-\subsubsection{Ecosystem}\label{subsubsec:ecosystem}
-The ecosystem comprises all available resources to reduce the workload of developers.
-The more resources are available, the more developers can focus on implementing business logic rather than reinventing the wheel.
-The following aspects will be considered to determine the quality of the ecosystem:
-
-\begin{itemize}
-	\item There should be official or well-maintained community \emph{plugins} for Jetbrains IDEs, offering features such as code completion, tooltip documentation, and error checking.
-	      These plugins can significantly enhance productivity and reduce the likelihood of errors.
-	\item A wide variety of \emph{libraries} should be available.
-	      These libraries can provide pre-built functionality, saving developers time and effort.
-	      The higher the number of available libraries, the bigger the chance that a library exists for a specific need.
-\end{itemize}
-
-\paragraph{Method of evaluation}
-To score this criterion, the availability of IDE plugin support will be checked, as well as the number of existing libraries.
-
-\paragraph{Weight}
-This criterion is assigned a weight of \emph{40}, derived from the above sub-criteria, which are \emph{25} and \emph{15}.
-
-The availability of IDE plugins is very important.
-Having tools that streamline development makes a big difference.
-If these tools are not available, development will be slower and more error-prone.
-
-The number of libraries is also important, but to a lesser extent.
-While they can speed up development, developers can create their own libraries if needed.
-This however, takes more time, making a rich ecosystem of ready-to-use libraries preferable.
-
-For these reasons, the ecosystem criterion is assigned a high weight.
-
-\subsubsection{Quality Assurance}\label{subsubsec:quality-assurance}
-The app should be of good quality when released to the public, ensuring both solid security and proper functionality.
-This criterion encapsulates a part of the advanced track chosen for back-end development (\emph{Quality Management and Deployment}).
-To help ensure the quality of the application, the following aspects will be considered:
-
-\begin{itemize}
-	\item The framework should provide some form of (automated) \emph{testing}.
-	      If this is not done, new updates may introduce bugs or break existing functionality, which could confuse or frustrate the users.
-	\item The framework should provide some form of \emph{static code analysis} tooling.
-	      This ensures the code is of good quality and keeps consistency between code that is written by different developers.
-	\item The framework should receive regular \emph{updates}.
-	      If bugs or security flaws are discovered, they should be fixed timely.
-	      Without frequent updates, users are left at risk, while developers have no control of critical issues.
-\end{itemize}
-
-\paragraph{Method of evaluation}
-To score this criterion, the existence of unit and integration testing solutions, and linting tools, will be checked.
-In addition, it will be verified that the framework has received an update within the last six months.
-
-\paragraph{Weight}
-This criterion is assigned a weight of \emph{25}, derived from the above sub-criteria, which are \emph{15}, \emph{5}, and \emph{5}.
-
-Testing the application is rather important, since it directly affects the quality of the deployed application from a user's perspective.
-
-Static code analysis is not very important.
-While it helps maintain cleaner and more consistent code, it does not directly affect the quality of the deployed application from a user's perspective.
-Since this project is small-scale, the codebase will be manageable without it.
-
-Updates are less important as long as the application remains secure and free of major bugs.
-However, the framework should still be maintained to ensure long-term stability.
-
-For these reasons, the quality assurance criterion is assigned a moderate weight.
-
-\subsection{Frameworks}\label{subsec:frameworks}
-\subsubsection{Longlist}
-The following list is compiled from Google searches and ChatGPT conversations. It contains numerous web frameworks.
-
-\begin{itemize}
-    \item Laravel (php)
-    \item CakePHP (php)
-    \item Ruby on Rails (ruby)
-    \item .NET Core (C#)
-    \item Echo (golang)
-    \item Gin (golang)
-    \item Fiber (golang)
-    \item Chi (golang)
-    \item Spring Boot (java)
-    \item Ktor (kotlin)
-    \item Django (python)
-    \item Flask (python)
-    \item Express.js (javascript)
-    \item NestJS (javascript)
-    \item Koa (javascript)
-    \item Oat++ (C++)
-    \item Actix (Rust)
-    \item Rocket (Rust)
-    \item phoenix (Elixir)
-    \item wisp (Gleam)
-\end{itemize}
-
-\subsubsection{Shortist}
-Three frameworks have been chosen from the longlist, based on our interests.
-The frameworks chosen are: Echo, Spring Boot, and NestJS.
-
-\paragraph{Echo}\label{subsubsec:frameworks-echo}
-Echo is a minimalist Go web framework by Labstack.
-It is lightweight, fast, and supports middleware for authentication, logging, and request validation.
-It includes built-in support for JWT, CORS, and WebSockets.
-Echo was chosen for its simplicity, performance, and extendability. \cite{bib:echo-framework}
-
-\paragraph{Spring Boot}\label{subsubsec:frameworks-spring-boot}
-Spring Boot is an open source Java-based framework developed by VMware \cite{bib:springboot-creator}, built on top of the Spring Framework.
-It simplifies the configuration and deployment of production-ready applications by providing auto-configuration, embedded servers, and a rich ecosystem of starter dependencies. \cite{bib:spring-boot-framework}
-
-Spring Boot was chosen because it is one of the most widely used back-end frameworks in enterprise development, and because it is built on Java, a language both team members have prior experience with.
-
-\paragraph{NestJS}\label{subsubsec:frameworks-nestjs}
-NestJS is a progressive Node.js framework for building efficient and scalable server-side applications using TypeScript.
-It is heavily inspired by Angular and uses decorators, modules, and dependency injection to provide a structured and opinionated architecture. \cite{bib:nestjs-framework}
-
-NestJS was chosen because it is built on TypeScript and JavaScript, which are already familiar to the team from front-end development, making knowledge transfer straightforward.
-
-\subsubsection{API}
-We`ve decided to go with a RESTful API for this project because it's simple, widely adopted, and fits our needs well.
-REST makes communication between clients and servers straightforward while keeping things scalable, maintainable, and compatible with different front-end technologies.
-We didn't see a need for GraphQL since our API is relatively simple.
-
-\subsubsection{Database}
-For our project, we use a relation-type database PostgreSQL, and a blob storage database s3 bucket from AWS or for local development MinIO because of its s3 compatibility.
-This way we can develop using a local blob storage and switch between them without starting AWS.
-We will make use of an ORM for its simplicity and to make sure that all queries are written the same between developers.
-
-\subsection{Evaluation}\label{subsec:evaluation}
-The frameworks are evaluated based on the criteria established in \cref{subsec:criteria}.
+\section{Results \& Findings}
+\subsection{Multi Criteria Analysis}
 
 \subsubsection{Echo}\label{subsubsec:evaluation-echo}
 
@@ -634,7 +409,7 @@ The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-nes
 
 The normalized total score for this criterion is \emph{1.00}.
 
-\subsection{Results}
+\subsubsection{Overview}
 \Cref{tab:score-results} shows an overview of the framework scores in comparison to one another.
 
 \begin{htable}[
@@ -651,7 +426,7 @@ The normalized total score for this criterion is \emph{1.00}.
     Quality Assurance & 25 & $25 \cdot 1.00 = 25.00$ & $25 \cdot 1.00 = 25.00$ & $25 \cdot 1.00 = 25.00$ \\
 \end{htable}
 
-The final ratings for each framework, normalized to a rating between 0 and 10, are presented in \cref{tab:scores}
+The final ratings for each framework, normalized to a rating between 0 and 10, are presented in \cref{tab:scores}.
 
 \begin{vtable}[
     caption = {Final scores},
@@ -662,3 +437,54 @@ The final ratings for each framework, normalized to a rating between 0 and 10, a
     Framework & Echo & Spring Boot & NestJS \\
     Score & 7.04 & 7.55 & 8.38 \\
 \end{vtable}
+
+\subsection{Prototyping}
+
+\subsubsection{Spring Boot}
+Setting up and creating the project was relatively easy.
+For building the prototype we used IntelliJ IDEA, which integrates well with Java and Spring Boot.
+We decided to use Spring Boot 4 together with Java version 21.
+
+Creating controllers, services, and repositories, as well as setting up the ORM, was straightforward due to the annotation-based approach provided by Spring Boot.
+Dependency injection is handled out of the box, which simplifies the structure of the application.
+Adding tests was also relatively easy because of the built-in support within the framework.
+
+In addition, observability was added using Grafana, Prometheus, and Loki. Setting this up was mostly straightforward, as it mainly required adding the necessary dependencies and configuring the application.
+There were some difficulties when configuring the security settings in Spring Boot, but after some experimentation the configuration became clearer.
+
+The documentation for Spring Boot was generally sufficient.
+Because Spring Boot is a mature and widely used framework, there is a large amount of information available online.
+However, some resources were outdated, especially since this prototype uses the newer Spring Boot 4 version, which means certain solutions were deprecated.
+Despite this, the official Spring Boot documentation provided enough examples and it was generally possible to find solutions to the problems encountered.
+
+\subsubsection{NestJS}
+Setting up the project was straightforward using the NestJS CLI.
+For development we used a Docker setup with multiple containers (for monitoring, database, s3).
+Getting hot reload working inside Docker took some extra effort, and in the end we could not get it working on Windows.
+This was however, more of a DevOps issue than something related to NestJS itself.
+
+Controllers, services and repositories were easy to set up using decorators.
+Dependency injection is built into NestJS and worked well across the different layers.
+This contributes to the developer experience, as it makes the structure predictable and easier to work with.
+
+For persistence we used TypeORM with a repository pattern.
+The developer environment was easy to set up with synchronization enabled.
+NestJS strongly advised not to use synchronization in production but instead implement migrations.
+This was doable, but proved to be a bit difficult.
+
+The API was implemented as a NestJS controller and validation was done using Zod and NestJS pipes.
+Validation caused some issues at the start.
+The default approach in NestJS validates all controller parameters, while in our case only the request body needed validation.
+Because of this, Zod object validation would fail when the endpoint also included route parameters.
+This was resolved by adjusting the validation setup after looking up similar issues online.
+
+One other issue we ran into was mapping database models to domain entities when relations were involved.
+Including related entities could cause infinite recursion.
+This was solved in a simple way by not including certain nested entities, which worked but was not ideal since it felt a bit `hacky'.
+
+The NestJS documentation was clear and helpful.
+It includes introductory chapters that made it easy to get started and build a solid foundation.
+For more advanced topics, there are separate sections that go into more detail, which helped when implementing more complex parts of the application.
+The documentation also highlights best practices, which can be easy to overlook but are useful as guidance during development.
+
+We did not really use (or rather need) much of the community, besides a couple stackoverflow/medium posts, so it is hard to comment on that.

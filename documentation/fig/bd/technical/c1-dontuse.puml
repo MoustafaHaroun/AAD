@@ -1,0 +1,40 @@
+@startuml
+title Trade2 - System Context
+
+actor User
+
+rectangle "Mobile Application" {
+    component "React Native App" as MobileApp
+}
+
+rectangle "Trade2 Backend" {
+    component "NestJS Backend API" as Backend
+}
+
+rectangle "External Systems" {
+    rectangle "Persistence" {
+        component "PostgreSQL Database" as DB
+        component "S3 / MinIO" as Storage
+    }
+
+    rectangle "Monitoring" {
+        component "Prometheus" as Prometheus
+        component "Loki" as Loki
+        component "Grafana" as Grafana
+    }
+}
+
+User --> MobileApp : Uses
+MobileApp --> Backend : REST API (HTTP)
+MobileApp --> Backend : WebSocket (chat)
+
+Backend --> DB : Read / Write
+Backend --> Storage : File storage
+
+Backend --> Prometheus : Metrics
+Backend --> Loki : Logs
+
+Prometheus --> Grafana : Metrics
+Loki --> Grafana : Logs
+
+@enduml
