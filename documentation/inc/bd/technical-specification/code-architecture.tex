@@ -1,0 +1,96 @@
+\section{Code Architecture (C4)}
+The Backend API in the Trade2 system follows our own four-layered variant of clean architecture with \emph{Domain}, \emph{Application}, \emph{Infrastructure}, and \emph{Presentation} layers.
+This layered design ensures separation of concerns, testability, and maintainability.
+
+\subsection{Overview}
+The four layers are organized as follows:
+
+\begin{itemize}
+    \item \textbf{Domain Layer}: Contains the core business entities and logic, which are framework-agnostic.
+    \item \textbf{Infrastructure Layer}: Implements low-level concerns such as data persistence and external service integration.
+    Contains TypeORM models, repositories for data access, and services.
+    \item \textbf{Application Layer}: Implements use cases and orchestrates interactions between domain entities and infrastructure services.
+    Contains request/response DTOs and Zod validation schemas.
+    \item \textbf{Presentation Layer}: Manages incoming requests and outgoing responses via NestJS controllers, defines routes, guards for authentication and authorization, and modules that wire all components together using dependency injection.
+\end{itemize}
+
+\Cref{fig:c3} shows the component diagram of the Backend API container, illustrating the layers, components, and their interactions with each other and with external systems.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{bd/technical/c3}
+    \caption{C3 component diagram}
+    \label{fig:c3}
+\end{figure}
+
+\subsection{Layers and Components}
+
+\subsubsection{Domain Layer}
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Define core entities (e.g., User, Listing, Message) independent of frameworks.
+    \item Encapsulate business rules and invariants.
+\end{itemize}
+
+\subsubsection{Infrastructure Layer}
+\paragraph{Components}
+\begin{htable}[
+    caption = {Infrastructure Components},
+    label = {tab:components-infrastructure}
+] {
+    colspec = {lX},
+}
+    Component & Role \\
+    Models & TypeORM entities mapping domain objects to the database. \\
+    Repositories & Provide data access and retrieval operations for entities. \\
+    Authentication Service & Handles token validation, password hashing, and other auth-related tasks. \\
+\end{htable}
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Persist and retrieve data from PostgreSQL
+    \item Coordinate with object storage for file handling
+    \item Provide authentication and security services to other layers
+\end{itemize}
+
+\subsubsection{Application Layer}
+\paragraph{Components}
+\begin{htable}[
+    caption = {Application Components},
+    label = {tab:components-application}
+] {
+    colspec = {lX},
+}
+    Component & Role \\
+    Use Cases & Encapsulate specific system actions by orchestrating repositories and services. \\
+    DTOs & Define request and response objects. \\
+    Validation Schemas & Zod-based validation for API requests. \\
+\end{htable}
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Implement system use cases in a decoupled and testable manner.
+    \item Transform incoming requests into domain operations.
+    \item Validate request data and enforce API contracts.
+\end{itemize}
+
+\subsubsection{Presentation Layer}
+\paragraph{Components}
+\begin{htable}[
+    caption = {Presentation Components},
+    label = {tab:components-presentation}
+] {
+    colspec = {lX},
+}
+    Component & Role \\
+    Controllers & Define REST and WebSocket endpoints. \\
+    Guards & Handle authentication and authorization checks. \\
+    Modules & Wire all components together via NestJS dependency injection. \\
+\end{htable}
+
+\paragraph{Responsibilities}
+\begin{itemize}
+    \item Handle incoming HTTP/WebSocket requests.
+    \item Forward requests to the appropriate use cases in the Application layer.
+    \item Enforce security and access control policies.
+    \item Expose responses to clients following API specifications.
+\end{itemize}
