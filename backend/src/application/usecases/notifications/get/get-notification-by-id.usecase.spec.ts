@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { GetNotificationByIdUseCase } from './get-notification-by-id.usecase';
 
 const mockNotificationDomain = {
@@ -25,11 +26,9 @@ describe('GetNotificationByIdUseCase', () => {
     expect(result).toEqual({ notification: mockNotificationDomain });
   });
 
-  it('returns null when notification does not exist', async () => {
+  it('throws NotFoundException when notification does not exist', async () => {
     mockNotificationRepo.findById.mockResolvedValue(null);
 
-    const result = await useCase.execute({ id: 'missing' });
-
-    expect(result).toEqual({ notification: null });
+    await expect(useCase.execute({ id: 'missing' })).rejects.toThrow(NotFoundException);
   });
 });
