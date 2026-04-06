@@ -33,7 +33,11 @@ import {
 } from '@/application/dto';
 import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
-import { AuthGuard, AuthenticatedRequest } from '@/presentation/guards/auth.guard';
+import {
+  AuthGuard,
+  AuthenticatedRequest,
+  getRequesterId,
+} from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Roles } from '@/presentation/decorators/roles.decorator';
 import { Role } from '@/domain/enums/role.enum';
@@ -82,10 +86,11 @@ export class UserController {
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateUserSchema)) dto: UpdateUserRequest,
   ): Promise<UpdateUserResponse> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
-
-    return this.updateUserUseCase.execute({ ...dto, id, requesterId });
+    return this.updateUserUseCase.execute({
+      ...dto,
+      id,
+      requesterId: getRequesterId(request),
+    });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)

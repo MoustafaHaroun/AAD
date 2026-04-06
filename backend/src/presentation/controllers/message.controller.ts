@@ -25,8 +25,8 @@ import { GetMessageByIdUseCase } from '@/application/usecases/messages/get/get-m
 import { GetMessagesByUserIdUseCase } from '@/application/usecases/messages/get/get-messages-by-user-id.usecase';
 import { DeleteMessageUseCase } from '@/application/usecases/messages/delete/delete-message.usecase';
 import * as authGuard from '@/presentation/guards/auth.guard';
+import { getRequesterId } from '@/presentation/guards/auth.guard';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
-import { Role } from '@/domain/enums/role.enum';
 
 @Controller('messages')
 export class MessageController {
@@ -61,8 +61,7 @@ export class MessageController {
     @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<GetMessageByIdResponse> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.getMessageByIdUseCase.execute({ id, requesterId });
   }
@@ -93,8 +92,7 @@ export class MessageController {
     @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<void> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.deleteMessageUseCase.execute({ id, requesterId });
   }

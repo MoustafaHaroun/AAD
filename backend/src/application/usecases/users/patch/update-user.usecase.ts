@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import { UpdateUserRequest, UpdateUserResponse } from '@/application/dto';
 import { UserModel } from '@/infrastructure/persistence/typeorm/models';

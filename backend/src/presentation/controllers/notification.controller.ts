@@ -21,7 +21,11 @@ import { GetNotificationByIdResponse } from '@/application/dto/notifications/get
 import { CreateNotificationUseCase } from '@/application/usecases/notifications/create/create-notification.usecase';
 import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete/delete-notification.usecase';
 import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get/get-notification-by-id.usecase';
-import { AuthGuard, AuthenticatedRequest } from '@/presentation/guards/auth.guard';
+import {
+  AuthGuard,
+  AuthenticatedRequest,
+  getRequesterId,
+} from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Roles } from '@/presentation/decorators/roles.decorator';
 import { Role } from '@/domain/enums/role.enum';
@@ -43,8 +47,7 @@ export class NotificationController {
     @Req() request: AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<GetNotificationByIdResponse> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.getNotificationByIdUseCase.execute({ id, requesterId });
   }
@@ -56,7 +59,8 @@ export class NotificationController {
   @ApiBearerAuth()
   @ApiBody(createNotificationApi)
   createNotification(
-    @Body(new ZodValidationPipe(createNotificationSchema)) dto: CreateNotificationRequest,
+    @Body(new ZodValidationPipe(createNotificationSchema))
+    dto: CreateNotificationRequest,
   ): Promise<CreateNotificationResponse> {
     return this.createNotificationUseCase.execute(dto);
   }
@@ -69,8 +73,7 @@ export class NotificationController {
     @Req() request: AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<void> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.deleteNotificationUseCase.execute({ id, requesterId });
   }

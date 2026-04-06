@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { MessageRepository } from '@/infrastructure/persistence/typeorm/repositories/message.repository';
 import {
   GetMessageByIdRequest,
@@ -13,7 +17,9 @@ export class GetMessageByIdUseCase {
     const message = await this.messageRepository.findById(dto.id);
 
     if (message == null) {
-      throw new NotFoundException(`Message with id '${dto.id}' does not exist.`);
+      throw new NotFoundException(
+        `Message with id '${dto.id}' does not exist.`,
+      );
     }
 
     const domain = message.toDomain();

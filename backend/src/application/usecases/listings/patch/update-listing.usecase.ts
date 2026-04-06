@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ListingRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import {
   UpdateListingRequest,
@@ -15,11 +19,15 @@ export class UpdateListingUseCase {
     const listing = await this.listingRepository.findById(dto.id);
 
     if (listing == null) {
-      throw new NotFoundException(`Listing with id '${dto.id}' does not exist.`);
+      throw new NotFoundException(
+        `Listing with id '${dto.id}' does not exist.`,
+      );
     }
 
     if (dto.requesterId && listing.user.id !== dto.requesterId) {
-      throw new ForbiddenException('You do not have permission to update this listing.');
+      throw new ForbiddenException(
+        'You do not have permission to update this listing.',
+      );
     }
 
     if (dto.title != null) listing.title = dto.title;

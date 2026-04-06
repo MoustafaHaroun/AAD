@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   AttachmentRepository,
   ListingRepository,
@@ -24,21 +28,29 @@ export class RemoveAttachmentFromListingUseCase {
       requesterId?: string;
     },
   ): Promise<RemoveAttachmentFromListingResponse> {
-    const attachment = await this.attachmentRepository.findById(dto.attachmentId);
+    const attachment = await this.attachmentRepository.findById(
+      dto.attachmentId,
+    );
 
     if (attachment == null) {
-      throw new NotFoundException(`Attachment with id '${dto.attachmentId}' does not exist.`);
+      throw new NotFoundException(
+        `Attachment with id '${dto.attachmentId}' does not exist.`,
+      );
     }
 
     if (dto.requesterId) {
       const listing = await this.listingRepository.findById(dto.listingId);
 
       if (listing == null) {
-        throw new NotFoundException(`Listing with id '${dto.listingId}' does not exist.`);
+        throw new NotFoundException(
+          `Listing with id '${dto.listingId}' does not exist.`,
+        );
       }
 
       if (listing.user.id !== dto.requesterId) {
-        throw new ForbiddenException('You do not have permission to remove attachments from this listing.');
+        throw new ForbiddenException(
+          'You do not have permission to remove attachments from this listing.',
+        );
       }
     }
 

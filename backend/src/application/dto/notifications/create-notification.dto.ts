@@ -23,7 +23,9 @@ export const createNotificationApi = {
   },
 };
 
-export type CreateNotificationRequest = z.infer<typeof createNotificationSchema>;
+export type CreateNotificationRequest = z.infer<
+  typeof createNotificationSchema
+>;
 
 export class CreateNotificationResponse {
   notification: Notification;

@@ -23,8 +23,8 @@ import { CreateFavoriteUseCase } from '@/application/usecases/favorites/create/c
 import { GetFavoritesByUserIdUseCase } from '@/application/usecases/favorites/get/get-favorites-by-user-id.usecase';
 import { DeleteFavoriteUseCase } from '@/application/usecases/favorites/delete/delete-favorite.usecase';
 import * as authGuard from '@/presentation/guards/auth.guard';
+import { getRequesterId } from '@/presentation/guards/auth.guard';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
-import { Role } from '@/domain/enums/role.enum';
 
 @Controller('favorites')
 export class FavoriteController {
@@ -57,7 +57,8 @@ export class FavoriteController {
   @ApiBody(createFavoriteApi)
   createFavorite(
     @Req() request: authGuard.AuthenticatedRequest,
-    @Body(new ZodValidationPipe(createFavoriteSchema)) dto: CreateFavoriteRequest,
+    @Body(new ZodValidationPipe(createFavoriteSchema))
+    dto: CreateFavoriteRequest,
   ): Promise<CreateFavoriteResponse> {
     const userId = request.user.sub;
 
@@ -76,8 +77,9 @@ export class FavoriteController {
     @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<void> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
-    return this.deleteFavoriteUseCase.execute({ id, requesterId });
+    return this.deleteFavoriteUseCase.execute({
+      id,
+      requesterId: getRequesterId(request),
+    });
   }
 }

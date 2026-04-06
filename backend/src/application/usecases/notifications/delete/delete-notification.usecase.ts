@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   DeleteNotificationRequest,
   DeleteNotificationResponse,
@@ -7,7 +11,9 @@ import { NotificationRepository } from '@/infrastructure/persistence/typeorm/rep
 
 @Injectable()
 export class DeleteNotificationUseCase {
-  constructor(private readonly notificationRepository: NotificationRepository) {}
+  constructor(
+    private readonly notificationRepository: NotificationRepository,
+  ) {}
 
   async execute(
     dto: DeleteNotificationRequest & { requesterId?: string },
@@ -15,13 +21,17 @@ export class DeleteNotificationUseCase {
     const notification = await this.notificationRepository.findById(dto.id);
 
     if (notification == null) {
-      throw new NotFoundException(`Notification with id '${dto.id}' does not exist.`);
+      throw new NotFoundException(
+        `Notification with id '${dto.id}' does not exist.`,
+      );
     }
 
     const domain = notification.toDomain();
 
     if (dto.requesterId && domain.user?.id !== dto.requesterId) {
-      throw new ForbiddenException('You do not have permission to delete this notification.');
+      throw new ForbiddenException(
+        'You do not have permission to delete this notification.',
+      );
     }
 
     await this.notificationRepository.delete(dto.id);

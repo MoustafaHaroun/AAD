@@ -39,11 +39,11 @@ import {
   UpdateListingUseCase,
 } from '@/application/usecases/';
 import * as authGuard from '@/presentation/guards/auth.guard';
+import { getRequesterId } from '@/presentation/guards/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
 import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/attachments/remove-attachment-from-listing.usecase';
 import { imageSchema } from '@/application/schemas/image.schema';
-import { Role } from '@/domain/enums/role.enum';
 
 @Controller('listings')
 export class ListingController {
@@ -110,12 +110,15 @@ export class ListingController {
     @UploadedFiles(new ZodValidationPipe(z.array(imageSchema)))
     binaries: Express.Multer.File[],
   ) {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     const results = await Promise.all(
       binaries.map((binary) =>
-        this.addAttachmentToListingUseCase.execute({ binary, listingId, requesterId }),
+        this.addAttachmentToListingUseCase.execute({
+          binary,
+          listingId,
+          requesterId,
+        }),
       ),
     );
 
@@ -133,8 +136,7 @@ export class ListingController {
     @Param('id') listingId: string,
     @Param('attachmentId') attachmentId: string,
   ) {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.removeAttachmentFromListingUseCase.execute({
       attachmentId,
@@ -153,8 +155,7 @@ export class ListingController {
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateListingSchema)) dto: UpdateListingRequest,
   ): Promise<UpdateListingResponse> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.updateListingUseCase.execute({ ...dto, id, requesterId });
   }
@@ -167,8 +168,7 @@ export class ListingController {
     @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<DeleteListingResponse> {
-    const requesterId =
-      request.user.role === Role.ADMIN ? undefined : request.user.sub;
+    const requesterId = getRequesterId(request);
 
     return this.deleteListingUseCase.execute({ id, requesterId });
   }
