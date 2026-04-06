@@ -1,6 +1,6 @@
 import { v4 } from 'uuid';
 import { AttachmentModel } from '@/infrastructure/persistence/typeorm/models';
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import {
   AttachmentRepository,
   ListingRepository,
@@ -20,14 +20,16 @@ export class AddAttachmentToListingUseCase {
   ) {}
 
   async execute(
-    dto: AddAttachmentToListingRequest & { listingId: string },
+    dto: AddAttachmentToListingRequest & { listingId: string; requesterId?: string },
   ): Promise<AddAttachmentToListingResponse> {
     const listing = await this.listingRepository.findById(dto.listingId);
 
     if (listing == null) {
-      throw new NotFoundException(
-        `Listing with id '${dto.listingId}' does not exist.`,
-      );
+      throw new NotFoundException(`Listing with id '${dto.listingId}' does not exist.`);
+    }
+
+    if (dto.requesterId && listing.user.id !== dto.requesterId) {
+      throw new ForbiddenException('You do not have permission to add attachments to this listing.');
     }
 
     const minioClient = this.minio.getClient();

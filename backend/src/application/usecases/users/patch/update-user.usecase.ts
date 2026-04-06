@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '@/infrastructure/persistence/typeorm/repositories';
 import { UpdateUserRequest, UpdateUserResponse } from '@/application/dto';
 import { UserModel } from '@/infrastructure/persistence/typeorm/models';
@@ -8,12 +8,16 @@ export class UpdateUserUseCase {
   constructor(private readonly userRepository: UserRepository) {}
 
   async execute(
-    dto: UpdateUserRequest & { id: string },
+    dto: UpdateUserRequest & { id: string; requesterId?: string },
   ): Promise<UpdateUserResponse> {
     const user: UserModel | null = await this.userRepository.findById(dto.id);
 
     if (user == null) {
       throw new NotFoundException(`User with id '${dto.id}' does not exist.`);
+    }
+
+    if (dto.requesterId && dto.requesterId !== dto.id) {
+      throw new ForbiddenException('You can only update your own account.');
     }
 
     if (dto.firstname != null) user.firstname = dto.firstname;
