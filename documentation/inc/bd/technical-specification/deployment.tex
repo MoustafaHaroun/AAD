@@ -1,0 +1,25 @@
+\section{Deployment}\label{sec:deployment}
+
+The Trade2 backend is deployed on a VPS hosted by Hetzner, managed through Dokploy \cite{bib:dokploy}.
+Dokploy was chosen for its straightforward UI and low resource overhead.
+Two alternatives were evaluated: Coolify \cite{bib:coolify} and Watchtower \cite{bib:watchtower}.
+Coolify was ruled out due to its higher resource consumption, and Watchtower was ruled out because it lacks a management UI.
+
+\subsection{Project Structure}
+
+Inside Dokploy, the deployment is organised as a single project containing four services:
+
+\begin{itemize}
+    \item \textbf{Backend} --- The NestJS API, deployed from the latest Docker image published to GitHub via the CI/CD pipeline. Further details on the pipeline are covered in the Show \& Tell document.
+    \item \textbf{PostgreSQL} --- The database.
+    \item \textbf{MinIO} --- The object storage database for images.
+    \item \textbf{Monitoring} --- A Docker Compose service that runs Loki, Grafana, and Prometheus together. On each release, Dokploy fetches the latest \texttt{docker-compose.yml} and configuration files directly from the GitHub repository.
+\end{itemize}
+
+\Cref{fig:dokploy-dashboard} shows the Dokploy dashboard with the four services.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{bd/technical/dokploy-dashboard}
+    \caption{Dokploy dashboard showing the four deployment services}
+    \label{fig:dokploy-dashboard}
+\end{figure}
