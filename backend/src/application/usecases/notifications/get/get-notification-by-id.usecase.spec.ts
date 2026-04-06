@@ -29,6 +29,8 @@ describe('GetNotificationByIdUseCase', () => {
   it('throws NotFoundException when notification does not exist', async () => {
     mockNotificationRepo.findById.mockResolvedValue(null);
 
-    await expect(useCase.execute({ id: 'missing' })).rejects.toThrow(NotFoundException);
+    await expect(useCase.execute({ id: 'missing' })).rejects.toThrow(
+      NotFoundException,
+    );
   });
 });
