@@ -10,10 +10,12 @@ Coolify was ruled out due to its higher resource consumption, and Watchtower was
 Inside Dokploy, the deployment is organised as a single project containing four services:
 
 \begin{itemize}
-    \item \textbf{Backend} --- The NestJS API, deployed from the latest Docker image published to GitHub via the CI/CD pipeline. Further details on the pipeline are covered in the Show \& Tell document.
-    \item \textbf{PostgreSQL} --- The database.
-    \item \textbf{MinIO} --- The object storage database for images.
-    \item \textbf{Monitoring} --- A Docker Compose service that runs Loki, Grafana, and Prometheus together. On each release, Dokploy fetches the latest \texttt{docker-compose.yml} and configuration files directly from the GitHub repository.
+    \item \textbf{Backend} -  The NestJS API, deployed from the latest Docker image published to GitHub via the CI/CD pipeline.
+    Further details on the pipeline are covered in the Show \& Tell document.
+    \item \textbf{PostgreSQL} - The database.
+    \item \textbf{MinIO} - The object storage database for images.
+    \item \textbf{Monitoring} - A Docker Compose service that runs Loki, Grafana, and Prometheus together.
+    On each release, Dokploy fetches the latest \texttt{docker-compose.yml} and configuration files directly from the GitHub repository.
 \end{itemize}
 
 \Cref{fig:dokploy-dashboard} shows the Dokploy dashboard.

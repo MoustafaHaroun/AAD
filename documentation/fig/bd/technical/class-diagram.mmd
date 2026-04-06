@@ -1,0 +1,112 @@
+classDiagram
+
+namespace domain {
+class user.entity {
+  +id: UUID
+  +email: string
+  +firstname: string
+  +surname: string
+  +role: Role
+  +listings: Listing[]
+  +notifications: Notification[]
+}
+}
+
+namespace application {
+    class create-user.usecase
+    class delete-user.usecase
+    class get-all-users.usecase
+    class get-user-by-id.usecase
+    class update-user.usecase
+
+    class create-user.dto
+    class delete-user.dto
+    class get-all-users.dto
+    class get-user-by-id.dto
+    class update-user.dto
+}
+
+namespace infrastructure {
+    class user.repository {
+        +create() UserModel
+        +findById() UserModel | null
+        +findAll() UserModel[]
+        +findByEmail() UserModel | null
+        +update() UserModel
+        +delete()
+    }
+
+    class user.model {
+        +id string
+        +email string
+        +password string
+        +firstname string
+        +surname string
+        +role Role
+        +listings ListingModel[]
+        +notifications: NotificationModel[]
+
+        +fromDomain(user) UserModel
+        +toDomain(model) User
+    }
+
+    class zod.pipe
+}
+
+namespace presentation {
+    class user.controller
+
+class auth.guard {
+  +canActivate()
+}
+
+class roles.guard {
+  +canActivate()
+}
+
+class user.module {
+  +register()
+}
+}
+
+create-user.usecase --> user.entity : uses
+delete-user.usecase --> user.entity : uses
+get-all-users.usecase --> user.entity : uses
+get-user-by-id.usecase --> user.entity : uses
+update-user.usecase --> user.entity : uses
+
+create-user.usecase --> user.repository : queries/mutates data
+delete-user.usecase --> user.repository : queries/mutates data
+get-all-users.usecase --> user.repository : queries/mutates data
+get-user-by-id.usecase --> user.repository : queries/mutates data
+update-user.usecase --> user.repository : queries/mutates data
+
+create-user.usecase --> create-user.dto : translates
+delete-user.usecase --> delete-user.dto : translates
+get-all-users.usecase --> get-all-users.dto : translates
+get-user-by-id.usecase --> get-user-by-id.dto : translates
+update-user.usecase --> update-user.dto : translates
+
+user.controller --> create-user.dto : validates schema
+user.controller --> delete-user.dto : validates schema
+user.controller --> get-all-users.dto : validates schema
+user.controller --> get-user-by-id.dto : validates schema
+user.controller --> update-user.dto : validates schema
+
+user.controller --> auth.guard : uses
+user.controller --> zod.pipe : uses
+user.controller --> roles.guard : uses
+
+user.repository --> user.model : uses
+
+user.module --> user.repository : manages
+user.module --> user.controller : manages
+user.module --> user.model : manages
+user.module --> auth.guard : manages
+user.module --> roles.guard : manages
+user.module --> zod.pipe : manages
+user.module --> create-user.usecase : manages
+user.module --> delete-user.usecase : manages
+user.module --> get-all-users.usecase : manages
+user.module --> get-user-by-id.usecase : manages
+user.module --> update-user.usecase : manages
