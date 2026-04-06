@@ -1,13 +1,30 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { z } from 'zod';
+import { messageSchema } from '@/application/schemas';
 import { Message } from '@/domain/entities/message.entity';
 
-export class CreateMessageRequest {
-  @ApiProperty({ example: 'Can I come over to build the shed?' })
-  content: string;
+export const createMessageSchema = z.object({
+  content: messageSchema.content,
+  recipientId: messageSchema.recipientId,
+});
 
-  @ApiProperty({ example: 'recipient-user-uuid' })
-  recipientId: string;
-}
+export const createMessageApi = {
+  schema: {
+    type: 'object',
+    properties: {
+      content: {
+        type: 'string',
+        example: 'Can I come over to build the shed?',
+      },
+      recipientId: {
+        type: 'string',
+        format: 'uuid',
+        example: 'recipient-user-uuid',
+      },
+    },
+  },
+};
+
+export type CreateMessageRequest = z.infer<typeof createMessageSchema>;
 
 export class CreateMessageResponse {
   message: Message;

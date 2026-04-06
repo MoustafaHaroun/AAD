@@ -1,10 +1,24 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { z } from 'zod';
 import { Favorite } from '@/domain/entities/favorite.entity';
 
-export class CreateFavoriteRequest {
-  @ApiProperty({ example: 'listing-uuid' })
-  listingId: string;
-}
+export const createFavoriteSchema = z.object({
+  listingId: z.string().uuid(),
+});
+
+export const createFavoriteApi = {
+  schema: {
+    type: 'object',
+    properties: {
+      listingId: {
+        type: 'string',
+        format: 'uuid',
+        example: 'listing-uuid',
+      },
+    },
+  },
+};
+
+export type CreateFavoriteRequest = z.infer<typeof createFavoriteSchema>;
 
 export class CreateFavoriteResponse {
   favorite: Favorite;

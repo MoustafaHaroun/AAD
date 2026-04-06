@@ -39,6 +39,7 @@ import {
   UpdateListingUseCase,
 } from '@/application/usecases/';
 import * as authGuard from '@/presentation/guards/auth.guard';
+import { getRequesterId } from '@/presentation/guards/auth.guard';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
 import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/attachments/remove-attachment-from-listing.usecase';
@@ -104,13 +105,20 @@ export class ListingController {
   @ApiConsumes('multipart/form-data')
   @ApiBody(addAttachmentToListingApi)
   async uploadAttachment(
+    @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') listingId: string,
     @UploadedFiles(new ZodValidationPipe(z.array(imageSchema)))
     binaries: Express.Multer.File[],
   ) {
+    const requesterId = getRequesterId(request);
+
     const results = await Promise.all(
       binaries.map((binary) =>
-        this.addAttachmentToListingUseCase.execute({ binary, listingId }),
+        this.addAttachmentToListingUseCase.execute({
+          binary,
+          listingId,
+          requesterId,
+        }),
       ),
     );
 
@@ -122,15 +130,18 @@ export class ListingController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id/attachments/:attachmentId')
   @UseGuards(authGuard.AuthGuard)
-  @UseInterceptors(FilesInterceptor('binaries', 10))
   @ApiBearerAuth()
-  @ApiConsumes('multipart/form-data')
-  async removeAttachment(
+  removeAttachment(
+    @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') listingId: string,
     @Param('attachmentId') attachmentId: string,
   ) {
-    await this.removeAttachmentFromListingUseCase.execute({
+    const requesterId = getRequesterId(request);
+
+    return this.removeAttachmentFromListingUseCase.execute({
       attachmentId,
+      listingId,
+      requesterId,
     });
   }
 
@@ -140,17 +151,25 @@ export class ListingController {
   @ApiBearerAuth()
   @ApiBody(updateListingApi)
   updateListing(
+    @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateListingSchema)) dto: UpdateListingRequest,
   ): Promise<UpdateListingResponse> {
-    return this.updateListingUseCase.execute({ ...dto, id });
+    const requesterId = getRequesterId(request);
+
+    return this.updateListingUseCase.execute({ ...dto, id, requesterId });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
-  deleteListing(@Param('id') id: string): Promise<DeleteListingResponse> {
-    return this.deleteListingUseCase.execute({ id });
+  deleteListing(
+    @Req() request: authGuard.AuthenticatedRequest,
+    @Param('id') id: string,
+  ): Promise<DeleteListingResponse> {
+    const requesterId = getRequesterId(request);
+
+    return this.deleteListingUseCase.execute({ id, requesterId });
   }
 }

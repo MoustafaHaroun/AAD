@@ -5,7 +5,7 @@ import { GetAllUsersUseCase } from '@/application/usecases/users/get/get-all-use
 import { GetUserByIdUseCase } from '@/application/usecases/users/get/get-user-by-id.usecase';
 import { UpdateUserUseCase } from '@/application/usecases/users/patch/update-user.usecase';
 import { DeleteUserUseCase } from '@/application/usecases/users/delete/delete-user.usecase';
-import { AuthGuard } from '@/presentation/guards/auth.guard';
+import { AuthGuard, AuthenticatedRequest } from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Role } from '@/domain/enums/role.enum';
 
@@ -17,6 +17,10 @@ const mockUser = {
   listings: [],
   notifications: [],
 };
+
+const mockAuthReq = {
+  user: { sub: 'user-1', email: 'test@test.com', role: Role.USER },
+} as AuthenticatedRequest;
 
 describe('UserController', () => {
   let controller: UserController;
@@ -72,15 +76,18 @@ describe('UserController', () => {
     expect(mockGetByIdUseCase.execute).toHaveBeenCalledWith({ id: 'user-1' });
   });
 
-  it('updateUser delegates to UpdateUserUseCase with merged id', async () => {
+  it('updateUser passes requesterId and merged id to UpdateUserUseCase', async () => {
     mockUpdateUseCase.execute.mockResolvedValue({ user: mockUser });
 
-    const result = await controller.updateUser('user-1', { firstname: 'Jane' });
+    const result = await controller.updateUser(mockAuthReq, 'user-1', {
+      firstname: 'Jane',
+    });
 
     expect(result).toEqual({ user: mockUser });
     expect(mockUpdateUseCase.execute).toHaveBeenCalledWith({
       id: 'user-1',
       firstname: 'Jane',
+      requesterId: 'user-1',
     });
   });
 

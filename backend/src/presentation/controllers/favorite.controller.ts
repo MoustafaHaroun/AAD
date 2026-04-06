@@ -13,7 +13,9 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import {
-  CreateFavoriteRequest,
+  createFavoriteApi,
+  createFavoriteSchema,
+  type CreateFavoriteRequest,
   CreateFavoriteResponse,
 } from '@/application/dto/favorites/create-favorite.dto';
 import { GetFavoritesByUserIdResponse } from '@/application/dto/favorites/get-favorites-by-user-id.dto';
@@ -21,6 +23,8 @@ import { CreateFavoriteUseCase } from '@/application/usecases/favorites/create/c
 import { GetFavoritesByUserIdUseCase } from '@/application/usecases/favorites/get/get-favorites-by-user-id.usecase';
 import { DeleteFavoriteUseCase } from '@/application/usecases/favorites/delete/delete-favorite.usecase';
 import * as authGuard from '@/presentation/guards/auth.guard';
+import { getRequesterId } from '@/presentation/guards/auth.guard';
+import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
 
 @Controller('favorites')
 export class FavoriteController {
@@ -50,10 +54,11 @@ export class FavoriteController {
   @Post()
   @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
-  @ApiBody({ type: CreateFavoriteRequest })
+  @ApiBody(createFavoriteApi)
   createFavorite(
     @Req() request: authGuard.AuthenticatedRequest,
-    @Body() dto: CreateFavoriteRequest,
+    @Body(new ZodValidationPipe(createFavoriteSchema))
+    dto: CreateFavoriteRequest,
   ): Promise<CreateFavoriteResponse> {
     const userId = request.user.sub;
 
@@ -68,7 +73,13 @@ export class FavoriteController {
   @Delete(':id')
   @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
-  deleteFavorite(@Param('id') id: string): Promise<void> {
-    return this.deleteFavoriteUseCase.execute({ id });
+  deleteFavorite(
+    @Req() request: authGuard.AuthenticatedRequest,
+    @Param('id') id: string,
+  ): Promise<void> {
+    return this.deleteFavoriteUseCase.execute({
+      id,
+      requesterId: getRequesterId(request),
+    });
   }
 }
