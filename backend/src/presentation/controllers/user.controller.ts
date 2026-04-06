@@ -33,11 +33,7 @@ import {
 } from '@/application/dto';
 import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
-import {
-  AuthGuard,
-  AuthenticatedRequest,
-  getRequesterId,
-} from '@/presentation/guards/auth.guard';
+import * as authGuard from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Roles } from '@/presentation/decorators/roles.decorator';
 import { Role } from '@/domain/enums/role.enum';
@@ -55,7 +51,7 @@ export class UserController {
   @HttpCode(HttpStatus.OK)
   @Get()
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(authGuard.AuthGuard, RolesGuard)
   @ApiBearerAuth()
   getAllUsers(): Promise<GetAllUsersResponse> {
     return this.getAllUsersUseCase.execute();
@@ -78,25 +74,25 @@ export class UserController {
 
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
   @ApiBody(updateUserApi)
   updateUser(
-    @Req() request: AuthenticatedRequest,
+    @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
     @Body(new ZodValidationPipe(updateUserSchema)) dto: UpdateUserRequest,
   ): Promise<UpdateUserResponse> {
     return this.updateUserUseCase.execute({
       ...dto,
       id,
-      requesterId: getRequesterId(request),
+      requesterId: authGuard.getRequesterId(request),
     });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(authGuard.AuthGuard, RolesGuard)
   @ApiBearerAuth()
   deleteUser(@Param('id') id: string): Promise<DeleteUserResponse> {
     return this.deleteUserUseCase.execute({ id });

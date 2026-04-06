@@ -21,11 +21,7 @@ import { GetNotificationByIdResponse } from '@/application/dto/notifications/get
 import { CreateNotificationUseCase } from '@/application/usecases/notifications/create/create-notification.usecase';
 import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete/delete-notification.usecase';
 import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get/get-notification-by-id.usecase';
-import {
-  AuthGuard,
-  AuthenticatedRequest,
-  getRequesterId,
-} from '@/presentation/guards/auth.guard';
+import * as authGuard from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Roles } from '@/presentation/decorators/roles.decorator';
 import { Role } from '@/domain/enums/role.enum';
@@ -41,13 +37,13 @@ export class NotificationController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
   getNotification(
-    @Req() request: AuthenticatedRequest,
+    @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<GetNotificationByIdResponse> {
-    const requesterId = getRequesterId(request);
+    const requesterId = authGuard.getRequesterId(request);
 
     return this.getNotificationByIdUseCase.execute({ id, requesterId });
   }
@@ -55,7 +51,7 @@ export class NotificationController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   @Roles(Role.ADMIN)
-  @UseGuards(AuthGuard, RolesGuard)
+  @UseGuards(authGuard.AuthGuard, RolesGuard)
   @ApiBearerAuth()
   @ApiBody(createNotificationApi)
   createNotification(
@@ -67,13 +63,13 @@ export class NotificationController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
   deleteNotification(
-    @Req() request: AuthenticatedRequest,
+    @Req() request: authGuard.AuthenticatedRequest,
     @Param('id') id: string,
   ): Promise<void> {
-    const requesterId = getRequesterId(request);
+    const requesterId = authGuard.getRequesterId(request);
 
     return this.deleteNotificationUseCase.execute({ id, requesterId });
   }
