@@ -1,0 +1,80 @@
+\section{Testing}\label{sec:testing}
+
+The backend is tested using \emph{Jest}, the testing framework bundled with NestJS.
+Tests are co-located with the source files they cover, following the \texttt{*.spec.ts} convention.
+
+\subsection{Approach}
+
+All tests are pure unit tests, no database, no HTTP server, and no external service is started.
+Every dependency (repository, service, use case) is replaced with a Jest mock object.
+This keeps the tests fast and isolated, while still verifying the logic of each component individually.
+
+Mocks are reset before every test via \texttt{jest.clearAllMocks()} in a \texttt{beforeEach} block, ensuring that one test cannot influence another.
+
+\subsection{Use-Case Tests}
+
+Use cases sit in the Application layer and contain all business logic.
+
+Each use case test covers two scenarios: the \emph{happy path}, where all dependencies behave correctly and the expected result is returned, and the \emph{failure path}, where a precondition is violated and the correct HTTP exception is thrown.
+
+\begin{htable}[
+    caption = {Tested Use Cases},
+    label = {tab:usecases-tested}
+] {
+    colspec = {llX},
+}
+    Domain & Use Case & Scenarios \\
+    Listings & CreateListingUseCase & Returns listing for valid user; throws \texttt{UnauthorizedException} when user not found. \\
+    Listings & GetListingByIdUseCase & Returns listing by ID; throws \texttt{NotFoundException} when listing does not exist. \\
+    Listings & UpdateListingUseCase & Returns updated listing; throws \texttt{NotFoundException} for unknown ID. \\
+    Listings & DeleteListingUseCase & Deletes listing; throws \texttt{NotFoundException} for unknown ID. \\
+    Users & CreateUserUseCase & Returns new user; throws \texttt{ConflictException} when email already exists. \\
+    Users & GetUserByIdUseCase & Returns user by ID; throws \texttt{NotFoundException} for unknown ID. \\
+    Users & UpdateUserUseCase & Returns updated user; throws \texttt{NotFoundException} for unknown ID. \\
+    Users & DeleteUserUseCase & Deletes user; throws \texttt{NotFoundException} for unknown ID. \\
+    Notifications & CreateNotificationUseCase & Returns new notification; throws \texttt{NotFoundException} when user not found. \\
+    Notifications & GetNotificationByIdUseCase & Returns notification; throws \texttt{NotFoundException} for unknown ID. \\
+    Notifications & UpdateNotificationUseCase & Returns updated notification; throws \texttt{NotFoundException} for unknown ID. \\
+    Notifications & DeleteNotificationUseCase & Deletes notification; throws \texttt{NotFoundException} for unknown ID. \\
+    Auth & SignInUseCase & Returns JWT on valid credentials; throws \texttt{UnauthorizedException} for wrong password or unknown user. \\
+\end{htable}
+
+\subsection{Controller Tests}
+
+Controllers sit in the Presentation layer and are responsible for routing requests to the correct use case.
+They are tested using NestJS's \texttt{TestingModule}, which compiles the controller with all use cases replaced by mock providers.
+The \texttt{AuthGuard} is overridden to always return \texttt{true}, allowing tests to focus on routing behaviour rather than authentication.
+
+Each controller test verifies that the correct use case is called with the correct arguments derived from the request, and that the use case's return value is forwarded back to the caller unchanged.
+
+\begin{htable}[
+    caption = {Tested Controllers},
+    label = {tab:controllers-tested}
+] {
+    colspec = {lX},
+}
+    Controller & Scenarios Covered \\
+    ListingController & Get all listings (passes \texttt{userId} from JWT), get by ID, create (merges JWT \texttt{userId} with body), update (merges route param with body), delete. \\
+    UserController & Get user by ID, create, update, delete. \\
+    AuthController & Sign-in returns token from use case. \\
+    NotificationController & Get all notifications, get by ID, create, update, delete. \\
+\end{htable}
+
+\subsection{Guard Tests}
+
+The \texttt{AuthGuard} is tested independently to verify its token-extraction and verification logic.
+A helper constructs a minimal mock \texttt{ExecutionContext} with a controlled \texttt{Authorization} header, and the \texttt{JwtService} is mocked.
+
+The following scenarios are covered:
+
+\begin{itemize}
+    \item Returns \texttt{true} and attaches the decoded payload to the request when a valid Bearer token is provided.
+    \item Throws \texttt{UnauthorizedException} when no \texttt{Authorization} header is present.
+    \item Throws \texttt{UnauthorizedException} when the scheme is not \texttt{Bearer}.
+    \item Throws \texttt{UnauthorizedException} when the JWT signature verification fails.
+\end{itemize}
+
+\subsection{Running the Tests}
+
+Tests are run from the \texttt{backend/} directory using \texttt{npm run test}.
+A coverage report can be generated with \texttt{npm run test:cov}.

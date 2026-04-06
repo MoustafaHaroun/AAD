@@ -1,0 +1,34 @@
+\section{Component Architecture (C3)}
+The backend container has multiple components that use one another to handle the business logic of the application.
+
+\subsection{Overview}
+The domain components are described in \cref{tab:domain-components} and other components are described in \cref{tab:other-components}.
+The diagram is too large to fit in this document, but it can be viewed by looking through the diagrams folder that is delivered alongside this document.
+
+\begin{htable}[
+    caption = {Domain Components},
+    label = {tab:domain-components}
+] {
+    colspec = {lX},
+}
+    Component & Role \\
+    Favorite Module & Handle CRUD operations for the favorites entity. \\
+    Listing Module & Handle CRUD operations for the listings entity. \\
+    Message Module & Handle CRUD operations for the messages entity. \\
+    Notification Module & Handle CRUD operations for the notifications entity. \\
+    User Module & Handle CRUD operations for the users entity. \\
+\end{htable}
+
+\begin{htable}[
+    caption = {Other Components},
+    label = {tab:other-components}
+] {
+    colspec = {lX},
+}
+    Component & Role \\
+    Auth Module & Handle sign in requests. \\
+    Health Module & Provide endpoint for checking if server is healthy. \\
+    Auth Guard & Ensure routes are protected so that only authenticated users can call them. \\
+    Role Decorator & Ensure routes are protected so that only authorized users can call them. \\
+    Zod Pipe & Validate the request body objects against a defined schema. \\
+\end{htable}
