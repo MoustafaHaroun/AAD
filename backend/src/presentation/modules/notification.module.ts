@@ -6,7 +6,6 @@ import { NotificationController } from '@/presentation/controllers/notification.
 import { CreateNotificationUseCase } from '@/application/usecases/notifications/create/create-notification.usecase';
 import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete/delete-notification.usecase';
 import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get/get-notification-by-id.usecase';
-import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update/update-notification.usecase';
 import { NotificationRepository } from '@/infrastructure/persistence/typeorm/repositories/notification.repository';
 import { NotificationModel } from '@/infrastructure/persistence/typeorm/models/notification.model';
 import { UserModel } from '@/infrastructure/persistence/typeorm/models';
@@ -19,7 +18,6 @@ import { UserModel } from '@/infrastructure/persistence/typeorm/models';
     CreateNotificationUseCase,
     DeleteNotificationUseCase,
     GetNotificationByIdUseCase,
-    UpdateNotificationUseCase,
     RolesGuard,
     Reflector,
   ],

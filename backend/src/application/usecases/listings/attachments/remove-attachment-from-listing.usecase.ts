@@ -1,5 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { AttachmentRepository } from '@/infrastructure/persistence/typeorm/repositories';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  AttachmentRepository,
+  ListingRepository,
+} from '@/infrastructure/persistence/typeorm/repositories';
 import { MinioClient } from '@/infrastructure/persistence/minio';
 import {
   RemoveAttachmentFromListingRequest,
@@ -10,12 +17,15 @@ import {
 export class RemoveAttachmentFromListingUseCase {
   constructor(
     private readonly attachmentRepository: AttachmentRepository,
+    private readonly listingRepository: ListingRepository,
     private readonly minio: MinioClient,
   ) {}
 
   async execute(
     dto: RemoveAttachmentFromListingRequest & {
       attachmentId: string;
+      listingId: string;
+      requesterId?: string;
     },
   ): Promise<RemoveAttachmentFromListingResponse> {
     const attachment = await this.attachmentRepository.findById(
@@ -26,6 +36,22 @@ export class RemoveAttachmentFromListingUseCase {
       throw new NotFoundException(
         `Attachment with id '${dto.attachmentId}' does not exist.`,
       );
+    }
+
+    if (dto.requesterId) {
+      const listing = await this.listingRepository.findById(dto.listingId);
+
+      if (listing == null) {
+        throw new NotFoundException(
+          `Listing with id '${dto.listingId}' does not exist.`,
+        );
+      }
+
+      if (listing.user.id !== dto.requesterId) {
+        throw new ForbiddenException(
+          'You do not have permission to remove attachments from this listing.',
+        );
+      }
     }
 
     const minioClient = this.minio.getClient();

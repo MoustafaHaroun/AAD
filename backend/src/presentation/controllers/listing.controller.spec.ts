@@ -1,5 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { AuthGuard } from '@/presentation/guards/auth.guard';
+import {
+  AuthGuard,
+  AuthenticatedRequest,
+} from '@/presentation/guards/auth.guard';
 import { ListingController } from './listing.controller';
 import { CreateListingUseCase } from '@/application/usecases/listings/create/create-listing.usecase';
 import { GetListingByIdUseCase } from '@/application/usecases/listings/get/get-listing-by-id.usecase';
@@ -8,7 +11,7 @@ import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listi
 import { UpdateListingUseCase } from '@/application/usecases/listings/patch/update-listing.usecase';
 import { DeleteListingUseCase } from '@/application/usecases/listings/delete/delete-listing.usecase';
 import { AddAttachmentToListingUseCase } from '@/application/usecases/listings/attachments/add-attachment-to-listing.usecase';
-import { AuthenticatedRequest } from '@/presentation/guards/auth.guard';
+import { Role } from '@/domain/enums/role.enum';
 
 const mockListing = {
   id: 'listing-1',
@@ -19,7 +22,7 @@ const mockListing = {
 };
 
 const mockAuthReq = {
-  user: { sub: 'user-1', email: 'test@test.com' },
+  user: { sub: 'user-1', email: 'test@test.com', role: Role.USER },
 } as AuthenticatedRequest;
 
 describe('ListingController', () => {
@@ -97,10 +100,10 @@ describe('ListingController', () => {
     });
   });
 
-  it('updateListing delegates to UpdateListingUseCase with merged id', async () => {
+  it('updateListing passes requesterId and merged id to UpdateListingUseCase', async () => {
     mockUpdateUseCase.execute.mockResolvedValue({ listing: mockListing });
 
-    const result = await controller.updateListing('listing-1', {
+    const result = await controller.updateListing(mockAuthReq, 'listing-1', {
       title: 'Updated',
     });
 
@@ -108,14 +111,18 @@ describe('ListingController', () => {
     expect(mockUpdateUseCase.execute).toHaveBeenCalledWith({
       id: 'listing-1',
       title: 'Updated',
+      requesterId: 'user-1',
     });
   });
 
-  it('deleteListing delegates to DeleteListingUseCase', async () => {
+  it('deleteListing passes requesterId to DeleteListingUseCase', async () => {
     mockDeleteUseCase.execute.mockResolvedValue(undefined);
 
-    await controller.deleteListing('listing-1');
+    await controller.deleteListing(mockAuthReq, 'listing-1');
 
-    expect(mockDeleteUseCase.execute).toHaveBeenCalledWith({ id: 'listing-1' });
+    expect(mockDeleteUseCase.execute).toHaveBeenCalledWith({
+      id: 'listing-1',
+      requesterId: 'user-1',
+    });
   });
 });

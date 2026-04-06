@@ -19,6 +19,7 @@ services:
       MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
       MINIO_BUCKET: ${MINIO_BUCKET}
       LOKI_URL: http://loki:3100
+      SWAGGER_ENABLED: 'true'
     command: sh -c "npm run start:dev"
     ports:
       - '80:3000'

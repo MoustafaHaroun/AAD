@@ -54,7 +54,11 @@ describe('Listings (e2e)', () => {
     delete: jest.fn(),
   };
   const mockUserRepo = { findById: jest.fn() };
-  const mockAttachmentRepo = { create: jest.fn(), findById: jest.fn(), delete: jest.fn() };
+  const mockAttachmentRepo = {
+    create: jest.fn(),
+    findById: jest.fn(),
+    delete: jest.fn(),
+  };
   const mockMinioClient = { upload: jest.fn() };
 
   beforeEach(async () => {
