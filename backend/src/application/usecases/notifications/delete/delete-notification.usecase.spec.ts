@@ -13,7 +13,12 @@ describe('DeleteNotificationUseCase', () => {
   it('deletes the notification when found', async () => {
     mockNotificationRepo.findById.mockResolvedValue({
       id: 'notif-1',
-      toDomain: jest.fn().mockReturnValue({ id: 'notif-1', title: 'Alert', message: 'Hello', user: null }),
+      toDomain: jest.fn().mockReturnValue({
+        id: 'notif-1',
+        title: 'Alert',
+        message: 'Hello',
+        user: null,
+      }),
     });
     mockNotificationRepo.delete.mockResolvedValue(undefined);
 

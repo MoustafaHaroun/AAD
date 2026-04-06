@@ -5,7 +5,10 @@ import { GetAllUsersUseCase } from '@/application/usecases/users/get/get-all-use
 import { GetUserByIdUseCase } from '@/application/usecases/users/get/get-user-by-id.usecase';
 import { UpdateUserUseCase } from '@/application/usecases/users/patch/update-user.usecase';
 import { DeleteUserUseCase } from '@/application/usecases/users/delete/delete-user.usecase';
-import { AuthGuard, AuthenticatedRequest } from '@/presentation/guards/auth.guard';
+import {
+  AuthGuard,
+  AuthenticatedRequest,
+} from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Role } from '@/domain/enums/role.enum';
 
