@@ -1,7 +1,16 @@
 import type { DIContainer } from "@/infrastructure/di";
 import * as irepositories from "@/domain/repositories";
 import * as iservices from "@/domain/services";
-import { ListingRepository, AttachmentRepository } from "@/infrastructure/persistence/repositories";
+import {
+    ListingRepository,
+    AttachmentRepository,
+    AuthHttpRepository,
+    UserHttpRepository,
+    FavoriteHttpRepository,
+    ApiListingHttpRepository,
+    MessageHttpRepository,
+    NotificationHttpRepository,
+} from "@/infrastructure/persistence/repositories";
 import { ImageService, SharingService } from "@/infrastructure/services";
 
 /**
@@ -20,6 +29,12 @@ export function register(di: DIContainer) {
 function registerRepositories(di: DIContainer) {
     di.provide(irepositories.LISTING_REPOSITORY_TOKEN, new ListingRepository());
     di.provide(irepositories.ATTACHMENT_REPOSITORY_TOKEN, new AttachmentRepository());
+    di.provide(irepositories.AUTH_REPOSITORY_TOKEN, new AuthHttpRepository());
+    di.provide(irepositories.USER_REPOSITORY_TOKEN, new UserHttpRepository());
+    di.provide(irepositories.FAVORITE_REPOSITORY_TOKEN, new FavoriteHttpRepository());
+    di.provide(irepositories.API_LISTING_REPOSITORY_TOKEN, new ApiListingHttpRepository());
+    di.provide(irepositories.MESSAGE_REPOSITORY_TOKEN, new MessageHttpRepository());
+    di.provide(irepositories.NOTIFICATION_REPOSITORY_TOKEN, new NotificationHttpRepository());
 }
 
 /**

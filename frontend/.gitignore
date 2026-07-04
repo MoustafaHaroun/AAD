@@ -16,6 +16,9 @@ web-build/
 *.key
 *.mobileprovision
 
+# Android build cache
+android/.kotlin/
+
 # Metro
 .metro-health-check*
 
@@ -28,7 +31,8 @@ yarn-error.*
 .DS_Store
 *.pem
 
-# local env files
+# env files
+.env
 .env*.local
 
 # typescript
