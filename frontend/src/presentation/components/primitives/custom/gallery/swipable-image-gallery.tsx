@@ -63,7 +63,7 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
                         <Image
                             className="aspect-video w-full"
                             source={{ uri }}
-                            resizeMode="contain"
+                            resizeMode="cover"
                         />
                     </Pressable>
                 ))}
