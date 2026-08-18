@@ -50,6 +50,8 @@ export class MinioClient implements OnModuleInit {
         } else {
           this.logger.log(`Bucket "${this.bucketName}" already exists — ready`);
         }
+
+        await this.ensurePublicReadPolicy();
         return;
       } catch (err) {
         this.logger.warn(
@@ -62,6 +64,23 @@ export class MinioClient implements OnModuleInit {
     this.logger.error(
       'Failed to connect to MinIO after 10 attempts — giving up',
     );
+  }
+
+  private async ensurePublicReadPolicy(): Promise<void> {
+    const policy = {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Effect: 'Allow',
+          Principal: { AWS: ['*'] },
+          Action: ['s3:GetObject'],
+          Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+        },
+      ],
+    };
+
+    await this.client.setBucketPolicy(this.bucketName, JSON.stringify(policy));
+    this.logger.log(`Bucket "${this.bucketName}" set to public-read`);
   }
 
   getClient(): Minio.Client {
@@ -83,6 +102,16 @@ export class MinioClient implements OnModuleInit {
   }
 
   toEndpoint(fileName: string): string {
-    return `http://${process.env.MINIO_HOST ?? 'minio'}/${this.bucketName}/${fileName}`;
+    const publicUrl = process.env.MINIO_PUBLIC_URL;
+
+    if (!publicUrl) {
+      this.logger.warn(
+        'MINIO_PUBLIC_URL is not set — falling back to the internal MINIO_HOST, which is likely unreachable from outside the container network',
+      );
+    }
+
+    const base = publicUrl ?? `http://${process.env.MINIO_HOST ?? 'minio'}:9000`;
+
+    return `${base.replace(/\/$/, '')}/${this.bucketName}/${fileName}`;
   }
 }
