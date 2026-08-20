@@ -9,15 +9,18 @@ export class ApiListingHttpRepository implements IApiListingRepository {
     }
 
     async getListing(id: string): Promise<ApiListing> {
-        return apiClient.get<ApiListing>(`/listings/${id}`);
+        const response = await apiClient.get<{ listing: ApiListing }>(`/listings/${id}`);
+        return response.listing;
     }
 
     async createListing(body: CreateApiListingBody): Promise<ApiListing> {
-        return apiClient.post<ApiListing>("/listings", body);
+        const response = await apiClient.post<{ listing: ApiListing }>("/listings", body);
+        return response.listing;
     }
 
     async updateListing(id: string, body: UpdateApiListingBody): Promise<ApiListing> {
-        return apiClient.patch<ApiListing>(`/listings/${id}`, body);
+        const response = await apiClient.patch<{ listing: ApiListing }>(`/listings/${id}`, body);
+        return response.listing;
     }
 
     async deleteListing(id: string): Promise<void> {
