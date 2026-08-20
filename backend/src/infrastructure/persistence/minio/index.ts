@@ -2,19 +2,41 @@ import 'dotenv';
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as Minio from 'minio';
 
+interface Endpoint {
+  endPoint: string;
+  port: number;
+  useSSL: boolean;
+}
+
+function parseEndpoint(raw: string): Endpoint {
+  if (/^https?:\/\//i.test(raw)) {
+    const url = new URL(raw);
+    const useSSL = url.protocol === 'https:';
+
+    return {
+      endPoint: url.hostname,
+      port: url.port ? Number(url.port) : useSSL ? 443 : 80,
+      useSSL,
+    };
+  }
+
+  return { endPoint: raw, port: 9000, useSSL: false };
+}
+
 @Injectable()
 export class MinioClient implements OnModuleInit {
   private readonly client: Minio.Client;
   private readonly bucketName: string;
+  private readonly endpoint: Endpoint;
   private readonly logger = new Logger(MinioClient.name);
 
   constructor() {
-    const endPoint = process.env.MINIO_HOST ?? 'minio';
+    const endpoint = parseEndpoint(process.env.MINIO_HOST ?? 'minio');
     const accessKey = process.env.MINIO_ROOT_USER;
     const bucketName = process.env.MINIO_BUCKET ?? '';
 
     this.logger.log(
-      `Initializing MinIO client — endpoint: ${endPoint}:9000, bucket: "${bucketName}", accessKey: ${accessKey ? accessKey : '(not set)'}`,
+      `Initializing MinIO client — endpoint: ${endpoint.endPoint}:${endpoint.port} (useSSL: ${endpoint.useSSL}), bucket: "${bucketName}", accessKey: ${accessKey ? accessKey : '(not set)'}`,
     );
 
     if (!accessKey) this.logger.warn('MINIO_ROOT_USER is not set');
@@ -23,19 +45,20 @@ export class MinioClient implements OnModuleInit {
     if (!bucketName) this.logger.warn('MINIO_BUCKET is not set');
 
     this.client = new Minio.Client({
-      endPoint,
-      port: 9000,
-      useSSL: false,
+      endPoint: endpoint.endPoint,
+      port: endpoint.port,
+      useSSL: endpoint.useSSL,
       accessKey: process.env.MINIO_ROOT_USER,
       secretKey: process.env.MINIO_ROOT_PASSWORD,
     });
 
     this.bucketName = bucketName;
+    this.endpoint = endpoint;
   }
 
   async onModuleInit(): Promise<void> {
     this.logger.log(
-      `Connecting to MinIO at ${process.env.MINIO_HOST ?? 'minio'}:9000...`,
+      `Connecting to MinIO at ${this.endpoint.endPoint}:${this.endpoint.port} (useSSL: ${this.endpoint.useSSL})...`,
     );
 
     for (let i = 0; i < 10; i++) {
@@ -110,7 +133,9 @@ export class MinioClient implements OnModuleInit {
       );
     }
 
-    const base = publicUrl ?? `http://${process.env.MINIO_HOST ?? 'minio'}:9000`;
+    const base =
+      publicUrl ??
+      `${this.endpoint.useSSL ? 'https' : 'http'}://${this.endpoint.endPoint}:${this.endpoint.port}`;
 
     return `${base.replace(/\/$/, '')}/${this.bucketName}/${fileName}`;
   }
