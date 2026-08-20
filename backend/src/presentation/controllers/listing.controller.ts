@@ -67,8 +67,6 @@ export class ListingController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  @UseGuards(authGuard.AuthGuard)
-  @ApiBearerAuth()
   getListings(
     @Query(new ZodValidationPipe(getListingsSchema))
     query: GetListingsRequest,
