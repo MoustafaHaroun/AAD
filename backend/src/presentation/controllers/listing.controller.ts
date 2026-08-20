@@ -9,6 +9,7 @@ import {
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UnauthorizedException,
   UploadedFiles,
@@ -25,6 +26,9 @@ import {
   type DeleteListingResponse,
   type GetListingByIdResponse,
   type GetListingsByUserIdResponse,
+  type GetRandomListingsRequest,
+  type GetRandomListingsResponse,
+  getRandomListingsSchema,
   updateListingApi,
   type UpdateListingRequest,
   type UpdateListingResponse,
@@ -36,6 +40,7 @@ import {
   DeleteListingUseCase,
   GetListingByIdUseCase,
   GetListingsByUserIdUseCase,
+  GetRandomListingsUseCase,
   UpdateListingUseCase,
 } from '@/application/usecases/';
 import * as authGuard from '@/presentation/guards/auth.guard';
@@ -52,6 +57,7 @@ export class ListingController {
     private readonly addAttachmentToListingUseCase: AddAttachmentToListingUseCase,
     private readonly removeAttachmentFromListingUseCase: RemoveAttachmentFromListingUseCase,
     private readonly getListingsByUserIdUseCase: GetListingsByUserIdUseCase,
+    private readonly getRandomListingsUseCase: GetRandomListingsUseCase,
     private readonly getListingByIdUseCase: GetListingByIdUseCase,
     private readonly updateListingUseCase: UpdateListingUseCase,
     private readonly deleteListingUseCase: DeleteListingUseCase,
@@ -70,6 +76,17 @@ export class ListingController {
       throw new UnauthorizedException('User not authenticated');
     }
     return this.getListingsByUserIdUseCase.execute({ userId });
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('random')
+  @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
+  getRandomListings(
+    @Query(new ZodValidationPipe(getRandomListingsSchema))
+    query: GetRandomListingsRequest,
+  ): Promise<GetRandomListingsResponse> {
+    return this.getRandomListingsUseCase.execute(query);
   }
 
   @HttpCode(HttpStatus.OK)

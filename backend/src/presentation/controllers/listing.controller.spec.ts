@@ -7,6 +7,7 @@ import { ListingController } from './listing.controller';
 import { CreateListingUseCase } from '@/application/usecases/listings/create/create-listing.usecase';
 import { GetListingByIdUseCase } from '@/application/usecases/listings/get/get-listing-by-id.usecase';
 import { GetListingsByUserIdUseCase } from '@/application/usecases/listings/get/get-listings-by-user-id.usecase';
+import { GetRandomListingsUseCase } from '@/application/usecases/listings/get/get-random-listings.usecase';
 import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/attachments/remove-attachment-from-listing.usecase';
 import { UpdateListingUseCase } from '@/application/usecases/listings/patch/update-listing.usecase';
 import { DeleteListingUseCase } from '@/application/usecases/listings/delete/delete-listing.usecase';
@@ -30,6 +31,7 @@ describe('ListingController', () => {
   const mockCreateUseCase = { execute: jest.fn() };
   const mockAddAttachmentUseCase = { execute: jest.fn() };
   const mockGetByUserUseCase = { execute: jest.fn() };
+  const mockGetRandomUseCase = { execute: jest.fn() };
   const mockRemoveAttachmentUseCase = { execute: jest.fn() };
   const mockGetByIdUseCase = { execute: jest.fn() };
   const mockUpdateUseCase = { execute: jest.fn() };
@@ -46,6 +48,7 @@ describe('ListingController', () => {
           useValue: mockAddAttachmentUseCase,
         },
         { provide: GetListingsByUserIdUseCase, useValue: mockGetByUserUseCase },
+        { provide: GetRandomListingsUseCase, useValue: mockGetRandomUseCase },
         {
           provide: RemoveAttachmentFromListingUseCase,
           useValue: mockRemoveAttachmentUseCase,
@@ -82,6 +85,15 @@ describe('ListingController', () => {
     expect(mockGetByIdUseCase.execute).toHaveBeenCalledWith({
       id: 'listing-1',
     });
+  });
+
+  it('getRandomListings delegates to GetRandomListingsUseCase', async () => {
+    mockGetRandomUseCase.execute.mockResolvedValue({ listings: [mockListing] });
+
+    const result = await controller.getRandomListings({ limit: 10 });
+
+    expect(result).toEqual({ listings: [mockListing] });
+    expect(mockGetRandomUseCase.execute).toHaveBeenCalledWith({ limit: 10 });
   });
 
   it('createListing passes userId from JWT and body to CreateListingUseCase', async () => {

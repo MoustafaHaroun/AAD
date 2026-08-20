@@ -7,6 +7,7 @@ import {
   DeleteListingUseCase,
   GetListingByIdUseCase,
   GetListingsByUserIdUseCase,
+  GetRandomListingsUseCase,
   UpdateListingUseCase,
   RemoveAttachmentFromListingUseCase,
 } from '@/application/usecases';
@@ -37,6 +38,7 @@ import { MinioClient } from '@/infrastructure/persistence/minio';
     DeleteListingUseCase,
     GetListingByIdUseCase,
     GetListingsByUserIdUseCase,
+    GetRandomListingsUseCase,
     UpdateListingUseCase,
     MinioClient,
   ],

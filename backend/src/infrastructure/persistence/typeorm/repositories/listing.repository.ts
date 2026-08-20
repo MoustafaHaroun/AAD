@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { ListingModel } from '@/infrastructure/persistence/typeorm/models';
 
 @Injectable()
@@ -24,6 +24,24 @@ export class ListingRepository {
   async findAllByUserId(userId: string): Promise<ListingModel[]> {
     return await this.repository.find({
       where: { user: { id: userId } },
+      relations: ['attachments', 'user'],
+    });
+  }
+
+  async findRandom(limit: number): Promise<ListingModel[]> {
+    const ids = await this.repository
+      .createQueryBuilder('listing')
+      .select('listing.id')
+      .orderBy('RANDOM()')
+      .limit(limit)
+      .getMany();
+
+    if (ids.length === 0) {
+      return [];
+    }
+
+    return await this.repository.find({
+      where: { id: In(ids.map((listing) => listing.id)) },
       relations: ['attachments', 'user'],
     });
   }
