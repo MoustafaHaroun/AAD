@@ -6,7 +6,7 @@ import {
 import { ListingController } from './listing.controller';
 import { CreateListingUseCase } from '@/application/usecases/listings/create/create-listing.usecase';
 import { GetListingByIdUseCase } from '@/application/usecases/listings/get/get-listing-by-id.usecase';
-import { GetListingsByUserIdUseCase } from '@/application/usecases/listings/get/get-listings-by-user-id.usecase';
+import { GetListingsUseCase } from '@/application/usecases/listings/get/get-listings.usecase';
 import { GetRandomListingsUseCase } from '@/application/usecases/listings/get/get-random-listings.usecase';
 import { RemoveAttachmentFromListingUseCase } from '@/application/usecases/listings/attachments/remove-attachment-from-listing.usecase';
 import { UpdateListingUseCase } from '@/application/usecases/listings/patch/update-listing.usecase';
@@ -30,7 +30,7 @@ describe('ListingController', () => {
   let controller: ListingController;
   const mockCreateUseCase = { execute: jest.fn() };
   const mockAddAttachmentUseCase = { execute: jest.fn() };
-  const mockGetByUserUseCase = { execute: jest.fn() };
+  const mockGetListingsUseCase = { execute: jest.fn() };
   const mockGetRandomUseCase = { execute: jest.fn() };
   const mockRemoveAttachmentUseCase = { execute: jest.fn() };
   const mockGetByIdUseCase = { execute: jest.fn() };
@@ -47,7 +47,7 @@ describe('ListingController', () => {
           provide: AddAttachmentToListingUseCase,
           useValue: mockAddAttachmentUseCase,
         },
-        { provide: GetListingsByUserIdUseCase, useValue: mockGetByUserUseCase },
+        { provide: GetListingsUseCase, useValue: mockGetListingsUseCase },
         { provide: GetRandomListingsUseCase, useValue: mockGetRandomUseCase },
         {
           provide: RemoveAttachmentFromListingUseCase,
@@ -65,14 +65,23 @@ describe('ListingController', () => {
     controller = module.get(ListingController);
   });
 
-  it('getListings passes userId from JWT to GetListingsByUserUseCase', async () => {
-    mockGetByUserUseCase.execute.mockResolvedValue({ listings: [mockListing] });
+  it('getListings delegates to GetListingsUseCase', async () => {
+    mockGetListingsUseCase.execute.mockResolvedValue({ listings: [mockListing] });
 
-    const result = await controller.getListings(mockAuthReq);
+    const result = await controller.getListings({});
 
     expect(result).toEqual({ listings: [mockListing] });
-    expect(mockGetByUserUseCase.execute).toHaveBeenCalledWith({
-      userId: 'user-1',
+    expect(mockGetListingsUseCase.execute).toHaveBeenCalledWith({});
+  });
+
+  it('getListings passes the search query through to GetListingsUseCase', async () => {
+    mockGetListingsUseCase.execute.mockResolvedValue({ listings: [mockListing] });
+
+    const result = await controller.getListings({ q: 'carpentry' });
+
+    expect(result).toEqual({ listings: [mockListing] });
+    expect(mockGetListingsUseCase.execute).toHaveBeenCalledWith({
+      q: 'carpentry',
     });
   });
 

@@ -28,6 +28,22 @@ export class ListingRepository {
     });
   }
 
+  async findAll(query?: string): Promise<ListingModel[]> {
+    if (!query) {
+      return await this.repository.find({
+        relations: ['attachments', 'user'],
+      });
+    }
+
+    return await this.repository
+      .createQueryBuilder('listing')
+      .leftJoinAndSelect('listing.attachments', 'attachments')
+      .leftJoinAndSelect('listing.user', 'user')
+      .where('listing.title ILIKE :query', { query: `%${query}%` })
+      .orWhere('listing.description ILIKE :query', { query: `%${query}%` })
+      .getMany();
+  }
+
   async findRandom(limit: number): Promise<ListingModel[]> {
     const ids = await this.repository
       .createQueryBuilder('listing')

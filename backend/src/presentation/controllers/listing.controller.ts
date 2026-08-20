@@ -25,7 +25,9 @@ import {
   createListingSchema,
   type DeleteListingResponse,
   type GetListingByIdResponse,
-  type GetListingsByUserIdResponse,
+  type GetListingsRequest,
+  type GetListingsResponse,
+  getListingsSchema,
   type GetRandomListingsRequest,
   type GetRandomListingsResponse,
   getRandomListingsSchema,
@@ -39,7 +41,7 @@ import {
   CreateListingUseCase,
   DeleteListingUseCase,
   GetListingByIdUseCase,
-  GetListingsByUserIdUseCase,
+  GetListingsUseCase,
   GetRandomListingsUseCase,
   UpdateListingUseCase,
 } from '@/application/usecases/';
@@ -56,7 +58,7 @@ export class ListingController {
     private readonly createListingUseCase: CreateListingUseCase,
     private readonly addAttachmentToListingUseCase: AddAttachmentToListingUseCase,
     private readonly removeAttachmentFromListingUseCase: RemoveAttachmentFromListingUseCase,
-    private readonly getListingsByUserIdUseCase: GetListingsByUserIdUseCase,
+    private readonly getListingsUseCase: GetListingsUseCase,
     private readonly getRandomListingsUseCase: GetRandomListingsUseCase,
     private readonly getListingByIdUseCase: GetListingByIdUseCase,
     private readonly updateListingUseCase: UpdateListingUseCase,
@@ -68,14 +70,10 @@ export class ListingController {
   @UseGuards(authGuard.AuthGuard)
   @ApiBearerAuth()
   getListings(
-    @Req() request: authGuard.AuthenticatedRequest,
-  ): Promise<GetListingsByUserIdResponse> {
-    const userId = request.user.sub;
-
-    if (!userId) {
-      throw new UnauthorizedException('User not authenticated');
-    }
-    return this.getListingsByUserIdUseCase.execute({ userId });
+    @Query(new ZodValidationPipe(getListingsSchema))
+    query: GetListingsRequest,
+  ): Promise<GetListingsResponse> {
+    return this.getListingsUseCase.execute(query);
   }
 
   @HttpCode(HttpStatus.OK)

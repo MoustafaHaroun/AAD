@@ -12,6 +12,7 @@ export * from '@/application/usecases/users/create/create-user.usecase';
 export * from '@/application/usecases/listings/delete/delete-listing.usecase';
 export * from '@/application/usecases/listings/get/get-listing-by-id.usecase';
 export * from '@/application/usecases/listings/get/get-listings-by-user-id.usecase';
+export * from '@/application/usecases/listings/get/get-listings.usecase';
 export * from '@/application/usecases/listings/get/get-random-listings.usecase';
 export * from '@/application/usecases/messages/create/create-message.usecase';
 export * from '@/application/usecases/messages/delete/delete-message.usecase';
