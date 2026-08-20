@@ -13,7 +13,19 @@ export class GetListingsUseCase {
     const listings = await this.listingRepository.findAll(dto.q);
 
     return {
-      listings: listings.map((l) => l.toDomain()),
+      listings: listings.map((l) => {
+        const { user, ...listing } = l.toDomain();
+
+        return {
+          ...listing,
+          user: {
+            id: user.id,
+            firstname: user.firstname,
+            surname: user.surname,
+            role: user.role,
+          },
+        };
+      }),
     };
   }
 }

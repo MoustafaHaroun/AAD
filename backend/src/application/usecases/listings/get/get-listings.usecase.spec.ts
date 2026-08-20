@@ -1,3 +1,4 @@
+import { Role } from '@/domain/enums/role.enum';
 import { GetListingsUseCase } from './get-listings.usecase';
 
 const mockListingDomain = {
@@ -5,7 +6,14 @@ const mockListingDomain = {
   title: 'Test Listing',
   description: null,
   attachments: [],
-  user: { id: 'user-1' },
+  user: {
+    id: 'user-1',
+    email: 'user1@test.com',
+    firstname: 'Jane',
+    surname: 'Doe',
+    role: Role.USER,
+    location: 'Enschede',
+  },
 };
 
 describe('GetListingsUseCase', () => {
@@ -17,7 +25,7 @@ describe('GetListingsUseCase', () => {
     useCase = new GetListingsUseCase(mockListingRepo as any);
   });
 
-  it('returns all listings mapped to domain when no query is given', async () => {
+  it('returns all listings with the user trimmed to id/firstname/surname/role', async () => {
     mockListingRepo.findAll.mockResolvedValue([
       { toDomain: () => mockListingDomain },
     ]);
@@ -25,7 +33,22 @@ describe('GetListingsUseCase', () => {
     const result = await useCase.execute({});
 
     expect(mockListingRepo.findAll).toHaveBeenCalledWith(undefined);
-    expect(result).toEqual({ listings: [mockListingDomain] });
+    expect(result).toEqual({
+      listings: [
+        {
+          id: 'listing-1',
+          title: 'Test Listing',
+          description: null,
+          attachments: [],
+          user: {
+            id: 'user-1',
+            firstname: 'Jane',
+            surname: 'Doe',
+            role: Role.USER,
+          },
+        },
+      ],
+    });
   });
 
   it('passes the search query through to the repository', async () => {
