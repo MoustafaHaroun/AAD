@@ -4,6 +4,7 @@ import {
   GetListingsRequest,
   GetListingsResponse,
 } from '@/application/dto/listings/get-listings.dto';
+import { toPublicListing } from '@/application/dto/listings/public-listing.dto';
 
 @Injectable()
 export class GetListingsUseCase {
@@ -13,19 +14,7 @@ export class GetListingsUseCase {
     const listings = await this.listingRepository.findAll(dto.q);
 
     return {
-      listings: listings.map((l) => {
-        const { user, ...listing } = l.toDomain();
-
-        return {
-          ...listing,
-          user: {
-            id: user.id,
-            firstname: user.firstname,
-            surname: user.surname,
-            role: user.role,
-          },
-        };
-      }),
+      listings: listings.map((l) => toPublicListing(l.toDomain())),
     };
   }
 }

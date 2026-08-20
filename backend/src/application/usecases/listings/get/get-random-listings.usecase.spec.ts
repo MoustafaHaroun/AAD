@@ -1,3 +1,4 @@
+import { Role } from '@/domain/enums/role.enum';
 import { GetRandomListingsUseCase } from './get-random-listings.usecase';
 
 const mockListingDomain = {
@@ -5,7 +6,14 @@ const mockListingDomain = {
   title: 'Test Listing',
   description: null,
   attachments: [],
-  user: { id: 'user-1' },
+  user: {
+    id: 'user-1',
+    email: 'user1@test.com',
+    firstname: 'Jane',
+    surname: 'Doe',
+    role: Role.USER,
+    location: 'Enschede',
+  },
 };
 
 describe('GetRandomListingsUseCase', () => {
@@ -17,7 +25,7 @@ describe('GetRandomListingsUseCase', () => {
     useCase = new GetRandomListingsUseCase(mockListingRepo as any);
   });
 
-  it('returns random listings mapped to domain', async () => {
+  it('returns random listings with the user trimmed to id/firstname/surname/role', async () => {
     mockListingRepo.findRandom.mockResolvedValue([
       { toDomain: () => mockListingDomain },
     ]);
@@ -25,7 +33,22 @@ describe('GetRandomListingsUseCase', () => {
     const result = await useCase.execute({ limit: 10 });
 
     expect(mockListingRepo.findRandom).toHaveBeenCalledWith(10);
-    expect(result).toEqual({ listings: [mockListingDomain] });
+    expect(result).toEqual({
+      listings: [
+        {
+          id: 'listing-1',
+          title: 'Test Listing',
+          description: null,
+          attachments: [],
+          user: {
+            id: 'user-1',
+            firstname: 'Jane',
+            surname: 'Doe',
+            role: Role.USER,
+          },
+        },
+      ],
+    });
   });
 
   it('returns an empty array when there are no listings', async () => {

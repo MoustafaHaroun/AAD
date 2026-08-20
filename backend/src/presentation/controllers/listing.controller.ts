@@ -87,8 +87,6 @@ export class ListingController {
 
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  @UseGuards(authGuard.AuthGuard)
-  @ApiBearerAuth()
   getListing(@Param('id') id: string): Promise<GetListingByIdResponse> {
     return this.getListingByIdUseCase.execute({ id });
   }

@@ -4,6 +4,7 @@ import {
   GetListingByIdRequest,
   GetListingByIdResponse,
 } from '@/application/dto/listings/get-listing-by-id.dto';
+import { toPublicListing } from '@/application/dto/listings/public-listing.dto';
 
 @Injectable()
 export class GetListingByIdUseCase {
@@ -21,7 +22,7 @@ export class GetListingByIdUseCase {
     }
 
     return {
-      listing: listing.toDomain(),
+      listing: toPublicListing(listing.toDomain()),
     };
   }
 }

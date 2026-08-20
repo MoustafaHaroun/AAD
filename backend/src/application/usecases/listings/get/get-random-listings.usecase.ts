@@ -4,6 +4,7 @@ import {
   GetRandomListingsRequest,
   GetRandomListingsResponse,
 } from '@/application/dto/listings/get-random-listings.dto';
+import { toPublicListing } from '@/application/dto/listings/public-listing.dto';
 
 @Injectable()
 export class GetRandomListingsUseCase {
@@ -15,7 +16,7 @@ export class GetRandomListingsUseCase {
     const listings = await this.listingRepository.findRandom(dto.limit);
 
     return {
-      listings: listings.map((l) => l.toDomain()),
+      listings: listings.map((l) => toPublicListing(l.toDomain())),
     };
   }
 }
