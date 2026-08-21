@@ -27,6 +27,9 @@ export class UserModel {
   @Column({ type: 'varchar', nullable: true })
   location: string | null;
 
+  @Column({ type: 'varchar', nullable: true })
+  avatar: string | null;
+
   @OneToMany(() => ListingModel, (listing) => listing.user)
   listings: ListingModel[];
 
@@ -53,6 +56,7 @@ export class UserModel {
       surname: this.surname,
       role: this.role,
       location: this.location ?? null,
+      avatar: this.avatar ?? null,
       listings: this.listings,
       notifications: this.notifications,
     } satisfies User;
