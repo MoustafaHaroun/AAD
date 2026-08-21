@@ -12,7 +12,7 @@ export class GetMessagesByUserIdUseCase {
   async execute(
     dto: GetMessagesByUserIdRequest,
   ): Promise<GetMessagesByUserIdResponse> {
-    const messages = await this.messageRepository.findAllBySenderId(dto.userId);
+    const messages = await this.messageRepository.findAllByUserId(dto.userId);
 
     return {
       messages: messages.map((m) => m.toDomain()),

@@ -21,11 +21,15 @@ export class MessageRepository {
     });
   }
 
-  async findAllBySenderId(senderId: string): Promise<MessageModel[]> {
-    return await this.repository.find({
-      where: { sender: { id: senderId } },
-      relations: ['sender', 'recipient'],
-    });
+  async findAllByUserId(userId: string): Promise<MessageModel[]> {
+    return await this.repository
+      .createQueryBuilder('message')
+      .leftJoinAndSelect('message.sender', 'sender')
+      .leftJoinAndSelect('message.recipient', 'recipient')
+      .where('sender.id = :userId', { userId })
+      .orWhere('recipient.id = :userId', { userId })
+      .orderBy('message.createdAt', 'ASC')
+      .getMany();
   }
 
   async delete(id: string): Promise<void> {
