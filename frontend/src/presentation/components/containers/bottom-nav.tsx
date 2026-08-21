@@ -8,7 +8,7 @@ import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { cn } from "@/presentation/utils/cn.util";
 
 const TABS = [
-    { href: "/", label: "Home", icon: Home },
+    { href: "/home", label: "Home", icon: Home },
     { href: "/listings", label: "Listings", icon: ClipboardList },
     { href: "/chats", label: "Chats", icon: MessageSquare },
     { href: "/account", label: "Account", icon: User },
@@ -30,7 +30,7 @@ export function BottomNav(): React.JSX.Element {
         >
             <View className="flex-row pt-2">
                 {TABS.map(tab => {
-                    const active = tab.href === "/" ? pathname === "/" : pathname.startsWith(tab.href);
+                    const active = pathname.startsWith(tab.href);
 
                     return (
                         <Pressable

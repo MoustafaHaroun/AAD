@@ -110,7 +110,7 @@ export default function RegisterScreen(): React.JSX.Element {
             });
         }
 
-        router.replace("/listings");
+        router.replace("/home");
     }
 
     return (

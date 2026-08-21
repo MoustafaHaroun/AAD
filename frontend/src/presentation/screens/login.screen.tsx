@@ -38,7 +38,7 @@ export default function LoginScreen(): React.JSX.Element {
     function onSubmit(data: z.infer<typeof loginSchema>) {
         signIn(
             { email: data.email, password: data.password },
-            { onSuccess: () => { router.replace("/listings"); } },
+            { onSuccess: () => { router.replace("/home"); } },
         );
     }
 
