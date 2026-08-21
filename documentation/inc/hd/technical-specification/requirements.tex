@@ -1,0 +1,72 @@
+\section{Requirements}\label{sec:hd-requirements}
+The requirements below are adapted from the backend's functional/non-functional requirements (\cref{sec:technical-requirements} of the Technical Specification), rephrased from the mobile app's perspective. IDs and priorities are kept consistent with the backend document for traceability.
+
+\subsection{Functional Requirements}\label{sec:hd-functional-requirements}
+
+\begin{htable}[
+    caption = {Front-end Functional Requirements},
+    label = {tab:hd-functional-requirements},
+]
+    {
+        colspec={lXl},
+    }
+        Id & Requirement & MoSCoW \\
+        FR1 & Allow a user to register and log in & Must \\
+        FR2 & Allow a user to create and manage their profile & Must \\
+        FR3 & Allow a user to create skill listings for offers and requests & Must \\
+        FR4 & Allow a user to edit and delete their listings & Must \\
+        FR5 & Show listings based on the user's location & Could \\
+        FR6 & Allow a user to express interest in a listing & Must \\
+        FR7 & Allow a user to search listings by skill & Should \\
+        FR8 & Allow a user to save and view favorite listings & Could \\
+        FR9 & Provide real-time or near-real-time messaging between users & Could \\
+        FR10 & Allow a user to filter listings by criteria & Must \\
+        FR11 & Allow a user to upload images for their profile and listings & Must \\
+        FR12 & Show notifications for messages and listing interest & Should \\
+\end{htable}
+
+\subsection{Non-functional Requirements}\label{sec:hd-non-functional-requirements}
+
+\begin{htable}[
+    caption = {Front-end Non-functional Requirements},
+    label = {tab:hd-non-functional-requirements},
+]
+    {
+        colspec={lXl},
+    }
+        Id & Requirement & MoSCoW \\
+        NFR1 & Communicates with the backend over a REST API using HTTPS & Must \\
+        % TODO: front-end-specific NFRs (accessibility for elderly users,
+        % offline behaviour, platform support, performance) are not covered
+        % in the backend docs.
+\end{htable}
+
+\subsection{Business Requirements}\label{sec:hd-business-requirements}
+
+\begin{htable}[
+    caption = {Front-end Business Requirements},
+    label = {tab:hd-business-requirements},
+]
+    {
+        colspec={lXl},
+    }
+        Id & Requirement & MoSCoW \\
+        B1 & The mobile application is built with React Native & Must \\
+        % TODO: other business requirements (code standards, platform
+        % support, documentation, linting) are not stated for the front-end
+        % anywhere in the backend docs.
+\end{htable}
+
+\subsection{User Requirements}\label{sec:hd-user-requirements}
+The backend's Functional Requirements table references user requirements U1--U14, but their text is not defined anywhere in the backend documents (they come from the separate Design Essentials deliverable, which is not part of this repository).
+
+\begin{htable}[
+    caption = {Front-end User Requirements},
+    label = {tab:hd-user-requirements},
+]
+    {
+        colspec={lXl},
+    }
+        Id & Requirement & MoSCoW \\
+        % U1--U14 & TODO -- see Design Essentials & \\
+\end{htable}

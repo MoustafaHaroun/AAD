@@ -32,11 +32,9 @@
 \setrootdepth{2} % Set this to correct nesting from the doc/ directory.
 
 \title{Hybrid Development}
-\subtitle{A research paper on hybrid frameworks for mobile applications.}
+\subtitle{A Technical Specification of the Front-End for Trade2}
 \author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
 \date{\today}
-
-\newcommand{\tradesq}{Trade\textsuperscript{2}\xspace}
 
 \begin{document}
 
@@ -46,17 +44,35 @@
 \section{Changelog}\label{sec:changelog}
 
 \begin{htable}[
-		caption = {Changelog},
-		label = {tab:changelog},
-	]{
-		colspec={llX},
-	}
-	Versie & Datum & Omschrijving \\
-	1.0 & \today & Initial draft. \\
+        caption = {Changelog},
+        label = {tab:changelog},
+    ]{
+        colspec={llX},
+    }
+    Version & Date & Description \\
+    1.0 & \today & Initial draft. \\
 \end{htable}
 
 \newpage
 \tableofcontents
+
+\newpage
+\input{hd/technical-specification/introduction.tex}
+
+\newpage
+\input{hd/technical-specification/problem-statement.tex}
+
+\newpage
+\input{hd/technical-specification/stakeholders.tex}
+
+\newpage
+\input{hd/technical-specification/requirements.tex}
+
+\newpage
+\input{hd/technical-specification/user-stories.tex}
+
+\newpage
+\input{hd/technical-specification/use-case-diagram.tex}
 
 \newpage
 \input{hd/technical-specification/system-context.tex}
@@ -68,7 +84,15 @@
 \input{hd/technical-specification/component-architecture.tex}
 
 \newpage
+\input{hd/technical-specification/libraries.tex}
+
+\newpage
+\input{hd/technical-specification/wireframes-navigation.tex}
+
+\newpage
+\input{hd/technical-specification/testing.tex}
+
+\newpage
 \printbibliography
 
 \end{document}
-
