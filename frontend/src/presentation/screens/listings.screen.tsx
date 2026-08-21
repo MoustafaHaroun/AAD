@@ -26,9 +26,9 @@ type TabKey = (typeof TABS)[number]["key"];
  */
 export default function ListingsScreen(): React.JSX.Element {
     const router = useRouter();
-    const params = useLocalSearchParams<{ q?: string }>();
+    const params = useLocalSearchParams<{ q?: string, tab?: TabKey }>();
     const currentUserId = useCurrentUserId();
-    const [tab, setTab] = useState<TabKey>("near");
+    const [tab, setTab] = useState<TabKey>(params.tab ?? "near");
     const [query, setQuery] = useState(params.q ?? "");
     const [category, setCategory] = useState<ListingCategory | undefined>(undefined);
 
@@ -82,7 +82,7 @@ export default function ListingsScreen(): React.JSX.Element {
                     </View>
 
                     <View className="flex-row gap-4 border-b border-border">
-                        {TABS.map(t => <Pressable
+                        {TABS.map(t => (<Pressable
                                 className={cn("pb-2", tab === t.key && "border-b-2 border-black")}
                                 key={t.key}
                                 onPress={() => { setTab(t.key); }}
@@ -95,13 +95,13 @@ export default function ListingsScreen(): React.JSX.Element {
                                 >
                                     {t.label}
                                 </Text>
-                             </Pressable>,)}
+                             </Pressable>),)}
                     </View>
 
                     {tab === "near" && <CategoryFilterChips
                         onChange={setCategory}
                         value={category}
-                                       />}
+                    />}
                 </View>
 
                 <ScrollView
@@ -115,8 +115,8 @@ export default function ListingsScreen(): React.JSX.Element {
                 >
                     {isLoading
                         ? <View className="flex-1 items-center justify-center">
-                            <ActivityIndicator />
-                          </View>
+                                <ActivityIndicator />
+                            </View>
                         : null}
 
                     {error != null &&
@@ -136,13 +136,13 @@ export default function ListingsScreen(): React.JSX.Element {
                         </View>}
 
                     <View className="-m-1 flex flex-row flex-wrap">
-                        {listings?.map(listing => <Pressable
+                        {listings?.map(listing => (<Pressable
                                 className="w-1/2 p-1"
                                 key={listing.id}
                                 onPress={() => { router.push(`/listings/${listing.id}`); }}
                             >
                                 <ListingItem listing={listing} />
-                             </Pressable>,)}
+                             </Pressable>),)}
                     </View>
                 </ScrollView>
 
