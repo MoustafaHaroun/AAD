@@ -1,9 +1,9 @@
-import ComingSoonScreen from "@/presentation/screens/coming-soon.screen";
+import ChatsScreen from "@/presentation/screens/chats.screen";
 import * as React from "react";
 
 /**
  *
  */
 export default function Screen() {
-    return <ComingSoonScreen title="Chats" />;
+    return <ChatsScreen />;
 }

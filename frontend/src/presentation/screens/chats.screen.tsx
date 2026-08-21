@@ -1,0 +1,100 @@
+import { Stack, useRouter } from "expo-router";
+import * as React from "react";
+import { useState } from "react";
+import { Pressable, ScrollView, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { Search } from "lucide-react-native";
+import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
+import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
+import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
+import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
+import { useConversations } from "@/presentation/hooks";
+import { formatConversationTimestamp } from "@/presentation/utils/format-timestamp.util";
+
+/**
+ *
+ */
+export default function ChatsScreen(): React.JSX.Element {
+    const router = useRouter();
+    const { conversations, isLoading } = useConversations();
+    const [query, setQuery] = useState("");
+
+    const filtered = conversations?.filter(({ counterpart }) => `${counterpart.firstname} ${counterpart.surname}`.toLowerCase().includes(query.toLowerCase()));
+
+    return (
+        <>
+            <Stack.Screen options={{ headerShown: false }} />
+
+            <SafeAreaView
+                className="flex-1 bg-background"
+                edges={["top"]}
+            >
+                <View className="bg-prim px-4 pb-4 pt-2">
+                    <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
+                </View>
+
+                <View className="p-4">
+                    <View className="flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
+                        <Icon
+                            as={Search}
+                            className="size-6 text-forehued"
+                        />
+
+                        <Input
+                            className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
+                            onChangeText={setQuery}
+                            placeholder="Search"
+                            value={query}
+                        />
+                    </View>
+                </View>
+
+                <ScrollView contentContainerStyle={{ gap: 8, padding: 16, paddingTop: 0 }}>
+                    {isLoading ? <Text className="p-4 text-center text-muted-foreground">Loading…</Text> : null}
+
+                    {filtered?.length === 0 &&
+                        <Text className="p-4 text-center text-muted-foreground">
+                            No conversations yet.
+                        </Text>}
+
+                    {filtered?.map(({ counterpart, lastMessage }) => <Pressable
+                            className="flex-row items-center gap-3 rounded-[10px] bg-surfhued p-3"
+                            key={counterpart.id}
+                            onPress={() => { router.push(`/chats/${counterpart.id}`); }}
+                        >
+                            <UserAvatar
+                                avatar={counterpart.avatar}
+                                firstname={counterpart.firstname}
+                                id={counterpart.id}
+                                surname={counterpart.surname}
+                            />
+
+                            <View className="flex-1">
+                                <View className="flex-row items-center justify-between">
+                                    <Text
+                                        className="text-[16px] font-noto-semibold text-black"
+                                        ellipsizeMode="tail"
+                                        numberOfLines={1}
+                                    >
+                                        {counterpart.firstname} {counterpart.surname}
+                                    </Text>
+
+                                    <Text className="text-[14px] font-noto-medium text-forehued">
+                                        {formatConversationTimestamp(lastMessage.createdAt)}
+                                    </Text>
+                                </View>
+
+                                <Text
+                                    className="text-[14px] font-noto-medium text-forehued"
+                                    ellipsizeMode="tail"
+                                    numberOfLines={1}
+                                >
+                                    {lastMessage.content}
+                                </Text>
+                            </View>
+                         </Pressable>,)}
+                </ScrollView>
+            </SafeAreaView>
+        </>
+    );
+}
