@@ -4,15 +4,21 @@ import type { Message, CreateMessageBody } from "@/domain/entities";
 
 export class MessageHttpRepository implements IMessageRepository {
     async getMessages(): Promise<Message[]> {
-        return apiClient.get<Message[]>("/messages");
+        const { messages } = await apiClient.get<{ messages: Message[] }>("/messages");
+
+        return messages;
     }
 
     async getMessage(id: string): Promise<Message> {
-        return apiClient.get<Message>(`/messages/${id}`);
+        const { message } = await apiClient.get<{ message: Message }>(`/messages/${id}`);
+
+        return message;
     }
 
     async createMessage(body: CreateMessageBody): Promise<Message> {
-        return apiClient.post<Message>("/messages", body);
+        const { message } = await apiClient.post<{ message: Message }>("/messages", body);
+
+        return message;
     }
 
     async deleteMessage(id: string): Promise<void> {

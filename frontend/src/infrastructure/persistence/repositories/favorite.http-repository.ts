@@ -4,11 +4,15 @@ import type { Favorite } from "@/domain/entities";
 
 export class FavoriteHttpRepository implements IFavoriteRepository {
     async getFavorites(): Promise<Favorite[]> {
-        return apiClient.get<Favorite[]>("/favorites");
+        const { favorites } = await apiClient.get<{ favorites: Favorite[] }>("/favorites");
+
+        return favorites;
     }
 
     async createFavorite(listingId: string): Promise<Favorite> {
-        return apiClient.post<Favorite>("/favorites", { listingId });
+        const { favorite } = await apiClient.post<{ favorite: Favorite }>("/favorites", { listingId });
+
+        return favorite;
     }
 
     async deleteFavorite(id: string): Promise<void> {
