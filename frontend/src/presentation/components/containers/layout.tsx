@@ -76,7 +76,9 @@ export default function Layout() {
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
                             <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
 
-                            <Stack />
+                            <Stack>
+                                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                            </Stack>
 
                             <PortalHost />
 
