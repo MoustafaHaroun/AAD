@@ -12,11 +12,20 @@ import { ActivityIndicator, Platform, Text } from "react-native";
 import { DATABASE_NAME, db } from "@/infrastructure/persistence/drizzle";
 import migrations from "@/../drizzle/migrations";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { SQLiteProvider } from "expo-sqlite";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import * as z from "zod";
 import { en } from "zod/locales";
+import {
+    NotoSans_400Regular,
+    NotoSans_500Medium,
+    NotoSans_600SemiBold,
+    NotoSans_700Bold,
+    NotoSans_900Black,
+    useFonts,
+} from "@expo-google-fonts/noto-sans";
+import { tokenStore } from "@/infrastructure/api";
 
 /**
  * Render the Layout component.
@@ -26,10 +35,22 @@ export default function Layout() {
     const queryClient = new QueryClient();
     const { success, error } = useMigrations(db, migrations);
     const { colorScheme, setColorScheme } = useColorScheme();
+    const [fontsLoaded] = useFonts({
+        NotoSans_400Regular,
+        NotoSans_500Medium,
+        NotoSans_600SemiBold,
+        NotoSans_700Bold,
+        NotoSans_900Black,
+    });
+    const [tokenHydrated, setTokenHydrated] = useState(false);
 
     setColorScheme("light"); // Forcefully set to light theme.
 
     z.config(en());
+
+    useEffect(() => {
+        void tokenStore.hydrate().then(() => setTokenHydrated(true));
+    }, []);
 
     if (error) {
         return (<Text>Shit broke</Text>)
@@ -37,6 +58,10 @@ export default function Layout() {
 
     if (!success) {
         return (<Text>Shit is trying</Text>)
+    }
+
+    if (!fontsLoaded || !tokenHydrated) {
+        return (<ActivityIndicator />);
     }
 
     return (
