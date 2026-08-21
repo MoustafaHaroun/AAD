@@ -13,6 +13,7 @@
     "db:generate": "drizzle-kit generate"
   },
   "dependencies": {
+    "@expo-google-fonts/noto-sans": "^0.4.2",
     "@hookform/resolvers": "^5.2.2",
     "@libsql/client": "^0.17.3",
     "@react-navigation/native": "^7.2.4",
@@ -39,9 +40,12 @@
     "expo": "~54.0.34",
     "expo-constants": "~18.0.13",
     "expo-file-system": "~19.0.22",
+    "expo-font": "~14.0.12",
     "expo-image-picker": "~17.0.11",
+    "expo-linear-gradient": "~15.0.8",
     "expo-linking": "~8.0.12",
     "expo-router": "~6.0.23",
+    "expo-secure-store": "~15.0.8",
     "expo-splash-screen": "~31.0.13",
     "expo-sqlite": "~16.0.10",
     "expo-status-bar": "~3.0.9",
