@@ -1,5 +1,5 @@
 import React from "react";
-import { View, ScrollView, Platform } from "react-native";
+import { Image, View, ScrollView, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
@@ -7,10 +7,10 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
-import { Button } from "@/presentation/components/primitives/rnreusables/ui/button";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { FormField } from "@/presentation/components/primitives/form-field";
-import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
+import { GradientButton } from "@/presentation/components/primitives/gradient-button";
+import { PasswordInput } from "@/presentation/components/primitives/password-input";
 import { useSignIn } from "@/presentation/hooks";
 
 const loginSchema = z.object({
@@ -18,6 +18,11 @@ const loginSchema = z.object({
     password: z.string().min(1),
 });
 
+const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
+
+/**
+ *
+ */
 export default function LoginScreen(): React.JSX.Element {
     const router = useRouter();
     const { mutate: signIn, isPending, error } = useSignIn();
@@ -26,18 +31,25 @@ export default function LoginScreen(): React.JSX.Element {
         defaultValues: { email: "", password: "" },
     });
 
+    /**
+     *
+     * @param data
+     */
     function onSubmit(data: z.infer<typeof loginSchema>) {
         signIn(
             { email: data.email, password: data.password },
-            { onSuccess: () => router.replace("/") },
+            { onSuccess: () => { router.replace("/listings"); } },
         );
     }
 
     return (
         <>
-            <Stack.Screen options={{ ...SCREEN_OPTIONS, title: "Sign in", headerBackVisible: false }} />
+            <Stack.Screen options={{ headerShown: false }} />
 
-            <SafeAreaView className="flex-1 bg-background" edges={["bottom"]}>
+            <SafeAreaView
+                className="flex-1 bg-background"
+                edges={["bottom", "top"]}
+            >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="flex-1"
@@ -47,52 +59,68 @@ export default function LoginScreen(): React.JSX.Element {
                         contentContainerStyle={{ padding: 24 }}
                         keyboardShouldPersistTaps="handled"
                     >
-                        <View className="mb-6">
-                            <Text className="text-2xl font-bold">Welcome back</Text>
-                            <Text className="text-muted-foreground mt-1">Sign in to your account</Text>
+                        <View className="items-center">
+                            <Image
+                                className="size-[163px] rounded-[24px]"
+                                source={require("@/assets/images/logo.png")}
+                            />
+
+                            <Text className="mt-6 text-[40px] font-noto-bold text-black">Trade²</Text>
                         </View>
 
-                        <FormField control={control} label="Email" name="email">
-                            {({ className, value, onChange }) => (
-                                <Input
-                                    className={className}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    autoComplete="email"
-                                />
-                            )}
-                        </FormField>
+                        <View className="mt-10">
+                            <FormField
+                                control={control}
+                                label="Email address"
+                                name="email"
+                            >
+                                {({ value, onChange }) => (<Input
+                                        autoCapitalize="none"
+                                        autoComplete="email"
+                                        className={INPUT_CLASS}
+                                        keyboardType="email-address"
+                                        onChangeText={onChange}
+                                        placeholder="example@email.com"
+                                        value={value}
+                                    />)}
+                            </FormField>
 
-                        <FormField control={control} label="Password" name="password">
-                            {({ className, value, onChange }) => (
-                                <Input
-                                    className={className}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    secureTextEntry
-                                    autoComplete="password"
-                                />
-                            )}
-                        </FormField>
-
-                        {error != null && (
-                            <Text className="text-destructive text-sm mb-4">{error.message}</Text>
-                        )}
-
-                        <View className="flex flex-col gap-3 mt-2">
-                            <Button onPress={handleSubmit(onSubmit)} disabled={isPending}>
-                                <Text>{isPending ? "Signing in…" : "Sign in"}</Text>
-                            </Button>
-
-                            <Button variant="ghost" onPress={() => router.push("/register")}>
-                                <Text className="text-muted-foreground text-sm">
-                                    Don't have an account?{" "}
-                                    <Text className="font-semibold text-foreground text-sm">Register</Text>
-                                </Text>
-                            </Button>
+                            <FormField
+                                control={control}
+                                label="Password"
+                                name="password"
+                            >
+                                {({ value, onChange }) => (<PasswordInput
+                                        autoComplete="password"
+                                        className={INPUT_CLASS}
+                                        onChangeText={onChange}
+                                        value={value}
+                                    />)}
+                            </FormField>
                         </View>
+
+                        {error != null &&
+                            <Text className="mb-4 text-sm text-destructive">{error.message}</Text>}
+
+                        <View className="mt-4 gap-3">
+                            <GradientButton
+                                disabled={isPending}
+                                onPress={handleSubmit(onSubmit)}
+                            >
+                                {isPending ? "Signing in…" : "Login"}
+                            </GradientButton>
+                        </View>
+
+                        <Text
+                            className="mt-6 text-center text-[16px] font-noto-medium text-forehued"
+                            onPress={() => { router.push("/register"); }}
+                        >
+                            Don’t have an account? Click{" "}
+
+                            <Text className="font-noto-bold text-black">here</Text>
+
+                            {" "}to register.
+                        </Text>
                     </ScrollView>
                 </KeyboardAvoidingView>
             </SafeAreaView>
