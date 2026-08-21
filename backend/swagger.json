@@ -235,6 +235,76 @@
         ]
       }
     },
+    "/users/{id}/avatar": {
+      "post": {
+        "operationId": "UserController_addAvatar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "binary": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_removeAvatar",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "User"
+        ]
+      }
+    },
     "/favorites": {
       "get": {
         "operationId": "FavoriteController_getFavorites",
@@ -339,11 +409,6 @@
             "description": ""
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Listing"
         ]
@@ -365,6 +430,30 @@
                   "description": {
                     "type": "string",
                     "example": "This is my first ever listing!!"
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "moving",
+                      "cooking",
+                      "gardening",
+                      "carpentry",
+                      "childcare",
+                      "cleaning",
+                      "tutoring",
+                      "tech_help",
+                      "pet_care",
+                      "other"
+                    ],
+                    "example": "other"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "offer",
+                      "request"
+                    ],
+                    "example": "offer"
                   }
                 }
               }
@@ -373,6 +462,25 @@
         },
         "responses": {
           "201": {
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "bearer": []
+          }
+        ],
+        "tags": [
+          "Listing"
+        ]
+      }
+    },
+    "/listings/random": {
+      "get": {
+        "operationId": "ListingController_getRandomListings",
+        "parameters": [],
+        "responses": {
+          "200": {
             "description": ""
           }
         },
@@ -404,11 +512,6 @@
             "description": ""
           }
         },
-        "security": [
-          {
-            "bearer": []
-          }
-        ],
         "tags": [
           "Listing"
         ]
@@ -439,6 +542,30 @@
                   "description": {
                     "type": "string",
                     "example": "The title and description of this listing were edited."
+                  },
+                  "category": {
+                    "type": "string",
+                    "enum": [
+                      "moving",
+                      "cooking",
+                      "gardening",
+                      "carpentry",
+                      "childcare",
+                      "cleaning",
+                      "tutoring",
+                      "tech_help",
+                      "pet_care",
+                      "other"
+                    ],
+                    "example": "other"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "offer",
+                      "request"
+                    ],
+                    "example": "offer"
                   }
                 }
               }
