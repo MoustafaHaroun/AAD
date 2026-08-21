@@ -1,128 +1,195 @@
-import React from "react";
-import { View, ScrollView, Platform } from "react-native";
+import React, { useState } from "react";
+import { Image, View, ScrollView, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
-import { Button } from "@/presentation/components/primitives/rnreusables/ui/button";
-import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
-import { FormField } from "@/presentation/components/primitives/form-field";
-import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
-import { useCreateUser } from "@/presentation/hooks";
+import { GradientButton } from "@/presentation/components/primitives/gradient-button";
+import { SecondaryButton } from "@/presentation/components/primitives/secondary-button";
+import { CredentialsStep } from "@/presentation/components/domain/register/credentials-step";
+import { NamesStep } from "@/presentation/components/domain/register/names-step";
+import { AddressStep } from "@/presentation/components/domain/register/address-step";
+import { PfpStep } from "@/presentation/components/domain/register/pfp-step";
+import {
+    registerSchema,
+    REGISTER_STEPS,
+    REGISTER_STEP_FIELDS,
+    type RegisterFormValues,
+} from "@/presentation/components/domain/register/schema";
+import { useCreateUser, useSignIn, useUploadUserAvatar, useImageService } from "@/presentation/hooks";
 
-const registerSchema = z.object({
-    firstname: z.string().min(1),
-    surname: z.string().min(1),
-    email: z.string().email(),
-    password: z.string().min(8),
-});
-
+/**
+ *
+ */
 export default function RegisterScreen(): React.JSX.Element {
     const router = useRouter();
-    const { mutate: createUser, isPending, error } = useCreateUser();
-    const { control, handleSubmit } = useForm({
+    const imageService = useImageService();
+    const { mutateAsync: createUser, isPending: isCreating, error } = useCreateUser();
+    const { mutateAsync: signIn, isPending: isSigningIn } = useSignIn();
+    const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } = useUploadUserAvatar();
+    const [stepIndex, setStepIndex] = useState(0);
+    const [avatarUri, setAvatarUri] = useState<string | null>(null);
+    const { control, handleSubmit, trigger } = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
-        defaultValues: { firstname: "", surname: "", email: "", password: "" },
+        defaultValues: {
+            email: "",
+            password: "",
+            confirmPassword: "",
+            firstname: "",
+            surname: "",
+            country: "",
+            region: "",
+            city: "",
+            postalCode: "",
+            street: "",
+        },
     });
 
-    function onSubmit(data: z.infer<typeof registerSchema>) {
-        createUser(
-            { email: data.email, password: data.password, firstname: data.firstname, surname: data.surname },
-            { onSuccess: () => router.replace("/login") },
-        );
+    const step = REGISTER_STEPS[stepIndex];
+    const isPending = isCreating || isSigningIn || isUploadingAvatar;
+
+    /**
+     *
+     */
+    async function goNext() {
+        const valid = await trigger(REGISTER_STEP_FIELDS[step]);
+
+        if (valid) {
+            setStepIndex(prev => prev + 1);
+        }
+    }
+
+    /**
+     *
+     */
+    function goBack() {
+        if (stepIndex === 0) {
+            router.back();
+        } else {
+            setStepIndex(prev => prev - 1);
+        }
+    }
+
+    /**
+     *
+     */
+    async function pickAvatar() {
+        const uri = await imageService.pickImageFromGallery();
+
+        if (uri != null) {
+            setAvatarUri(uri);
+        }
+    }
+
+    /**
+     *
+     * @param data
+     */
+    async function onSubmit(data: RegisterFormValues) {
+        const location = [data.street, data.city, data.postalCode, data.region, data.country]
+            .filter(Boolean)
+            .join(", ");
+
+        const user = await createUser({
+            email: data.email,
+            password: data.password,
+            firstname: data.firstname,
+            surname: data.surname,
+            location,
+        });
+
+        // Sign in immediately so the avatar upload (which requires auth) can succeed.
+        await signIn({ email: data.email, password: data.password });
+
+        if (avatarUri != null) {
+            await uploadAvatar({
+                id: user.id,
+                file: { uri: avatarUri, name: "avatar.jpg", type: "image/jpeg" },
+            });
+        }
+
+        router.replace("/listings");
     }
 
     return (
         <>
-            <Stack.Screen options={{ ...SCREEN_OPTIONS, title: "Register" }} />
+            <Stack.Screen options={{ headerShown: false }} />
 
-            <SafeAreaView className="flex-1 bg-background" edges={["bottom"]}>
+            <SafeAreaView
+                className="flex-1 bg-background"
+                edges={["bottom", "top"]}
+            >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="flex-1"
                 >
                     <ScrollView
                         className="flex-1"
-                        contentContainerStyle={{ padding: 24 }}
+                        contentContainerStyle={{ padding: 24, flexGrow: 1 }}
                         keyboardShouldPersistTaps="handled"
                     >
-                        <View className="mb-6">
-                            <Text className="text-2xl font-bold">Create account</Text>
-                            <Text className="text-muted-foreground mt-1">Fill in your details to get started</Text>
+                        <View className="items-center">
+                            <Image
+                                className="size-[163px] rounded-[24px]"
+                                source={require("@/assets/images/logo.png")}
+                            />
+
+                            <Text className="mt-6 text-[40px] font-noto-bold text-black">Trade²</Text>
                         </View>
 
-                        <View className="flex flex-row gap-3">
-                            <View className="flex-1">
-                                <FormField control={control} label="First name" name="firstname">
-                                    {({ className, value, onChange }) => (
-                                        <Input
-                                            className={className}
-                                            value={value}
-                                            onChangeText={onChange}
-                                            autoComplete="given-name"
-                                        />
-                                    )}
-                                </FormField>
-                            </View>
+                        <View className="mt-10 flex-1">
+                            {step === "credentials" && <CredentialsStep control={control} />}
 
-                            <View className="flex-1">
-                                <FormField control={control} label="Surname" name="surname">
-                                    {({ className, value, onChange }) => (
-                                        <Input
-                                            className={className}
-                                            value={value}
-                                            onChangeText={onChange}
-                                            autoComplete="family-name"
-                                        />
-                                    )}
-                                </FormField>
-                            </View>
+                            {step === "names" && <NamesStep control={control} />}
+
+                            {step === "address" && <AddressStep control={control} />}
+
+                            {step === "pfp" && <PfpStep
+                                avatarUri={avatarUri}
+                                onPick={pickAvatar}
+                            />}
+
+                            {error != null &&
+                                <Text className="mb-4 text-sm text-destructive">{error.message}</Text>}
                         </View>
 
-                        <FormField control={control} label="Email" name="email">
-                            {({ className, value, onChange }) => (
-                                <Input
-                                    className={className}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    keyboardType="email-address"
-                                    autoCapitalize="none"
-                                    autoComplete="email"
-                                />
-                            )}
-                        </FormField>
+                        <View className="mt-6 flex-row gap-3">
+                            <SecondaryButton
+                                className="flex-1"
+                                onPress={goBack}
+                            >
+                                Back
+                            </SecondaryButton>
 
-                        <FormField control={control} label="Password" name="password">
-                            {({ className, value, onChange }) => (
-                                <Input
-                                    className={className}
-                                    value={value}
-                                    onChangeText={onChange}
-                                    secureTextEntry
-                                    autoComplete="new-password"
-                                />
-                            )}
-                        </FormField>
+                            {step === "pfp"
+                                ? <GradientButton
+                                        className="flex-1"
+                                        disabled={isPending}
+                                        onPress={handleSubmit(onSubmit)}
+                                    >
+                                    {isPending ? "Creating account…" : "Continue"}
+                                  </GradientButton>
 
-                        {error != null && (
-                            <Text className="text-destructive text-sm mb-4">{error.message}</Text>
-                        )}
-
-                        <View className="flex flex-col gap-3 mt-2">
-                            <Button onPress={handleSubmit(onSubmit)} disabled={isPending}>
-                                <Text>{isPending ? "Creating account…" : "Create account"}</Text>
-                            </Button>
-
-                            <Button variant="ghost" onPress={() => router.back()}>
-                                <Text className="text-muted-foreground text-sm">
-                                    Already have an account?{" "}
-                                    <Text className="font-semibold text-foreground text-sm">Sign in</Text>
-                                </Text>
-                            </Button>
+                                : <GradientButton
+                                        className="flex-1"
+                                        onPress={goNext}
+                                    >
+                                    Continue
+                                    </GradientButton>}
                         </View>
+
+                        <Text
+                            className="mt-6 text-center text-[16px] font-noto-medium text-forehued"
+                            onPress={() => { router.replace("/login"); }}
+                        >
+                            Already have an account? Click{" "}
+
+                            <Text className="font-noto-bold text-black">here</Text>
+
+                            {" "}to login.
+                        </Text>
                     </ScrollView>
                 </KeyboardAvoidingView>
             </SafeAreaView>
