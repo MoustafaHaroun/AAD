@@ -1,0 +1,37 @@
+@startuml C1_System_Context
+!include <C4/C4_Context>
+
+title C1 -- System Context Diagram: Trade2 Mobile Application
+
+LAYOUT_LEFT_RIGHT()
+
+Person(user, "Trade2 User",
+    "Uses the mobile application to offer skills, request help, discover listings, and communicate with other users.")
+
+System(mobileApp, "Trade2 Mobile Application",
+    "Allows users to exchange skills and knowledge with people in their local neighbourhood.")
+
+System_Ext(backendApi, "Trade2 Backend API",
+    "External system that provides authentication, shared application data, and messaging functionality.")
+
+System_Ext(mobileOs, "Mobile Operating System",
+    "Provides secure storage, connectivity information, media access, notifications, and accessibility services.")
+
+Rel(user, mobileApp,
+    "Uses",
+    "Touch interaction, keyboard input, screen reader")
+
+Rel(mobileApp, backendApi,
+    "Retrieves and updates shared data",
+    "HTTPS")
+
+Rel(mobileApp, backendApi,
+    "Sends and receives messaging events",
+    "WebSocket, if implemented")
+
+Rel(mobileApp, mobileOs,
+    "Uses platform capabilities",
+    "Secure storage, media, connectivity, notifications, accessibility")
+
+SHOW_LEGEND()
+@enduml

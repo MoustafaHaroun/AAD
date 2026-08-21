@@ -1,0 +1,66 @@
+\section{Container Architecture (C2)}
+The C2 container diagram provides a higher-level technical view of the \tradesq{} Mobile Application.
+It decomposes the application into its main runtime and local data-storage containers.
+A container represents an independently executable application or a data store with a distinct responsibility.
+In this context, a container does not refer to a Docker container.
+
+\begin{figure}[H]
+    \includegraphics[width=\textwidth]{hd/diagrams/c2}
+    \caption{C2 Container diagram of the \tradesq{} Mobile Application.}
+    \label{fig:c2}
+\end{figure}
+
+As shown in \cref{fig:c2}, the \tradesq{} Mobile Application consists of the Expo React Native application, Secure Session Storage, and Local Cache and Draft Storage.
+The \tradesq{} back-end API and the mobile operating system remain external systems because their internal implementation is outside the scope of this document.
+
+\subsection{Containers}
+
+\subsubsection{Expo React Native Application}
+The Expo React Native Application is the primary runtime container of \tradesq{}.
+It is implemented in TypeScript using React Native and Expo.
+It provides the application screens, navigation, reusable user-interface components, client-side validation, feature state, and communication with external services.
+
+The application receives user input and renders feedback for loading, completed actions, empty content, validation failures, network errors, and offline states.
+It communicates with the \tradesq{} back-end API through HTTPS to retrieve and update shared application data.
+If real-time messaging had been implemented, the application would additionally use a WebSocket connection to receive and send messaging events.
+
+The application is responsible for client-side user experience decisions.
+These decisions include displaying accessible feedback, disabling unavailable actions while offline, preserving user input where supported, and restoring a valid local session when the application starts.
+The application is not responsible for enforcing final authorisation decisions or validating the correctness of shared data.
+The \tradesq{} back-end API remains authoritative for server-side validation, authorisation, and persistent shared data.
+
+\subsubsection{Secure Session Storage}
+Secure Session Storage persists authentication tokens and other small sensitive session values on the device.
+The application uses \texttt{expo-secure-store} for this purpose.
+Expo SecureStore encrypts stored key-value pairs and uses platform-provided protected storage, including iOS Keychain services and Android Keystore-backed storage.
+
+The Expo React Native Application retrieves the stored session when it starts.
+This allows a user to remain signed in after closing and reopening the application, provided that the session remains valid.
+When the user signs out or receives an unauthorised response from the API, the application removes the stored session information.
+
+Secure Session Storage is intentionally separated from the general local cache.
+Authentication tokens and other credentials must not be stored in unencrypted local storage.
+SecureStore is used only for small sensitive values rather than large cached data or media files.
+
+\subsubsection{Local Cache, Draft, and Synchronisation Storage}
+Local Cache, Draft, and Synchronisation Storage persists non-sensitive data on the device.
+The application uses Expo SQLite as its local database and Drizzle ORM to define the schema and perform typed database operations.
+
+This container stores user preferences, cached listing data, listing details, incomplete form drafts, and queued offline operations.
+Cached data reduces loading time and allows previously retrieved content to remain available when the device is offline.
+Draft storage prevents temporary network failure, accidental navigation, or an application restart from unnecessarily discarding user input.
+
+Queued operations are synchronised with the \tradesq{} back-end API when connectivity is restored.
+Cached data and queued changes are not treated as authoritative until the back-end API confirms them.
+Authentication tokens and other sensitive session values are stored separately in Secure Session Storage.
+
+\subsubsection{External Communication}
+The Expo React Native Application communicates with the \tradesq{} back-end API over HTTPS for standard application operations.
+These operations include registration, sign-in, profile management, listing management, favourites, notifications, image-related actions, and other shared data operations.
+
+The application may establish a WebSocket connection for real-time messaging.
+The WebSocket connection is currently not used because the messaging functionality is not implemented in the back-end.
+The application closes the connection when the user signs out or when the active session is no longer valid.
+
+The Expo React Native Application also communicates with the mobile operating system through Expo and React Native platform APIs.
+These APIs provide secure storage, local persistence, network-connectivity information, image selection, notifications, system text scaling, and screen-reader support.
