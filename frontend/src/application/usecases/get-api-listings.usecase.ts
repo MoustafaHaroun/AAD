@@ -1,8 +1,8 @@
 import { di, UseCaseBase } from "@/infrastructure/di";
 import { API_LISTING_REPOSITORY_TOKEN, type IApiListingRepository } from "@/domain/repositories";
-import type { ApiListing } from "@/domain/entities";
+import type { ApiListing, GetApiListingsParams } from "@/domain/entities";
 
-export class GetApiListings extends UseCaseBase<ApiListing[]> {
+export class GetApiListings extends UseCaseBase<ApiListing[], GetApiListingsParams> {
     private readonly apiListingRepository;
 
     constructor() {
@@ -10,7 +10,7 @@ export class GetApiListings extends UseCaseBase<ApiListing[]> {
         this.apiListingRepository = di.inject<IApiListingRepository>(API_LISTING_REPOSITORY_TOKEN);
     }
 
-    async execute(): Promise<ApiListing[]> {
-        return this.apiListingRepository.getListings();
+    async execute(params: GetApiListingsParams): Promise<ApiListing[]> {
+        return this.apiListingRepository.getListings(params);
     }
 }
