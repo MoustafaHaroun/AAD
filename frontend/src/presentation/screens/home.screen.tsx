@@ -9,7 +9,10 @@ import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { QuickActionTile } from "@/presentation/components/domain/home/quick-action-tile";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
-import { useGetApiListings } from "@/presentation/hooks";
+import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
+import { useConversations, useGetApiListings } from "@/presentation/hooks";
+
+const CHATS_PREVIEW_LIMIT = 5;
 
 const NEW_LISTINGS_LIMIT = 4;
 
@@ -20,7 +23,9 @@ export default function HomeScreen(): React.JSX.Element {
     const router = useRouter();
     const [query, setQuery] = useState("");
     const { data: listings } = useGetApiListings();
+    const { conversations } = useConversations();
     const newListings = listings?.slice(0, NEW_LISTINGS_LIMIT) ?? [];
+    const recentConversations = conversations?.slice(0, CHATS_PREVIEW_LIMIT) ?? [];
 
     /**
      *
@@ -97,9 +102,30 @@ export default function HomeScreen(): React.JSX.Element {
                             </Pressable>
                         </View>
 
-                        <Text className="mt-3 font-noto text-sm text-muted-foreground">
-                            No conversations yet.
-                        </Text>
+                        {recentConversations.length === 0
+                            ? <Text className="mt-3 font-noto text-sm text-muted-foreground">
+                                No conversations yet.
+                                </Text>
+
+                            : <ScrollView
+                                    className="mt-3"
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                >
+                                <View className="flex-row gap-3">
+                                        {recentConversations.map(({ counterpart }) => <Pressable
+                                                key={counterpart.id}
+                                                onPress={() => { router.push(`/chats/${counterpart.id}`); }}
+                                            >
+                                                <UserAvatar
+                                                    avatar={counterpart.avatar}
+                                                    firstname={counterpart.firstname}
+                                                    id={counterpart.id}
+                                                    surname={counterpart.surname}
+                                                />
+                                             </Pressable>,)}
+                                    </View>
+                              </ScrollView>}
                     </View>
 
                     <View>
@@ -112,13 +138,13 @@ export default function HomeScreen(): React.JSX.Element {
                         </View>
 
                         <View className="mt-2 flex-row flex-wrap">
-                            {newListings.map(listing => <Pressable
+                            {newListings.map(listing => (<Pressable
                                     className="w-1/2 p-1"
                                     key={listing.id}
                                     onPress={() => { router.push(`/listings/${listing.id}`); }}
                                 >
                                     <ListingItem listing={listing} />
-                                 </Pressable>,)}
+                                 </Pressable>),)}
 
                             {newListings.length === 0 &&
                                 <Text className="p-2 font-noto text-sm text-muted-foreground">
