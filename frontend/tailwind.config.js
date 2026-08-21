@@ -41,6 +41,11 @@ module.exports = {
                     DEFAULT: 'hsl(var(--card))',
                     foreground: 'hsl(var(--card-foreground))',
                 },
+                prim: 'hsl(var(--prim))',
+                sec: 'hsl(var(--sec))',
+                primdesat: 'hsl(var(--primdesat))',
+                forehued: 'hsl(var(--forehued))',
+                surfhued: 'hsl(var(--surfhued))',
             },
             borderRadius: {
                 lg: 'var(--radius)',
@@ -49,6 +54,13 @@ module.exports = {
             },
             borderWidth: {
                 hairline: hairlineWidth(),
+            },
+            fontFamily: {
+                noto: ['NotoSans_400Regular'],
+                'noto-medium': ['NotoSans_500Medium'],
+                'noto-semibold': ['NotoSans_600SemiBold'],
+                'noto-bold': ['NotoSans_700Bold'],
+                'noto-black': ['NotoSans_900Black'],
             },
             keyframes: {
                 'accordion-down': {
