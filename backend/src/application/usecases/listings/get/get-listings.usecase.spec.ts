@@ -1,10 +1,14 @@
 import { Role } from '@/domain/enums/role.enum';
+import { ListingCategory } from '@/domain/enums/listing-category.enum';
+import { ListingType } from '@/domain/enums/listing-type.enum';
 import { GetListingsUseCase } from './get-listings.usecase';
 
 const mockListingDomain = {
   id: 'listing-1',
   title: 'Test Listing',
   description: null,
+  category: ListingCategory.CARPENTRY,
+  type: ListingType.OFFER,
   attachments: [],
   user: {
     id: 'user-1',
@@ -32,13 +36,19 @@ describe('GetListingsUseCase', () => {
 
     const result = await useCase.execute({});
 
-    expect(mockListingRepo.findAll).toHaveBeenCalledWith(undefined);
+    expect(mockListingRepo.findAll).toHaveBeenCalledWith(
+      undefined,
+      undefined,
+      undefined,
+    );
     expect(result).toEqual({
       listings: [
         {
           id: 'listing-1',
           title: 'Test Listing',
           description: null,
+          category: ListingCategory.CARPENTRY,
+          type: ListingType.OFFER,
           attachments: [],
           user: {
             id: 'user-1',
@@ -51,13 +61,21 @@ describe('GetListingsUseCase', () => {
     });
   });
 
-  it('passes the search query through to the repository', async () => {
+  it('passes the search query, category and type through to the repository', async () => {
     mockListingRepo.findAll.mockResolvedValue([
       { toDomain: () => mockListingDomain },
     ]);
 
-    await useCase.execute({ q: 'carpentry' });
+    await useCase.execute({
+      q: 'carpentry',
+      category: ListingCategory.CARPENTRY,
+      type: ListingType.OFFER,
+    });
 
-    expect(mockListingRepo.findAll).toHaveBeenCalledWith('carpentry');
+    expect(mockListingRepo.findAll).toHaveBeenCalledWith(
+      'carpentry',
+      ListingCategory.CARPENTRY,
+      ListingType.OFFER,
+    );
   });
 });

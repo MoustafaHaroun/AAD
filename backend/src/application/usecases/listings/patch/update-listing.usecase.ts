@@ -32,6 +32,8 @@ export class UpdateListingUseCase {
 
     if (dto.title != null) listing.title = dto.title;
     if (dto.description != null) listing.description = dto.description ?? null;
+    if (dto.category != null) listing.category = dto.category;
+    if (dto.type != null) listing.type = dto.type;
 
     return {
       listing: (await this.listingRepository.update(listing)).toDomain(),
