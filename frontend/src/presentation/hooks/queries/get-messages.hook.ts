@@ -4,9 +4,14 @@ import { useQuery } from "@tanstack/react-query";
 
 const getMessages = new GetMessages();
 
+/**
+ *
+ */
 export function useGetMessages() {
-    return useQuery<Message[], Error>({
+    return useQuery<Message[]>({
         queryKey: ["messages.get"],
-        queryFn: () => getMessages.execute(),
+        queryFn: async () => getMessages.execute(),
+        // No WebSocket support on the backend yet — poll for new messages instead.
+        refetchInterval: 5000,
     });
 }

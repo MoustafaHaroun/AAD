@@ -32,6 +32,7 @@ export { useRemoveListingAttachment } from "@/presentation/hooks/mutations/remov
 
 // Messages
 export { useGetMessages } from "@/presentation/hooks/queries/get-messages.hook";
+export { useConversations } from "@/presentation/hooks/queries/get-conversations.hook";
 export { useGetMessage } from "@/presentation/hooks/queries/get-message.hook";
 export { useCreateMessage } from "@/presentation/hooks/mutations/create-message.hook";
 export { useDeleteMessage } from "@/presentation/hooks/mutations/delete-message.hook";
