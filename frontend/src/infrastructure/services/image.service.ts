@@ -1,5 +1,5 @@
 import {
-    launchCameraAsync, MediaTypeOptions,
+    launchCameraAsync, launchImageLibraryAsync, MediaTypeOptions,
     requestCameraPermissionsAsync,
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
@@ -34,6 +34,16 @@ export class ImageService implements IImageService {
         if (!hasPermission) {
             return null;
         }
+
+        const result = await launchImageLibraryAsync({
+            quality: 0.8,
+        });
+
+        if (result.canceled || result.assets.length <= 0) {
+            return null;
+        }
+
+        return result.assets[0].uri;
     }
 
     async takePhoto(): Promise<string | null> {
