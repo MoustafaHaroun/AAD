@@ -1,4 +1,50 @@
 \section{Conclusion}\label{sec:conclusion}
-This is the conclusion for both the mca and the prototypes.
 
-First compare the three frameworks in the big table, then conclude which prototype to continue with.
+\subsection{Multi Criteria Analysis}
+The multi-criteria analysis shows that Flutter, React Native, and Ionic all meet the essential communication requirements.
+Each framework supports RESTful API calls and WebSocket connections.
+
+The largest differences occur in the Community and Ecosystem criteria.
+React Native achieves the highest Community score of \emph{0.93}, due to its large number of GitHub examples and its extensive surrounding community.
+Flutter follows with a score of \emph{0.80}, supported by the highest number of GitHub stars and a large number of examples.
+Ionic receives the lowest Community score of \emph{0.21}, as it has fewer stars, Discord users, and GitHub examples than the other frameworks.
+
+Developer Experience scores are close.
+React Native receives the highest score of \emph{0.74}, followed by Flutter with \emph{0.73} and Ionic with \emph{0.71}.
+All frameworks provide debugging support and sufficient documentation.
+The small differences are mainly caused by the team's prior experience, with React Native and Ionic benefiting from transferable JavaScript knowledge.
+
+React Native and Ionic receive the maximum Ecosystem score of \emph{1.00}.
+Both use npm, which contains more than two million packages, and provide suitable UI component libraries and JetBrains IDE support.
+Flutter receives an Ecosystem score of \emph{0.74}.
+It provides an official JetBrains plugin, built-in Material and Cupertino components, and a mature package ecosystem, but pub.dev contains substantially fewer packages than npm according to the selected normalisation method.
+
+All frameworks receive a Quality Assurance score of \emph{1.00}.
+They provide automated testing, static analysis tooling, and regular updates.
+Flutter provides first-party testing and Dart analysis tooling, React Native uses Jest together with ESLint and TypeScript, and Ionic can use the testing and linting tooling of its selected frontend framework.
+
+Overall, React Native achieves the highest result in the multi-criteria analysis.
+Ionic and Flutter remain a close alternative with strong documentation, built-in UI functionality, and a mature mobile ecosystem.
+
+\subsection{Prototyping}
+Both Flutter and React Native were capable of implementing the required prototype functionality, including user interfaces, local storage, camera integration, and backend communication.
+
+Flutter provided a structured development experience once the initial setup was completed.
+Its widget-based approach and built-in components, such as \texttt{Scaffold}, \texttt{RefreshIndicator}, and \texttt{Snackbar}, made it possible to develop screens quickly.
+Packages for shared preferences, camera access, local file paths, and sharing were also relatively easy to integrate.
+However, configuring the Flutter, Dart, and Android environments required effort, and implementing a custom interface beyond the default Material Design appearance could require substantial widget-specific styling code.
+The Android emulator was also resource-intensive and occasionally behaved differently from a physical device.
+
+React Native provided a productive workflow for building and styling the interface.
+Its component-based structure, CSS-like styling, and fast refresh functionality made it easy to create and adjust screens iteratively.
+Navigation, SQLite storage, and camera functionality were implemented without major problems.
+However, Android environment configuration required setting variables such as \texttt{ANDROID\_HOME} and \texttt{JAVA\_HOME}, and Java had to be downgraded to version 17 for Gradle to build the application.
+Expo Go also did not support all required native functionality, meaning that the prototype had to be tested using a native Android build and USB debugging.
+Content sharing required additional investigation because Expo-specific and general React Native packages supported different features.
+
+Considering both the multi-criteria analysis and the prototyping results, React Native is the most suitable frontend framework for this project.
+It achieves the highest overall score and aligns well with the team's existing JavaScript experience.
+Its large ecosystem, strong community, familiar component model, straightforward styling, and fast refresh workflow outweigh the additional native Android and Expo-related configuration effort.
+
+Flutter remains a strong alternative, particularly because of its structured widget model, mature documentation, and broad selection of built-in mobile functionality.
+However, React Native is preferred because it better matches the team's existing skills and provided an efficient experience during prototyping.

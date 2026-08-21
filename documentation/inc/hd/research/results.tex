@@ -1,0 +1,586 @@
+\section{Results \& Findings}
+\subsection{Multi Criteria Analysis}
+\subsubsection{Flutter}
+\paragraph{Communication Protocols}
+Flutter has a well-maintained package named \emph{dio}, that can perform rest calls. \cite{bib:dio-package}
+Additionally, the \emph{web\_socket\_channel} package can be used to establish WebSocket connections. \cite{bib:web-socket-channel-package}
+
+Since this criterion is not assigned any weight, Flutter meets the requirements and passes the criterion.
+
+\paragraph{Community}
+The official Flutter GitHub repository has over 172.000 stars \cite{bib:flutter-github}, the official Flutter Discord server has over 71.000 members \cite{bib:flutter-discord}, and there are at least 523.000 results on GitHub for Flutter projects \cite{bib:flutter-github-search}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-flutter-community}.
+
+\begin{htable}[
+		caption = {Flutter community evaluation},
+		label = {tab:multi-criteria-analysis-flutter-community},
+	]{
+		colspec={lllX},
+	}
+	Sub-criterion & Weight & Function & Normalized score \\
+	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{172000}{172000} = 1$ \\
+	Number of Discord users & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{71000}{308000} = 0.23$ \\
+	Number of examples & 10 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{523000}{535000} = 0.98$ \\
+\end{htable}
+
+\[
+	S_{\text{community}} =
+	\frac{
+		5 \cdot 1 +
+		5 \cdot 0.23 +
+		10 \cdot 0.98
+	}{
+		5 + 5 + 10
+	} = 0.80
+\]
+
+The normalized total score for this criterion is \emph{0.80}.
+
+\paragraph{Developer Experience}
+The proficiency ratings are as follows:
+\begin{itemize}
+	\item \textbf{Moustafa (0.50)} - Has been working on a Flutter project at work, but feels like he does not yet have a solid understanding of the framework.
+	\item \textbf{William (0.30)} - Has played around with Flutter in his free time, but does not feel like he has used the framework extensively enough to be proficient.
+\end{itemize}
+
+Debugging flutter can be done inside Android Studio using the Dart and Flutter plugins \cite{bib:flutter-debugging}.
+The documentation for Flutter contains an installation guide, and covers lots of aspects of the framework, including state management and navigation \cite{bib:flutter-documentation}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-flutter-developer-experience}.
+
+\begin{htable}[
+		caption = {Flutter developer experience evaluation},
+		label = {tab:multi-criteria-analysis-flutter-developer-experience},
+	]{
+		colspec={lllX},
+	}
+	Sub-criterion & Weight & Function & Normalized score \\
+	Learning curve & 20 & $\bar{x} = \frac{x_1 + x_2}{2}$ & $\bar{x} = \frac{0.50 + 0.30}{2} = 0.40$ \\
+	Debugging support & 10 & Binary (0 or 1) & 1 \\
+	Documentation quality & 15 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+	S_{\text{developer experience}} =
+	\frac{
+		20 \cdot 0.40 +
+		10 \cdot 1 +
+		15 \cdot 1
+	}{
+		20 + 10 + 15
+	} = 0.73
+\]
+
+The normalized total score for this criterion is \emph{0.73}.
+
+\paragraph{Ecosystem}
+There is an official Flutter plugin for JetBrains IDEs, which provides code completion and error checking \cite{bib:flutter-jetbrains-plugin}.
+The Dart package repository \cite{bib:pub-dev} contains over 58.000 packages, many of which are compatible with Flutter.
+For UI components, there is the built-in \emph{Material} \cite{bib:flutter-material} and \emph{Cupertino} \cite{bib:flutter-cupertino} libraries, as well as several open source libraries, such as \emph{Syncfusion} \cite{bib:flutter-syncfusion}, and \emph{GetWidget} \cite{bib:flutter-getwidget}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-flutter-ecosystem}.
+
+\begin{htable}[
+    caption = {Flutter ecosystem evaluation},
+    label = {tab:multi-criteria-analysis-flutter-ecosystem},
+]{
+    colspec={lllX},
+}
+    Sub-criterion & Weight & Function & Normalized score \\
+    IDE plugin support & 25 & Binary (0 or 1) & 1 \\
+    Number of libraries & 15 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{58000}{2000000} = 0.029$ \\
+    Availability of UI components & 15 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+S_{\text{ecosystem}} =
+\frac{
+25 \cdot 1 +
+15 \cdot 0.029 +
+15 \cdot 1
+}{
+25 + 15 + 15
+}
+=
+\frac{40.435}{55}
+=
+0.735
+\]
+
+The normalized total score for this criterion is \emph{0.74}.
+
+
+\paragraph{Quality Assurance}
+Flutter provides first-party support for automated testing through its \texttt{flutter\_test} framework.
+This supports unit tests for individual functions, methods, and classes, widget tests for individual interface components, and integration tests for verifying the behaviour of an entire application or substantial parts of it \cite{bib:flutter-testing-overview}.
+The official \texttt{integration\_test} package is included in the Flutter SDK and can execute tests on physical devices and emulators, using the same testing APIs as widget tests \cite{bib:flutter-integration-testing}.
+
+For static code analysis, Flutter uses the Dart analyzer.
+The analyzer is used by the \texttt{dart analyze} and \texttt{flutter analyze} commands, as well as by supported IDEs and editors, to identify errors and enforce configurable analysis and linting rules \cite{bib:dart-static-analysis}.
+This allows development teams to detect potential defects before runtime and to apply a shared coding standard through an \texttt{analysis\_options.yaml} configuration file.
+
+Flutter is actively maintained through stable-channel releases.
+The stable channel is the recommended channel for production applications, and its releases are promoted regularly from the beta channel \cite{bib:flutter-sdk-archive}.
+At the time of evaluation, Flutter had received stable updates during the preceding six months, satisfying the requirement for regular framework maintenance and timely delivery of bug fixes and security-related improvements \cite{bib:flutter-release-notes}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-flutter-quality-assurance}.
+
+\begin{htable}[
+    caption = {Flutter quality assurance evaluation},
+    label = {tab:multi-criteria-analysis-flutter-quality-assurance},
+]{
+    colspec={lllX},
+}
+    Sub-criterion & Weight & Function & Normalized score \\
+    Availability of testing & 10 & Binary (0 or 1) & 1 \\
+    Availability of static code analysis & 5 & Binary (0 or 1) & 1 \\
+    Regular updates & 25 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+	S_{\text{quality assurance}} =
+	\frac{
+		10 \cdot 1 +
+		5 \cdot 1 +
+		25 \cdot 1
+	}{
+		10 + 5 + 25
+	} = 1
+\]
+The normalized total score for this criterion is \emph{1.00}.
+
+\subsubsection{React Native}\label{subsubsec:evaluation-react-native}
+
+\paragraph{Communication Protocols}
+React Native runs JavaScript, so either Fetch API \cite{bib:fetch-api} or Axios \cite{bib:axios} can be used to perform RESTful API calls.
+The \texttt{WebSocket} class \cite{bib:websocket-class} from JavaScript can be used to establish WebSocket connections.
+
+Since this criterion is not assigned any weight, React Native meets the requirements and passes the criterion.
+
+\paragraph{Community}
+The official React Native GitHub repository has over 124.000 stars \cite{bib:react-native-github}.
+There is one unofficial Discord server named Reactiflux, which has over 230.000 members \cite{bib:reactiflux-discord}.
+There are also three company-based Discord servers referenced on the official React Native website \cite{bib:react-native-communities}, which in total amount to 78.000 members.
+Search results on GitHub for React Native projects amount to at least 535.000 repositories \cite{bib:react-native-github-search}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-react-native-community}.
+
+\begin{htable}[
+		caption = {React Native community evaluation},
+		label = {tab:multi-criteria-analysis-react-native-community},
+	]{
+		colspec={lllX},
+	}
+	Sub-criterion & Weight & Function & Normalized score \\
+	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{124000}{172000} = 0.72$ \\
+	Number of Discord users & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{308000}{308000} = 1$ \\
+	Number of examples & 10 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{535000}{535000} = 1$ \\
+\end{htable}
+
+\[
+	S_{\text{community}} =
+	\frac{
+		5 \cdot 0.72 +
+		5 \cdot 1 +
+		10 \cdot 1
+	}{
+		5 + 5 + 10
+	} = 0.93
+\]
+
+The normalized total score for this criterion is \emph{0.93}.
+
+\paragraph{Developer Experience}
+The proficiency ratings are as follows:
+
+\begin{itemize}
+	\item \textbf{Moustafa (0.20)} - Has never used the framework, but does have minimal experience with other JavaScript frameworks such as VueJS and Svelte.
+	\item \textbf{William (0.65)} - Has built a small application using React Native, and has extensive experience with other JavaScript frameworks.
+\end{itemize}
+
+Debugging can be done inside WebStorm \cite{bib:react-native-debugging}.
+The documentation for React Native contains an installation guide, and covers lots of aspects of the framework, including state management and navigation \cite{bib:react-native-documentation}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-react-native-developer-experience}.
+
+\begin{htable}[
+		caption = {React Native developer experience evaluation},
+		label = {tab:multi-criteria-analysis-react-native-developer-experience},
+	]{
+		colspec={lllX},
+	}
+	Sub-criterion & Weight & Function & Normalized score \\
+	Learning curve & 20 & $\bar{x} = \frac{x_1 + x_2}{2}$ & $\bar{x} = \frac{0.20 + 0.65}{2} = 0.43$ \\
+	Debugging support & 10 & Binary (0 or 1) & 1 \\
+	Documentation quality & 15 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+	S_{\text{developer experience}} =
+	\frac{
+		20 \cdot 0.43 +
+		10 \cdot 1 +
+		15 \cdot 1
+	}{
+		20 + 10 + 15
+	} = 0.74
+\]
+
+The normalized total score for this criterion is \emph{0.74}.
+
+\paragraph{Ecosystem}
+React Native can be developed with JetBrains IDEs such as IntelliJ IDEA, WebStorm, and Android Studio.
+The \emph{React Native Console} plugin is available through the JetBrains Marketplace and supports executing React Native commands directly from the IDE \cite{bib:react-native-console-plugin}.
+Furthermore, JetBrains IDEs provide support for JavaScript, TypeScript, JSX, and TSX, including code completion, inspections, refactoring, navigation, and error checking \cite{bib:jetbrains-javascript}.
+Therefore, React Native satisfies the requirement for IDE plugin support.
+
+React Native uses the npm package registry as its primary package ecosystem.
+The npm registry contains more than two million packages \cite{bib:npm}.
+Many of these packages can be used in React Native applications, including packages for navigation, device functionality, authentication, state management, networking, data persistence, and interface development.
+Since npm has the highest number of packages among the evaluated package repositories, it is used as the maximum value for normalisation.
+
+React Native provides a set of built-in primitive interface components, including \texttt{View}, \texttt{Text}, \texttt{Image}, \texttt{TextInput}, \texttt{ScrollView}, and \texttt{FlatList} \cite{bib:react-native-core-components}.
+In addition, multiple open-source component libraries are available.
+For example, \emph{React Native Paper} provides Material Design components, while \emph{NativeBase} provides accessible and configurable interface components for React Native applications \cite{bib:react-native-paper,bib:nativebase}.
+Therefore, React Native satisfies the requirement for the availability of UI components.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-react-native-ecosystem}.
+
+\begin{htable}[
+    caption = {React Native ecosystem evaluation},
+    label = {tab:multi-criteria-analysis-react-native-ecosystem},
+]{
+    colspec={lllX},
+}
+    Sub-criterion & Weight & Function & Normalized score \\
+    IDE plugin support & 25 & Binary (0 or 1) & 1 \\
+    Number of libraries & 15 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{2000000}{2000000} = 1$ \\
+    Availability of UI components & 15 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+S_{\text{ecosystem}} =
+\frac{
+25 \cdot 1 +
+15 \cdot 1 +
+15 \cdot 1
+}{
+25 + 15 + 15
+}
+=
+\frac{55}{55}
+=
+1
+\]
+
+The normalized total score for this criterion is \emph{1.00}.
+
+\paragraph{Quality Assurance}
+React Native provides testing support through the \emph{Jest} testing framework \cite{bib:react-native-testing}.
+Jest can be used for unit tests, component tests, and snapshot tests.
+Snapshot tests compare the rendered output of a component against a previously stored snapshot, making it possible to detect unintended changes to the user interface \cite{bib:jest-react-native-testing}.
+For higher-level component testing, developers can additionally use libraries such as \texttt{@testing-library/react-native}.
+
+React Native also provides static code analysis tooling by configuring ESLint and TypeScript in the default project template.
+ESLint analyses JavaScript and TypeScript source code without executing it, allowing it to identify common errors, unused code, and violations of configurable coding conventions \cite{bib:eslint}.
+TypeScript provides additional static type checking, which can identify invalid values passed to functions and components before the application is executed \cite{bib:react-native-testing}.
+
+React Native is actively maintained and follows a regular release schedule.
+At the time of evaluation, React Native had received updates during the preceding six months, satisfying the requirement for regular framework maintenance and timely delivery of bug fixes and security-related improvements \cite{bib:react-native-releases}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-react-native-quality-assurance}. \begin{htable}[
+    caption = {React Native quality assurance evaluation},
+    label = {tab:multi-criteria-analysis-react-native-quality-assurance},
+]{
+    colspec={lllX},
+}
+    Sub-criterion & Weight & Function & Normalized score \\
+    Availability of testing & 10 & Binary (0 or 1) & 1 \\
+    Availability of static code analysis & 5 & Binary (0 or 1) & 1 \\
+    Regular updates & 25 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+S_{\text{quality assurance}} =
+\frac{
+10 \cdot 1 +
+5 \cdot 1 +
+25 \cdot 1
+}{
+10 + 5 + 25
+} = 1
+\]
+
+The normalized total score for this criterion is \emph{1.00}.
+
+\subsubsection{Ionic}\label{subsubsec:evaluation-ionic}
+
+\paragraph{Communication Protocols}
+Ionic, like React Native, runs JavaScript, so either Fetch API \cite{bib:fetch-api} or Axios \cite{bib:axios} can be used to perform RESTful API calls.
+It can also use the \texttt{WebSocket} class \cite{bib:websocket-class} from JavaScript to establish WebSocket connections.
+
+Since this criterion is not assigned any weight, Ionic meets the requirements and passes the criterion.
+
+\paragraph{Community}
+The official Ionic GitHub repository has over 52.000 stars \cite{bib:ionic-github}, the official Ionic Discord server has just over 11.000 members \cite{bib:ionic-discord}, and there are at least 136.000 results on GitHub for Ionic projects \cite{bib:ionic-github-search}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-ionic-community}.
+
+\begin{htable}[
+		caption = {Ionic community evaluation},
+		label = {tab:multi-criteria-analysis-ionic-community},
+	]{
+		colspec={lllX},
+	}
+	Sub-criterion & Weight & Function & Normalized score \\
+	Number of stars & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{52000}{172000} = 0.30$ \\
+	Number of Discord users & 5 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{11000}{308000} = 0.04$ \\
+	Number of examples & 10 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{136000}{535000} = 0.25$ \\
+\end{htable}
+
+\[
+	S_{\text{community}} =
+	\frac{
+		5 \cdot 0.30 +
+		5 \cdot 0.04 +
+		10 \cdot 0.25
+	}{
+		5 + 5 + 10
+	} = 0.21
+\]
+
+The normalized total score for this criterion is \emph{0.21}.
+
+\paragraph{Developer Experience}
+The proficiency ratings are as follows:
+
+\begin{itemize}
+	\item \textbf{Moustafa (0.25)} - Has never used the framework, but does have minimal experience with other JavaScript frameworks such as VueJS and Svelte.
+	      These frameworks can be used with Ionic, so some of the knowledge is transferable.
+	\item \textbf{William (0.50)} - Has never used the framework, but does have experience with other JavaScript frameworks.
+	      These frameworks can be used with Ionic, so some of the knowledge is transferable.
+\end{itemize}
+
+Debugging can be done inside WebStorm \cite{bib:ionic-debugging}.
+The documentation for Ionic contains an installation guide, but does not cover every aspect one would expect of a framework.
+It does however, link to documentation for popular JavaScript frameworks, which can be used with Ionic \cite{bib:ionic-documentation}, which each provide their own functionality like state management and navigation.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-ionic-developer-experience}.
+
+\begin{htable}[
+		caption = {Ionic developer experience evaluation},
+		label = {tab:multi-criteria-analysis-ionic-developer-experience},
+	]{
+		colspec={lllX},
+	}
+	Sub-criterion & Weight & Function & Normalized score \\
+	Learning curve & 20 & $\bar{x} = \frac{x_1 + x_2}{2}$ & $\bar{x} = \frac{0.25 + 0.50}{2} = 0.38$ \\
+	Debugging support & 10 & Binary (0 or 1) & 1 \\
+	Documentation quality & 15 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+	S_{\text{developer experience}} =
+	\frac{
+		20 \cdot 0.38 +
+		10 \cdot 1 +
+		15 \cdot 1
+	}{
+		20 + 10 + 15
+	} = 0.71
+\]
+
+The normalized total score for this criterion is \emph{0.71}.
+
+\paragraph{Ecosystem}
+Ionic applications can be developed with JetBrains IDEs that support the web technologies on which Ionic is based, including HTML, CSS, JavaScript, TypeScript, Angular, React, and Vue.
+WebStorm and IntelliJ IDEA provide features such as code completion, inspections, refactoring, navigation, and error checking for these technologies \cite{bib:jetbrains-javascript,bib:jetbrains-webstorm}.
+Although Ionic does not require a dedicated official JetBrains plugin, the built-in support for its underlying web technologies allows Ionic applications to be developed effectively in JetBrains IDEs.
+Therefore, Ionic satisfies the requirement for IDE plugin support.
+
+Ionic uses the npm package registry for its core framework packages, Capacitor integrations, third-party plugins, and general JavaScript or TypeScript libraries.
+The npm registry contains more than two million packages \cite{bib:npm}.
+This includes libraries compatible with the Angular, React, and Vue frameworks supported by Ionic, as well as packages for device access, data storage, network communication, mapping, authentication, and other application features.
+Since npm has the highest number of packages among the evaluated package repositories, it is used as the maximum value for normalisation.
+
+Ionic Framework provides a comprehensive library of mobile-oriented user interface components.
+Examples include buttons, cards, lists, menus, modals, form controls, alerts, loading indicators, navigation components, and tabs \cite{bib:ionic-ui-components}.
+These components are available for applications built using Angular, React, or Vue \cite{bib:ionic-framework}.
+Therefore, Ionic satisfies the requirement for the availability of UI components.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-ionic-ecosystem}.
+
+\begin{htable}[
+    caption = {Ionic ecosystem evaluation},
+    label = {tab:multi-criteria-analysis-ionic-ecosystem},
+]{
+    colspec={lllX},
+}
+    Sub-criterion & Weight & Function & Normalized score \\
+    IDE plugin support & 25 & Binary (0 or 1) & 1 \\
+    Number of libraries & 15 & $\bar{x} = \frac{N}{N_{\max}}$ & $\bar{x} = \frac{2000000}{2000000} = 1$ \\
+    Availability of UI components & 15 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+S_{\text{ecosystem}} =
+\frac{
+25 \cdot 1 +
+15 \cdot 1 +
+15 \cdot 1
+}{
+25 + 15 + 15
+}
+=
+\frac{55}{55}
+=
+1
+\]
+
+The normalized total score for this criterion is \emph{1.00}.
+
+\paragraph{Quality Assurance}
+Ionic supports automated testing, although the exact testing setup depends on the selected underlying web framework, such as Angular, React, or Vue.
+For Ionic Angular applications, projects generated with the Ionic CLI are configured for both unit testing and end-to-end testing by default \cite{bib:ionic-angular-testing}.
+Ionic React similarly provides official guidance and examples for testing Ionic components with React Testing Library \cite{bib:ionic-react-testing}.
+Therefore, Ionic provides testing solutions for both individual interface components and complete application flows.
+
+Static code analysis is available through the tooling of the selected framework.
+For example, Ionic Angular projects generated by the Ionic CLI include a \texttt{lint} command that invokes Angular's linting tooling \cite{bib:ionic-angular-testing}.
+Ionic React and Ionic Vue applications can use ESLint, which statically analyses JavaScript and TypeScript source code to identify potential problems and enforce configurable code-quality rules \cite{bib:eslint}.
+
+Ionic Framework is actively maintained through regular production releases.
+At the time of evaluation, Ionic had received stable updates during the preceding six months, satisfying the requirement for regular framework maintenance and timely delivery of bug fixes and security-related improvements \cite{bib:ionic-release-notes}.
+
+The scores for this criterion are shown in \cref{tab:multi-criteria-analysis-ionic-quality-assurance}.
+
+\begin{htable}[
+    caption = {Ionic quality assurance evaluation},
+    label = {tab:multi-criteria-analysis-ionic-quality-assurance},
+]{
+    colspec={lllX},
+}
+    Sub-criterion & Weight & Function & Normalized score \\
+    Availability of testing & 10 & Binary (0 or 1) & 1 \\
+    Availability of static code analysis & 5 & Binary (0 or 1) & 1 \\
+    Regular updates & 25 & Binary (0 or 1) & 1 \\
+\end{htable}
+
+\[
+S_{\text{quality assurance}} =
+\frac{
+10 \cdot 1 +
+5 \cdot 1 +
+25 \cdot 1
+}{
+10 + 5 + 25
+} = 1
+\]
+
+The normalized total score for this criterion is \emph{1.00}.
+
+\subsubsection{Overview}
+\Cref{tab:frontend-score-results} shows an overview of the frontend framework scores in comparison to one another.
+
+\begin{htable}[
+    caption = {Frontend framework score results},
+    label = {tab:frontend-score-results},
+] {
+    colspec = {Xlll}
+}
+    Criterion & Weight & Flutter & React Native & Ionic \\
+    Communication Protocols & N/A & pass & pass & pass \\
+    Community & 20 & $20 \cdot 0.80 = 16.00$ & $20 \cdot 0.93 = 18.60$ & $20 \cdot 0.21 = 4.20$ \\
+    Developer Experience & 45 & $45 \cdot 0.73 = 32.85$ & $45 \cdot 0.74 = 33.30$ & $45 \cdot 0.71 = 31.95$ \\
+    Ecosystem & 55 & $55 \cdot 0.74 = 40.70$ & $55 \cdot 1.00 = 55.00$ & $55 \cdot 1.00 = 55.00$ \\
+    Quality Assurance & 40 & $40 \cdot 1.00 = 40.00$ & $40 \cdot 1.00 = 40.00$ & $40 \cdot 1.00 = 40.00$ \\
+\end{htable}
+
+The final ratings for each framework, normalized to a rating between 0 and 10, are presented in \cref{tab:frontend-scores}.
+
+\begin{vtable}[
+    caption = {Final frontend framework scores},
+    label = {tab:frontend-scores},
+] {
+    colspec = {XXXX}
+}
+    Framework & Flutter & React Native & Ionic \\
+    Score & 8.10 & 9.18 & 8.20 \\
+\end{vtable}
+
+\subsection{Prototyping}
+The two highest-scoring frameworks are React Native and Ionic Framework.
+Although Ionic Framework achieves a slightly higher score than Flutter (\emph{8.20} compared with \emph{8.10}), the difference is minimal.
+Flutter was therefore selected as the second framework for prototyping instead of Ionic Framework.
+
+This decision was made because Flutter differs more substantially from React Native in both programming language and application development approach.
+React Native and Ionic Framework both rely primarily on JavaScript or TypeScript and use web-oriented development concepts.
+In contrast, Flutter uses the Dart programming language and constructs user interfaces through a widget-based approach rather than HTML elements styled using CSS.
+Prototyping Flutter alongside React Native therefore enables a more diverse practical comparison between two distinct approaches to cross-platform mobile application development.
+
+\subsubsection{Flutter}
+Setting up Flutter was, in our opinion, the most challenging part of developing the prototype.
+For development, Android Studio and the Android emulator were used.
+Adding Flutter to the system \texttt{PATH}, configuring the Dart SDK, and ensuring that the Android development environment was configured correctly were well documented, but small configuration mistakes could take considerable time to identify and resolve.
+
+Once the development environment was working, creating the user interface with Flutter widgets was relatively straightforward.
+The widget-based approach provided a clear structure for composing pages and reusable interface elements.
+Built-in components such as \texttt{Scaffold} made it possible to create page layouts quickly, which allowed the interface to take shape early in the development process.
+Flutter also includes commonly required mobile interface features, such as \texttt{RefreshIndicator} and \texttt{Snackbar}, reducing the need for additional dependencies.
+
+Styling the interface was more challenging when the intended design differed from the default Material Design appearance.
+Although Flutter provides extensive styling options, implementing a custom interface could require substantial additional code.
+Furthermore, styling is configured through widget parameters, and the available parameters differ between widgets.
+This made some styling tasks less predictable, since the required configuration and parameter names had to be looked up for each individual widget.
+
+The Flutter ecosystem made it relatively easy to add functionality through packages.
+For the prototype, shared preferences were used for local storage, while the camera and path provider packages were integrated to capture images and store their paths locally.
+Adding features such as content sharing required limited code, and the availability of built-in widgets and packages meant that relatively few additional dependencies were required.
+
+The Android emulator produced mixed results.
+It was resource-intensive and occasionally displayed behaviour differently from that of a physical device.
+These issues were largely resolved by using wired debugging on a physical Android phone.
+This demonstrated the importance of testing a mobile application on real hardware, particularly when device-specific features are involved.
+
+The documentation was generally helpful.
+However, finding specific widgets could take time when their exact names were unknown.
+Flutter is a mature framework with substantial official documentation and community resources, but some online examples may use outdated APIs or approaches.
+Overall, after becoming familiar with the Flutter ecosystem and development workflow, the framework made it possible to build the prototype in an approachable and structured manner.
+Its main strengths were the availability of built-in functionality, the structured widget model, and the relatively simple integration of common mobile features.
+The main limitation encountered was the initial configuration effort and the additional implementation work required to substantially customise the default Material interface.
+
+
+\subsubsection{React Native}
+The React Native prototype was developed using Expo and WebStorm.
+The application was started for Android using the \texttt{npm run android} command and tested through USB debugging on a physical Android phone.
+Although Expo simplifies parts of the React Native development process, setting up the Android development environment still required effort.
+In particular, environment variables such as \texttt{ANDROID\_HOME} and \texttt{JAVA\_HOME} needed to be configured correctly before the Android application could be built and executed.
+The Java version also had to be downgraded to version 17 to be able to build the application with Gradle.
+This was a somewhat cumbersome initial setup step.
+
+Expo Go could not be used for all required functionality because some native functionality was not supported in the selected development configuration.
+Consequently, the prototype was tested through a native Android build on a physical device instead.
+While this allowed the required functionality to be tested, it reduced one of the main conveniences of the Expo managed workflow: quickly running the application through Expo Go without creating a native build.
+This distinction between Expo Go, development builds, and native Android builds required attention during development, because not all documentation and packages support each workflow equally.
+
+Creating the user interface was generally straightforward.
+React Native uses a component-based development model, and styling is implemented using JavaScript or TypeScript objects with a CSS-like syntax.
+This made styling familiar and relatively easy to apply.
+The fast refresh functionality was particularly useful, as interface and styling changes were reflected quickly during development.
+This created a short feedback loop and made it easier to experiment with layouts and adjust the prototype incrementally.
+
+Navigation was implemented without major difficulties.
+The navigation solution used in the prototype was considered sufficient and did not introduce notable obstacles.
+For local data storage, SQLite was used.
+The camera functionality was also integrated successfully and worked without significant issues during the prototype.
+
+Content sharing took some time to implement.
+Several libraries were considered because Expo-specific and general React Native libraries offered different capabilities.
+The available sharing functionality depended on whether a library was compatible with the selected Expo workflow and whether it supported the intended native features.
+As a result, implementing sharing was less straightforward than expected and required comparing packages and their platform support.
+
+The official React Native and Expo documentation was generally useful.
+However, the distinction between Expo-specific solutions, general React Native libraries, and functionality requiring a native build needed to be considered carefully.
+Overall, React Native provided a productive environment for quickly building and styling the user interface, supported by fast refresh and a familiar component-based model.
+Its principal limitations in this prototype were the Android environment configuration, the restricted capabilities of Expo Go for native functionality and the inconsistent sharing support across available libraries.

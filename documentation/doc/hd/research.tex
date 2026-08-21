@@ -22,7 +22,7 @@
             \edef\rootpath{\rootpath../}
             \advance\count0 by 1
     \repeat
- 
+
     \graphicspath{{\rootpath fig/}{\rootpath uml/}} % Change this to be a relative path to your figures.
     \addbibresource{\rootpath bib/references.bib} % Change this to be a relative path to your references.bib file.
     \def\input@path{{\rootpath inc/}} % Change this to be a relative path to your included tex files.
@@ -49,7 +49,7 @@
 	]{
 		colspec={llX},
 	}
-	Version & Date & Description \\
+	Versie & Datum & Omschrijving \\
 	1.0 & \today & Initial draft. \\
 \end{htable}
 
@@ -57,10 +57,16 @@
 \tableofcontents
 
 \newpage
-\input{hd/research/multi-criteria-analysis.tex}
+\input{hd/research/introduction.tex}
 
 \newpage
-\input{hd/research/prototyping.tex}
+\input{hd/research/theory.tex}
+
+\newpage
+\input{hd/research/methodology.tex}
+
+\newpage
+\input{hd/research/results.tex}
 
 \newpage
 \input{hd/research/conclusion.tex}
@@ -69,3 +75,4 @@
 \printbibliography
 
 \end{document}
+
