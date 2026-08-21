@@ -1,9 +1,9 @@
-import ComingSoonScreen from "@/presentation/screens/coming-soon.screen";
+import AccountScreen from "@/presentation/screens/account.screen";
 import * as React from "react";
 
 /**
  *
  */
 export default function Screen() {
-    return <ComingSoonScreen title="Account" />;
+    return <AccountScreen />;
 }
