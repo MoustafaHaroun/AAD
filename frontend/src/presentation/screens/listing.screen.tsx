@@ -30,6 +30,7 @@ import {
     useDeleteFavorite,
     useGetFavorites,
     useCreateMessage,
+    useCurrentUserId,
 } from "@/presentation/hooks";
 import { SwipableImageGallery } from "@/presentation/components/primitives/custom";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
@@ -46,6 +47,7 @@ export default function ListingScreen(): React.JSX.Element {
     const { mutate: createFavorite, isPending: isFavoriting } = useCreateFavorite();
     const { mutate: deleteFavoriteItem, isPending: isUnfavoriting } = useDeleteFavorite();
     const { mutate: sendMessage } = useCreateMessage();
+    const currentUserId = useCurrentUserId();
 
     const favorite = favorites?.find(f => f.listingId === id);
     const isFavorited = favorite != null;
@@ -75,10 +77,13 @@ export default function ListingScreen(): React.JSX.Element {
     /**
      *
      */
-    function onSendMessage(): void {
+    function onTradeRequest(): void {
         if (listing?.user == null) { return; }
+        const posterId = listing.user.id;
+
         sendMessage(
-            { content: `Hi, I'm interested in your listing "${listing.title}".`, recipientId: listing.user.id },
+            { content: `Hi, I'm interested in your listing "${listing.title}".`, recipientId: posterId },
+            { onSuccess: () => { router.push(`/chats/${posterId}`); } },
         );
     }
 
@@ -228,14 +233,12 @@ as={Trash} />
                 </ScrollView>
 
                 {/* Fixed bottom CTA */}
-                <View className="border-t border-border bg-background px-4 pb-4 pt-3">
-                    <GradientButton
-                        disabled={listing == null}
-                        onPress={onSendMessage}
-                    >
-                        Send message
-                    </GradientButton>
-                </View>
+                {listing != null && listing.user?.id !== currentUserId &&
+                    <View className="border-t border-border bg-background px-4 pb-4 pt-3">
+                        <GradientButton onPress={onTradeRequest}>
+                            Trade Request
+                        </GradientButton>
+                    </View>}
             </SafeAreaView>
         </>
     );
