@@ -7,6 +7,8 @@ import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { NotificationController } from './notification.controller';
 import { CreateNotificationUseCase } from '@/application/usecases/notifications/create/create-notification.usecase';
 import { GetNotificationByIdUseCase } from '@/application/usecases/notifications/get/get-notification-by-id.usecase';
+import { GetNotificationsByUserIdUseCase } from '@/application/usecases/notifications/get/get-notifications-by-user-id.usecase';
+import { UpdateNotificationUseCase } from '@/application/usecases/notifications/update/update-notification.usecase';
 import { DeleteNotificationUseCase } from '@/application/usecases/notifications/delete/delete-notification.usecase';
 import { Role } from '@/domain/enums/role.enum';
 
@@ -20,6 +22,8 @@ describe('NotificationController', () => {
   let controller: NotificationController;
   const mockCreateUseCase = { execute: jest.fn() };
   const mockGetByIdUseCase = { execute: jest.fn() };
+  const mockGetByUserIdUseCase = { execute: jest.fn() };
+  const mockUpdateUseCase = { execute: jest.fn() };
   const mockDeleteUseCase = { execute: jest.fn() };
 
   beforeEach(async () => {
@@ -29,6 +33,11 @@ describe('NotificationController', () => {
       providers: [
         { provide: CreateNotificationUseCase, useValue: mockCreateUseCase },
         { provide: GetNotificationByIdUseCase, useValue: mockGetByIdUseCase },
+        {
+          provide: GetNotificationsByUserIdUseCase,
+          useValue: mockGetByUserIdUseCase,
+        },
+        { provide: UpdateNotificationUseCase, useValue: mockUpdateUseCase },
         { provide: DeleteNotificationUseCase, useValue: mockDeleteUseCase },
       ],
     })
@@ -69,6 +78,36 @@ describe('NotificationController', () => {
     expect(mockCreateUseCase.execute).toHaveBeenCalledWith({
       title: 'Alert',
       message: 'Hello',
+    });
+  });
+
+  it('getNotifications passes the authenticated user id to GetNotificationsByUserIdUseCase', async () => {
+    mockGetByUserIdUseCase.execute.mockResolvedValue({
+      notifications: [mockNotification],
+    });
+
+    const result = await controller.getNotifications(mockAuthReq);
+
+    expect(result).toEqual({ notifications: [mockNotification] });
+    expect(mockGetByUserIdUseCase.execute).toHaveBeenCalledWith({
+      userId: 'user-1',
+    });
+  });
+
+  it('updateNotification passes requesterId to UpdateNotificationUseCase', async () => {
+    mockUpdateUseCase.execute.mockResolvedValue({
+      notification: mockNotification,
+    });
+
+    const result = await controller.updateNotification(mockAuthReq, 'notif-1', {
+      read: true,
+    });
+
+    expect(result).toEqual({ notification: mockNotification });
+    expect(mockUpdateUseCase.execute).toHaveBeenCalledWith({
+      read: true,
+      id: 'notif-1',
+      requesterId: 'user-1',
     });
   });
 

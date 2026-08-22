@@ -1,4 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { UserModel } from '@/infrastructure/persistence/typeorm/models';
 import { Notification } from '@/domain/entities';
 
@@ -13,6 +19,12 @@ export class NotificationModel {
   @Column()
   message: string;
 
+  @Column({ default: false })
+  read: boolean;
+
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
   @ManyToOne(() => UserModel, (user) => user.notifications)
   user: UserModel;
 
@@ -22,6 +34,7 @@ export class NotificationModel {
     model.id = notification.id;
     model.title = notification.title;
     model.message = notification.message;
+    model.read = notification.read;
 
     return model;
   }
@@ -31,6 +44,8 @@ export class NotificationModel {
       id: this.id,
       title: this.title,
       message: this.message,
+      read: this.read,
+      createdAt: this.createdAt,
       user: this.user?.toDomain(),
     } satisfies Notification;
   }

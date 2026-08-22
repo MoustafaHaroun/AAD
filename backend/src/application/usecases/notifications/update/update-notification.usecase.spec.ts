@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { UpdateNotificationUseCase } from './update-notification.usecase';
 
 const mockNotificationDomain = {
@@ -43,6 +43,33 @@ describe('UpdateNotificationUseCase', () => {
     await expect(
       useCase.execute({ id: 'missing', title: 'X' }),
     ).rejects.toThrow(NotFoundException);
+    expect(mockNotificationRepo.update).not.toHaveBeenCalled();
+  });
+
+  it('marks the notification as read', async () => {
+    const model = {
+      id: 'notif-1',
+      read: false,
+      user: { id: 'user-1' },
+      toDomain: jest
+        .fn()
+        .mockReturnValue({ ...mockNotificationDomain, read: true }),
+    };
+    mockNotificationRepo.findById.mockResolvedValue(model);
+    mockNotificationRepo.update.mockResolvedValue(model);
+
+    await useCase.execute({ id: 'notif-1', read: true, requesterId: 'user-1' });
+
+    expect(model.read).toBe(true);
+  });
+
+  it('throws ForbiddenException when the requester does not own the notification', async () => {
+    const model = { id: 'notif-1', user: { id: 'user-1' } };
+    mockNotificationRepo.findById.mockResolvedValue(model);
+
+    await expect(
+      useCase.execute({ id: 'notif-1', read: true, requesterId: 'user-2' }),
+    ).rejects.toThrow(ForbiddenException);
     expect(mockNotificationRepo.update).not.toHaveBeenCalled();
   });
 });
