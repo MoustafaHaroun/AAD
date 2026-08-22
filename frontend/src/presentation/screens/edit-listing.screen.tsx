@@ -58,7 +58,8 @@ const editListingSchema = z.object({
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
 /**
- *
+ * Render the edit-listing form, restoring any saved draft, and save or delete the listing.
+ * @returns The rendered edit-listing screen.
  */
 export default function EditListingScreen(): React.JSX.Element {
     const router = useRouter();
@@ -101,10 +102,10 @@ export default function EditListingScreen(): React.JSX.Element {
     }, [watch]);
 
     /**
-     *
+     * Pick or capture a photo and add it to the attachments to upload on save.
      */
-    async function addAttachment() {
-        const uri = await imageService.takePhoto();
+    async function addAttachment(): Promise<void> {
+        const uri = await imageService.pickImage();
 
         if (uri != null) {
             setNewAttachments(prev => [...prev, uri]);
@@ -112,15 +113,15 @@ export default function EditListingScreen(): React.JSX.Element {
     }
 
     /**
-     *
-     * @param uri
+     * Remove a not-yet-uploaded photo from the attachments to upload on save.
+     * @param uri - The local URI of the attachment to remove.
      */
-    function removeNewAttachment(uri: string) {
+    function removeNewAttachment(uri: string): void {
         setNewAttachments(prev => prev.filter(u => u !== uri));
     }
 
     /**
-     *
+     * Delete the listing and return to the listings screen.
      */
     function onDelete(): void {
         deleteListing({ id }, { onSuccess: () => {
@@ -130,8 +131,8 @@ export default function EditListingScreen(): React.JSX.Element {
     }
 
     /**
-     *
-     * @param data
+     * Save the listing changes, upload any new photos, clear the draft, and go back.
+     * @param data - The validated listing field values.
      */
     async function onSave(data: z.infer<typeof editListingSchema>): Promise<void> {
         await updateListing({
@@ -226,7 +227,7 @@ className={INPUT_CLASS}
                                         accessibilityRole="button"
                                         className={cn("h-20 w-20 items-center justify-center rounded-[10px] bg-surfhued", !isOnline && "opacity-50")}
                                         disabled={!isOnline}
-                                        onPress={addAttachment}
+                                        onPress={() => { void addAttachment(); }}
                                     >
                                         <View className="size-12 items-center justify-center rounded-full bg-forehued">
                                             <Icon
@@ -250,7 +251,7 @@ key={attachment.id}>
                                                 className={cn("absolute -right-1 -top-1 size-5 items-center justify-center rounded-full bg-forehued", !isOnline && "opacity-50")}
                                                 disabled={!isOnline}
                                                 hitSlop={8}
-                                                onPress={async () => removeAttachment({ id, attachmentId: attachment.id })}
+                                                onPress={() => { void removeAttachment({ id, attachmentId: attachment.id }); }}
                                             >
                                                 <Icon as={X}
 className="size-3 text-white" />
@@ -280,7 +281,7 @@ onPress={() => removeNewAttachment(uri)}>
                         <GradientButton
                             className="flex-1"
                             disabled={listing == null || !isOnline}
-                            onPress={handleSubmit(onSave)}
+                            onPress={() => { void handleSubmit(onSave)(); }}
                         >
                             {t("common.save")}
                         </GradientButton>

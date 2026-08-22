@@ -36,7 +36,8 @@ const accountSettingsSchema = z.object({
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
 /**
- *
+ * Render the profile settings form and save changes on submit.
+ * @returns The rendered account settings screen.
  */
 export default function AccountSettingsScreen(): React.JSX.Element {
     const router = useRouter();
@@ -63,12 +64,12 @@ export default function AccountSettingsScreen(): React.JSX.Element {
     }, [user, reset]);
 
     /**
-     *
+     * Prompt the user to pick a new avatar image and upload it.
      */
-    async function onChangeAvatar() {
+    async function onChangeAvatar(): Promise<void> {
         if (currentUserId == null) { return; }
 
-        const uri = await imageService.pickImageFromGallery();
+        const uri = await imageService.pickImage();
 
         if (uri != null) {
             await uploadAvatar({ id: currentUserId, file: { uri, name: "avatar.jpg", type: "image/jpeg" } });
@@ -76,10 +77,10 @@ export default function AccountSettingsScreen(): React.JSX.Element {
     }
 
     /**
-     *
-     * @param data
+     * Save the profile changes and return to the previous screen.
+     * @param data - The validated profile field values.
      */
-    async function onSave(data: z.infer<typeof accountSettingsSchema>) {
+    async function onSave(data: z.infer<typeof accountSettingsSchema>): Promise<void> {
         if (currentUserId == null) { return; }
 
         await updateUser({ id: currentUserId, body: data });
@@ -104,7 +105,7 @@ export default function AccountSettingsScreen(): React.JSX.Element {
                                 accessibilityRole="button"
                                 className={cn("mb-6 items-center", !isOnline && "opacity-50")}
                                 disabled={!isOnline}
-                                onPress={onChangeAvatar}
+                                onPress={() => { void onChangeAvatar(); }}
                             >
                                 <View className="relative">
                                     <UserAvatar
@@ -183,7 +184,7 @@ className={INPUT_CLASS}
                     <View className="border-t border-border bg-background p-4">
                         <GradientButton
                             disabled={isSaving || !isOnline}
-                            onPress={handleSubmit(onSave)}
+                            onPress={() => { void handleSubmit(onSave)(); }}
                         >
                             {isSaving ? t("common.saving") : t("common.save")}
                         </GradientButton>

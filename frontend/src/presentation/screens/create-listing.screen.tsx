@@ -39,7 +39,8 @@ const createListingSchema = z.object({
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
 /**
- *
+ * Render the create-listing form, restoring any saved draft and publishing on submit.
+ * @returns The rendered create-listing screen.
  */
 export default function CreateListingScreen(): React.JSX.Element {
     const router = useRouter();
@@ -79,10 +80,10 @@ export default function CreateListingScreen(): React.JSX.Element {
     }, [watch]);
 
     /**
-     *
+     * Pick or capture a photo and add it to the attachments to upload on submit.
      */
-    async function addAttachment() {
-        const uri = await imageService.takePhoto();
+    async function addAttachment(): Promise<void> {
+        const uri = await imageService.pickImage();
 
         if (uri != null) {
             setAttachments(prev => [...prev, uri]);
@@ -90,18 +91,18 @@ export default function CreateListingScreen(): React.JSX.Element {
     }
 
     /**
-     *
-     * @param uri
+     * Remove a photo from the attachments to upload on submit.
+     * @param uri - The local URI of the attachment to remove.
      */
-    function removeAttachment(uri: string) {
+    function removeAttachment(uri: string): void {
         setAttachments(prev => prev.filter(u => u !== uri));
     }
 
     /**
-     *
-     * @param data
+     * Create the listing, upload any attached photos, clear the draft, and go back.
+     * @param data - The validated listing field values.
      */
-    async function onSubmit(data: z.infer<typeof createListingSchema>) {
+    async function onSubmit(data: z.infer<typeof createListingSchema>): Promise<void> {
         const listing = await createListing({
             title: data.title,
             description: data.description,
@@ -189,7 +190,7 @@ className={INPUT_CLASS}
                                     accessibilityRole="button"
                                     className={cn("h-20 w-20 items-center justify-center rounded-[10px] bg-surfhued", !isOnline && "opacity-50")}
                                     disabled={!isOnline}
-                                    onPress={addAttachment}
+                                    onPress={() => { void addAttachment(); }}
                                 >
                                     <View className="size-12 items-center justify-center rounded-full bg-forehued">
                                         <Icon
@@ -224,7 +225,7 @@ onPress={() => removeAttachment(uri)}>
                     <View className="border-t border-border bg-background p-4">
                         <GradientButton
                             disabled={category == null || !isOnline}
-                            onPress={handleSubmit(onSubmit)}
+                            onPress={() => { void handleSubmit(onSubmit)(); }}
                         >
                             {t("common.save")}
                         </GradientButton>

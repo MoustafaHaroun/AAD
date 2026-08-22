@@ -16,6 +16,8 @@
     "unfavorite": "Remove from favorites",
     "addPhoto": "Add photo",
     "removePhoto": "Remove photo",
+    "takePhoto": "Take photo",
+    "chooseFromLibrary": "Choose from library",
     "send": "Send",
     "close": "Close",
     "changeAvatar": "Change profile picture",

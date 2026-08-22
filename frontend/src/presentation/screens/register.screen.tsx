@@ -21,6 +21,10 @@ import {
 } from "@/presentation/components/domain/register/schema";
 import { useCreateUser, useSignIn, useUploadUserAvatar, useImageService } from "@/presentation/hooks";
 
+/**
+ * Render the multi-step registration wizard and create the account on the final step.
+ * @returns The rendered registration screen.
+ */
 export default function RegisterScreen(): React.JSX.Element {
     const router = useRouter();
     const { t } = useTranslation();
@@ -50,7 +54,10 @@ export default function RegisterScreen(): React.JSX.Element {
     const step = REGISTER_STEPS[stepIndex];
     const isPending = isCreating || isSigningIn || isUploadingAvatar;
 
-    async function goNext() {
+    /**
+     * Validate the current step's fields and advance to the next step if they pass.
+     */
+    async function goNext(): Promise<void> {
         const valid = await trigger(REGISTER_STEP_FIELDS[step]);
 
         if (valid) {
@@ -58,7 +65,10 @@ export default function RegisterScreen(): React.JSX.Element {
         }
     }
 
-    function goBack() {
+    /**
+     * Go back to the previous step, or leave the wizard entirely on the first step.
+     */
+    function goBack(): void {
         if (stepIndex === 0) {
             router.back();
         } else {
@@ -66,15 +76,22 @@ export default function RegisterScreen(): React.JSX.Element {
         }
     }
 
-    async function pickAvatar() {
-        const uri = await imageService.pickImageFromGallery();
+    /**
+     * Prompt the user to pick an avatar image and store its local URI.
+     */
+    async function pickAvatar(): Promise<void> {
+        const uri = await imageService.pickImage();
 
         if (uri != null) {
             setAvatarUri(uri);
         }
     }
 
-    async function onSubmit(data: RegisterFormValues) {
+    /**
+     * Create the account, sign in, upload the avatar if one was picked, and navigate home.
+     * @param data - The validated registration form values.
+     */
+    async function onSubmit(data: RegisterFormValues): Promise<void> {
         const location = [data.street, data.city, data.postalCode, data.region, data.country]
             .filter(Boolean)
             .join(", ");
@@ -120,7 +137,7 @@ export default function RegisterScreen(): React.JSX.Element {
                         <View className="items-center">
                             <Image
                                 className="size-[163px] rounded-[24px]"
-                                source={require("@/assets/images/logo.png")}
+                                source={require("@/assets/images/logo.png") as number}
                             />
 
                             <Text className="mt-6 text-[40px] font-noto-bold text-black">Trade²</Text>
@@ -135,7 +152,7 @@ export default function RegisterScreen(): React.JSX.Element {
 
                             {step === "pfp" && <PfpStep
                                 avatarUri={avatarUri}
-                                onPick={pickAvatar}
+                                onPick={() => { void pickAvatar(); }}
                             />}
 
                             {error != null &&
@@ -154,14 +171,14 @@ export default function RegisterScreen(): React.JSX.Element {
                                 ? <GradientButton
                                         className="flex-1"
                                         disabled={isPending}
-                                        onPress={handleSubmit(onSubmit)}
+                                        onPress={() => { void handleSubmit(onSubmit)(); }}
                                     >
                                     {isPending ? t("register.creatingAccount") : t("register.continue")}
                                   </GradientButton>
 
                                 : <GradientButton
                                         className="flex-1"
-                                        onPress={goNext}
+                                        onPress={() => { void goNext(); }}
                                     >
                                     {t("register.continue")}
                                     </GradientButton>}
