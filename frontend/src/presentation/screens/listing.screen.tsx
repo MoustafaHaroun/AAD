@@ -13,6 +13,7 @@ import {
     useDeleteFavorite,
     useGetFavorites,
     useCreateMessage,
+    useConversations,
     useCurrentUserId,
     useCurrentUser,
     useGetUser,
@@ -35,6 +36,7 @@ export default function ListingScreen(): React.JSX.Element {
     const { mutate: createFavorite, isPending: isFavoriting } = useCreateFavorite();
     const { mutate: deleteFavoriteItem, isPending: isUnfavoriting } = useDeleteFavorite();
     const { mutate: sendMessage } = useCreateMessage();
+    const { conversations } = useConversations();
     const currentUserId = useCurrentUserId();
     const currentUser = useCurrentUser();
     const { data: viewer } = useGetUser(currentUserId ?? "");
@@ -76,6 +78,12 @@ export default function ListingScreen(): React.JSX.Element {
     function onSendMessage(): void {
         if (listing?.user == null) { return; }
         const posterId = listing.user.id;
+        const hasExistingConversation = conversations?.some(c => c.counterpart.id === posterId) ?? false;
+
+        if (hasExistingConversation) {
+            router.push(`/chats/${posterId}`);
+            return;
+        }
 
         sendMessage(
             { content: t("listing.tradeRequestMessage", { title: listing.title }), recipientId: posterId },
@@ -109,14 +117,14 @@ export default function ListingScreen(): React.JSX.Element {
                                 className="flex items-center justify-center w-8 aspect-square"
                                 hitSlop={8}
                                 onPress={() => { router.push(`/listings/${id}/edit`); }}
-                          >
-                            <Icon
-                                    as={Pencil}
-                                    className="size-5"
-                                />
-                          </Pressable>
+                            >
+                                <Icon
+                                as={Pencil}
+                                className="size-5"
+                            />
+                            </Pressable>
                         : null}
-                </>}
+                       </>}
             />
 
             <View className="flex-1 bg-background">
@@ -131,14 +139,17 @@ export default function ListingScreen(): React.JSX.Element {
                     }
                 >
 
-                    {isLoading &&
-                        <View className="items-center justify-center p-8">
-                            <ActivityIndicator />
-                        </View>}
+                    {isLoading
+                        ? <View className="items-center justify-center p-8">
+                                <ActivityIndicator />
+                            </View>
+                        : null}
 
-                    {error != null &&
+                    {error != null && listing == null &&
                         <View className="items-center justify-center p-8">
-                            <Text className="text-center text-sm text-destructive">{error.message}</Text>
+                            <Text className="text-center text-sm text-destructive">
+                                {isOnline ? t("common.loadError") : t("common.notAvailableOffline")}
+                            </Text>
                         </View>}
 
                     {/* Gallery */}
@@ -198,19 +209,19 @@ export default function ListingScreen(): React.JSX.Element {
                                                 end={{ x: 1, y: 1 }}
                                                 start={{ x: 0, y: 0 }}
                                                 style={{ alignItems: "center", height: "100%", justifyContent: "center", width: "100%" }}
-                                          >
-                                                <Icon
-                                                as={Heart}
-                                                className="size-5 fill-black text-black"
-                                            />
-                                            </LinearGradient>
+                                            >
+                                            <Icon
+                                                    as={Heart}
+                                                    className="size-5 fill-black text-black"
+                                                />
+                                          </LinearGradient>
 
                                         : <View className="size-full items-center justify-center bg-surfhued">
-                                                <Icon
-                                                as={Heart}
-                                                className="size-5 text-forehued"
-                                            />
-                                            </View>}
+                                            <Icon
+                                                    as={Heart}
+                                                    className="size-5 text-forehued"
+                                                />
+                                          </View>}
                                 </Pressable>
                             </View>
 

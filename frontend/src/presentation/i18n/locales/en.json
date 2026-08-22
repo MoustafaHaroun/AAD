@@ -19,7 +19,9 @@
     "send": "Send",
     "close": "Close",
     "changeAvatar": "Change profile picture",
-    "viewPhoto": "View photo {{index}} of {{total}}, fullscreen"
+    "viewPhoto": "View photo {{index}} of {{total}}, fullscreen",
+    "notAvailableOffline": "Not available offline. Connect to the internet to load it.",
+    "loadError": "Something went wrong loading this. Pull down to try again."
   },
   "offline": {
     "banner": "You're offline"

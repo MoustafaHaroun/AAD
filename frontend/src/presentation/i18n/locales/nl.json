@@ -19,7 +19,9 @@
     "send": "Versturen",
     "close": "Sluiten",
     "changeAvatar": "Profielfoto wijzigen",
-    "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm"
+    "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm",
+    "notAvailableOffline": "Niet beschikbaar zonder internet. Maak verbinding om dit te laden.",
+    "loadError": "Er ging iets mis bij het laden. Trek naar beneden om het opnieuw te proberen."
   },
   "offline": {
     "banner": "Je bent offline"
