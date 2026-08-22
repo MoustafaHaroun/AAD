@@ -285,13 +285,14 @@ onPress={() => removeNewAttachment(uri)}>
                             {t("common.save")}
                         </GradientButton>
 
-                        <AlertDialog className="w-16 self-stretch">
+                        <AlertDialog style={{ height: 56, width: 64 }}>
                             <AlertDialogTrigger asChild>
                                 <Pressable
                                     accessibilityLabel={t("common.delete")}
                                     accessibilityRole="button"
-                                    className={cn("w-16 items-center justify-center self-stretch rounded-[10px] bg-destructive", !isOnline && "opacity-50")}
+                                    className={cn("items-center justify-center rounded-[10px] bg-destructive", !isOnline && "opacity-50")}
                                     disabled={listing == null || isDeleting || !isOnline}
+                                    style={{ height: "100%", width: "100%" }}
                                 >
                                     {isDeleting
                                         ? <ActivityIndicator color="white" />
