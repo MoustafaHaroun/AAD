@@ -15,6 +15,7 @@ import {
     MyListingsIcon,
     NewListingIcon,
 } from "@/presentation/components/domain/home/quick-action-icons";
+import { NotificationBell } from "@/presentation/components/domain/home/notification-bell";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
 import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
 import { OfflineBanner } from "@/presentation/components/containers/offline-banner";
@@ -57,7 +58,13 @@ export default function HomeScreen(): React.JSX.Element {
                     edges={["top"]}
                 >
                     <View className="px-4 pb-4 pt-2">
-                        <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
+                        <View className="relative items-center justify-center">
+                            <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
+
+                            <View className="absolute right-0 top-1/2 -translate-y-1/2">
+                                <NotificationBell />
+                            </View>
+                        </View>
 
                         <View className="mt-4 flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
                             <Icon

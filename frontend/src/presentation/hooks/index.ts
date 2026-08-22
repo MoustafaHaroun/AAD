@@ -42,5 +42,7 @@ export { useDeleteMessage } from "@/presentation/hooks/mutations/delete-message.
 
 // Notifications
 export { useGetNotification } from "@/presentation/hooks/queries/get-notification.hook";
+export { useGetNotifications } from "@/presentation/hooks/queries/get-notifications.hook";
 export { useCreateNotification } from "@/presentation/hooks/mutations/create-notification.hook";
+export { useUpdateNotification } from "@/presentation/hooks/mutations/update-notification.hook";
 export { useDeleteNotification } from "@/presentation/hooks/mutations/delete-notification.hook";

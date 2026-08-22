@@ -25,5 +25,7 @@ export * from "@/application/usecases/get-message.usecase";
 export * from "@/application/usecases/create-message.usecase";
 export * from "@/application/usecases/delete-message.usecase";
 export * from "@/application/usecases/get-notification.usecase";
+export * from "@/application/usecases/get-notifications.usecase";
 export * from "@/application/usecases/create-notification.usecase";
+export * from "@/application/usecases/update-notification.usecase";
 export * from "@/application/usecases/delete-notification.usecase";

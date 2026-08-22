@@ -152,6 +152,10 @@
     "sayHello": "Say hello — start the conversation.",
     "sendMessage": "Send message"
   },
+  "notifications": {
+    "title": "Notifications",
+    "empty": "No notifications yet."
+  },
   "account": {
     "menu": {
       "personalInformation": "Personal Information",

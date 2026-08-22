@@ -152,6 +152,10 @@
     "sayHello": "Zeg hallo — begin het gesprek.",
     "sendMessage": "Bericht versturen"
   },
+  "notifications": {
+    "title": "Meldingen",
+    "empty": "Nog geen meldingen."
+  },
   "account": {
     "menu": {
       "personalInformation": "Persoonlijke gegevens",

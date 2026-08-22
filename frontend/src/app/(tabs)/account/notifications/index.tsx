@@ -1,10 +1,10 @@
-import ComingSoonScreen from "@/presentation/screens/coming-soon.screen";
+import NotificationsScreen from "@/presentation/screens/notifications.screen";
 import * as React from "react";
 
 /**
- * Render the Notifications route as a coming-soon placeholder.
- * @returns The rendered coming-soon screen.
+ * Render the Notifications screen route.
+ * @returns The rendered Notifications screen.
  */
 export default function Screen(): React.JSX.Element {
-    return <ComingSoonScreen titleKey="account.menu.notifications" />;
+    return <NotificationsScreen />;
 }
