@@ -3,13 +3,16 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 const deleteApiListing = new DeleteApiListing();
 
+/**
+ *
+ */
 export function useDeleteApiListing() {
     const queryClient = useQueryClient();
 
     return useMutation<void, Error, DeleteApiListingParams>({
-        mutationFn: (params) => deleteApiListing.execute(params),
-        onSuccess: async (_, variables) => {
-            await queryClient.invalidateQueries({ queryKey: ["api-listings.get"] });
+        mutationFn: async params => deleteApiListing.execute(params),
+        onSuccess: (_, variables) => {
+            void queryClient.invalidateQueries({ queryKey: ["api-listings.get"] });
             queryClient.removeQueries({ queryKey: ["api-listings.get", variables.id] });
         },
     });

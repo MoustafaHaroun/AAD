@@ -1,32 +1,14 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, ScrollView, Share, View } from "react-native";
+import * as Linking from "expo-linking";
 import { LinearGradient } from "expo-linear-gradient";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
-import {
-    Text,
-    Icon,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    AlertDialogTrigger,
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-    Separator,
-    PopoverClose,
-} from "@/presentation/components/primitives/rnreusables";
-import { MapPin, Pencil, Trash, EllipsisVertical, Heart, ImageOff } from "lucide-react-native";
+import { AppHeader } from "@/presentation/components/containers/app-header";
+import { Text, Icon, Separator } from "@/presentation/components/primitives/rnreusables";
+import { MapPin, Pencil, Heart, ImageOff, Share2 } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 import {
     useGetApiListing,
-    useDeleteApiListing,
     useCreateFavorite,
     useDeleteFavorite,
     useGetFavorites,
@@ -34,10 +16,12 @@ import {
     useCurrentUserId,
     useCurrentUser,
     useGetUser,
+    useNetworkStatus,
 } from "@/presentation/hooks";
 import { SwipableImageGallery } from "@/presentation/components/primitives/custom";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
+import { cn } from "@/presentation/utils/cn.util";
 
 /**
  *
@@ -47,7 +31,6 @@ export default function ListingScreen(): React.JSX.Element {
     const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
     const { data: listing } = useGetApiListing(id);
-    const { mutate: mutateDeleteListing } = useDeleteApiListing();
     const { data: favorites } = useGetFavorites();
     const { mutate: createFavorite, isPending: isFavoriting } = useCreateFavorite();
     const { mutate: deleteFavoriteItem, isPending: isUnfavoriting } = useDeleteFavorite();
@@ -55,27 +38,19 @@ export default function ListingScreen(): React.JSX.Element {
     const currentUserId = useCurrentUserId();
     const currentUser = useCurrentUser();
     const { data: viewer } = useGetUser(currentUserId ?? "");
+    const isOnline = useNetworkStatus();
 
     const favorite = favorites?.find(f => f.listingId === id);
     const isFavorited = favorite != null;
-    const canManage = listing != null
-        && (listing.user?.id === currentUserId || currentUser?.role === "admin");
+    const canManage = listing != null &&
+        (listing.user?.id === currentUserId || currentUser?.role === "admin");
     const distanceLabel = viewer == null ? undefined : formatDistanceLabel(t, viewer, listing?.user ?? {});
 
     /**
      *
      */
-    function deleteListing(): void {
-        if (listing != null) {
-            mutateDeleteListing({ id: listing.id }, { onSuccess: () => { router.back(); } });
-        }
-    }
-
-    /**
-     *
-     */
     function toggleFavorite(): void {
-        if (isFavoriting || isUnfavoriting || listing == null) { return; }
+        if (isFavoriting || isUnfavoriting || listing == null || !isOnline) { return; }
 
         if (favorite != null) {
             deleteFavoriteItem({ id: favorite.id });
@@ -87,7 +62,18 @@ export default function ListingScreen(): React.JSX.Element {
     /**
      *
      */
-    function onTradeRequest(): void {
+    function onShare(): void {
+        if (listing == null) { return; }
+
+        const url = Linking.createURL(`/listings/${listing.id}`);
+
+        void Share.share({ message: `${listing.title}\n${url}`, title: listing.title, url });
+    }
+
+    /**
+     *
+     */
+    function onSendMessage(): void {
         if (listing?.user == null) { return; }
         const posterId = listing.user.id;
 
@@ -100,71 +86,40 @@ export default function ListingScreen(): React.JSX.Element {
     const attachmentPaths = listing?.attachments?.map(a => a.path) ?? [];
 
     return (
-        <>
-            <Stack.Screen options={{
-                ...SCREEN_OPTIONS,
-                headerRight: !canManage ? undefined : () => (<Popover>
-                        <PopoverTrigger asChild>
-                            <Pressable className="flex items-center justify-center w-8 aspect-square">
-                                <Icon className="size-5"
-as={EllipsisVertical} />
-                            </Pressable>
-                        </PopoverTrigger>
+        <View className="flex-1 bg-background">
+            <AppHeader
+                right={<>
+                    <Pressable
+                        accessibilityLabel={t("common.share")}
+                        accessibilityRole="button"
+                        className="flex items-center justify-center w-8 aspect-square"
+                        hitSlop={8}
+                        onPress={onShare}
+                    >
+                        <Icon
+                            as={Share2}
+                            className="size-5"
+                        />
+                    </Pressable>
 
-                        <PopoverContent className="w-40">
-                            <View className="flex flex-col gap-1">
-                                <PopoverClose
-                                    className="flex flex-row items-center gap-2 py-2 px-2"
-                                    onPress={() => { router.push(`/listings/${id}/edit`); }}
-                                >
-                                    <Icon className="size-4"
-as={Pencil} />
-
-                                    <Text className="text-sm font-medium">{t("common.edit")}</Text>
-                                </PopoverClose>
-
-                                <PopoverClose>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger>
-                                            <View className="flex flex-row items-center gap-2 py-2 px-2">
-                                                <Icon className="size-4"
-as={Trash} />
-
-                                                <Text className="text-sm font-medium">{t("common.delete")}</Text>
-                                            </View>
-                                        </AlertDialogTrigger>
-
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>{t("listing.deleteTitle")}</AlertDialogTitle>
-
-                                                <AlertDialogDescription>
-                                                    {t("listing.deleteDescription")}
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>
-                                                    <Text>{t("common.cancel")}</Text>
-                                                </AlertDialogCancel>
-
-                                                <AlertDialogAction onPress={deleteListing}>
-                                                    <Text>{t("common.delete")}</Text>
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </PopoverClose>
-                            </View>
-                        </PopoverContent>
-                     </Popover>),
-            }}
+                    {canManage
+                        ? <Pressable
+                                accessibilityLabel={t("common.edit")}
+                                accessibilityRole="button"
+                                className="flex items-center justify-center w-8 aspect-square"
+                                hitSlop={8}
+                                onPress={() => { router.push(`/listings/${id}/edit`); }}
+                          >
+                            <Icon
+                                    as={Pencil}
+                                    className="size-5"
+                                />
+                          </Pressable>
+                        : null}
+                </>}
             />
 
-            <SafeAreaView
-                className="flex-1 bg-background"
-                edges={["bottom"]}
-            >
+            <View className="flex-1 bg-background">
                 <ScrollView
                     bounces
                     className="flex-1"
@@ -214,7 +169,10 @@ as={Trash} />
                                 <Text className="flex-1 text-[24px] font-noto-bold text-black">{listing.title}</Text>
 
                                 <Pressable
-                                    className="size-12 shrink-0 items-center justify-center overflow-hidden rounded-[10px]"
+                                    accessibilityLabel={isFavorited ? t("common.unfavorite") : t("common.favorite")}
+                                    accessibilityRole="button"
+                                    className={cn("size-12 shrink-0 items-center justify-center overflow-hidden rounded-[10px]", !isOnline && "opacity-50")}
+                                    disabled={!isOnline}
                                     onPress={toggleFavorite}
                                 >
                                     {isFavorited
@@ -250,11 +208,14 @@ as={Trash} />
                 {/* Fixed bottom CTA */}
                 {listing != null && listing.user?.id !== currentUserId &&
                     <View className="border-t border-border bg-background px-4 pb-4 pt-3">
-                        <GradientButton onPress={onTradeRequest}>
-                            {t("listing.tradeRequest")}
+                        <GradientButton
+                            disabled={!isOnline}
+                            onPress={onSendMessage}
+                        >
+                            {t("listing.sendMessage")}
                         </GradientButton>
                     </View>}
-            </SafeAreaView>
-        </>
+            </View>
+        </View>
     );
 }
