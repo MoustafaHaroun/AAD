@@ -6,7 +6,8 @@ import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "nativewind";
-import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { persistQueryClient } from "@tanstack/query-persist-client-core";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ActivityIndicator, Platform, Text } from "react-native";
 import { DATABASE_NAME, db } from "@/infrastructure/persistence/drizzle";
@@ -55,6 +56,18 @@ export default function Layout() {
     useEffect(() => {
         void tokenStore.hydrate().then(() => { setTokenHydrated(true); });
         void initLanguage().then(() => { setLanguageReady(true); });
+
+        // Restored/saved entirely in the background — queries must never
+        // Wait on this. A restored entry only fills in for a query that
+        // Hasn't already fetched fresher data, so it can't clobber a live
+        // Result even if the persisted snapshot turns out to be stale.
+        const [unsubscribe] = persistQueryClient({
+            queryClient,
+            persister: queryPersister,
+            maxAge: PERSIST_MAX_AGE_MS,
+        });
+
+        return unsubscribe;
     }, []);
 
     if (error) {
@@ -76,10 +89,7 @@ export default function Layout() {
                 options={{ enableChangeListener: true }}
                 useSuspense
             >
-                <PersistQueryClientProvider
-                    client={queryClient}
-                    persistOptions={{ maxAge: PERSIST_MAX_AGE_MS, persister: queryPersister }}
-                >
+                <QueryClientProvider client={queryClient}>
                     <KeyboardProvider>
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
                             <StatusBar
@@ -100,7 +110,7 @@ export default function Layout() {
                                 <ReactQueryDevtools initialIsOpen={false} />}
                         </ThemeProvider>
                     </KeyboardProvider>
-                </PersistQueryClientProvider>
+                </QueryClientProvider>
             </SQLiteProvider>
         </Suspense>
     );
