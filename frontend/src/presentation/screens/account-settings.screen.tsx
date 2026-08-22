@@ -21,7 +21,9 @@ import {
     useUpdateUser,
     useUploadUserAvatar,
     useImageService,
+    useNetworkStatus,
 } from "@/presentation/hooks";
+import { cn } from "@/presentation/utils/cn.util";
 
 const accountSettingsSchema = z.object({
     firstname: z.string().min(1).max(128),
@@ -44,6 +46,7 @@ export default function AccountSettingsScreen(): React.JSX.Element {
     const { data: user } = useGetUser(currentUserId ?? "");
     const { mutateAsync: updateUser, isPending: isSaving, error } = useUpdateUser();
     const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } = useUploadUserAvatar();
+    const isOnline = useNetworkStatus();
     const { control, handleSubmit, reset } = useForm<z.infer<typeof accountSettingsSchema>>({
         resolver: zodResolver(accountSettingsSchema),
     });
@@ -97,7 +100,10 @@ export default function AccountSettingsScreen(): React.JSX.Element {
                     <ScrollView contentContainerStyle={{ padding: 16 }}>
                         {user != null &&
                             <Pressable
-                                className="mb-6 items-center"
+                                accessibilityLabel={t("common.changeAvatar")}
+                                accessibilityRole="button"
+                                className={cn("mb-6 items-center", !isOnline && "opacity-50")}
+                                disabled={!isOnline}
                                 onPress={onChangeAvatar}
                             >
                                 <View className="relative">
@@ -176,7 +182,7 @@ className={INPUT_CLASS}
 
                     <View className="border-t border-border bg-background p-4">
                         <GradientButton
-                            disabled={isSaving}
+                            disabled={isSaving || !isOnline}
                             onPress={handleSubmit(onSave)}
                         >
                             {isSaving ? t("common.saving") : t("common.save")}

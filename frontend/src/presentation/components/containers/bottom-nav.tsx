@@ -36,6 +36,9 @@ export function BottomNav(): React.JSX.Element {
 
                     return (
                         <Pressable
+                            accessibilityLabel={t(`nav.${tab.key}`)}
+                            accessibilityRole="tab"
+                            accessibilityState={{ selected: active }}
                             className="flex-1 items-center gap-1 pb-2"
                             key={tab.href}
                             onPress={() => { router.push(tab.href); }}

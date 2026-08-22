@@ -13,8 +13,9 @@ import { Input } from "@/presentation/components/primitives/rnreusables/ui/input
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
 import { MessageBubble } from "@/presentation/components/domain/chat/message-bubble";
-import { useCreateMessage, useCurrentUserId, useGetMessages, useGetUser } from "@/presentation/hooks";
+import { useCreateMessage, useCurrentUserId, useGetMessages, useGetUser, useNetworkStatus } from "@/presentation/hooks";
 import { formatDateDivider } from "@/presentation/utils/format-timestamp.util";
+import { cn } from "@/presentation/utils/cn.util";
 
 /**
  *
@@ -26,6 +27,7 @@ export default function ChatScreen(): React.JSX.Element {
     const { data: counterpart } = useGetUser(userId);
     const { data: messages } = useGetMessages();
     const { mutate: sendMessage, isPending } = useCreateMessage();
+    const isOnline = useNetworkStatus();
     const [draft, setDraft] = useState("");
 
     const thread = useMemo(
@@ -41,7 +43,7 @@ export default function ChatScreen(): React.JSX.Element {
     function onSend() {
         const content = draft.trim();
 
-        if (content.length === 0 || isPending) { return; }
+        if (content.length === 0 || isPending || !isOnline) { return; }
 
         sendMessage(
             { content, recipientId: userId },
@@ -119,7 +121,10 @@ export default function ChatScreen(): React.JSX.Element {
                         />
 
                         <Pressable
-                            className="overflow-hidden rounded-[10px]"
+                            accessibilityLabel={t("common.send")}
+                            accessibilityRole="button"
+                            className={cn("overflow-hidden rounded-[10px]", !isOnline && "opacity-50")}
+                            disabled={!isOnline}
                             onPress={onSend}
                         >
                             <LinearGradient
