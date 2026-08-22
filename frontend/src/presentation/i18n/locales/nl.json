@@ -10,7 +10,19 @@
     "search": "Zoeken",
     "all": "Alle",
     "yes": "Ja",
-    "no": "Nee"
+    "no": "Nee",
+    "share": "Delen",
+    "favorite": "Toevoegen aan favorieten",
+    "unfavorite": "Verwijderen uit favorieten",
+    "addPhoto": "Foto toevoegen",
+    "removePhoto": "Foto verwijderen",
+    "send": "Versturen",
+    "close": "Sluiten",
+    "changeAvatar": "Profielfoto wijzigen",
+    "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm"
+  },
+  "offline": {
+    "banner": "Je bent offline. Opgeslagen gegevens worden getoond — bewerken is niet mogelijk tot je weer online bent."
   },
   "nav": {
     "home": "Home",
@@ -102,10 +114,10 @@
     "distanceAway": "{{distance}} km verderop"
   },
   "listing": {
-    "tradeRequest": "Ruilverzoek",
+    "sendMessage": "Bericht versturen",
     "tradeRequestMessage": "Hoi, ik ben geïnteresseerd in je listing \"{{title}}\".",
-    "deleteTitle": "Listing verwijderen",
-    "deleteDescription": "Deze actie kan niet ongedaan worden gemaakt. Weet je zeker dat je deze listing permanent wilt verwijderen?"
+    "deleteTitle": "Weet je zeker dat je deze listing wilt verwijderen?",
+    "deleteDescription": "Deze actie is permanent en kan niet ongedaan worden gemaakt!"
   },
   "listingForm": {
     "titleLabel": "Titel",
@@ -142,6 +154,7 @@
       "myListings": "Mijn listings",
       "notifications": "Meldingen",
       "privacy": "Privacy & beveiliging",
+      "preferences": "Voorkeuren",
       "language": "Taal"
     },
     "sectionTitle": "Account",

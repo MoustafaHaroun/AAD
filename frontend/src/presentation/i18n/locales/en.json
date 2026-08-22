@@ -10,7 +10,19 @@
     "search": "Search",
     "all": "All",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "share": "Share",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "addPhoto": "Add photo",
+    "removePhoto": "Remove photo",
+    "send": "Send",
+    "close": "Close",
+    "changeAvatar": "Change profile picture",
+    "viewPhoto": "View photo {{index}} of {{total}}, fullscreen"
+  },
+  "offline": {
+    "banner": "You're offline. Showing saved data — editing is disabled until you're back online."
   },
   "nav": {
     "home": "Home",
@@ -102,10 +114,10 @@
     "distanceAway": "{{distance}} km away"
   },
   "listing": {
-    "tradeRequest": "Trade Request",
+    "sendMessage": "Send message",
     "tradeRequestMessage": "Hi, I'm interested in your listing \"{{title}}\".",
-    "deleteTitle": "Delete Listing",
-    "deleteDescription": "This action cannot be undone. Are you sure you wish to permanently delete your listing?"
+    "deleteTitle": "Are you sure you want to delete this listing?",
+    "deleteDescription": "This action is permanent and cannot be undone!"
   },
   "listingForm": {
     "titleLabel": "Title",
@@ -142,6 +154,7 @@
       "myListings": "My listings",
       "notifications": "Notifications",
       "privacy": "Privacy & Security",
+      "preferences": "Preferences",
       "language": "Language"
     },
     "sectionTitle": "Account",
