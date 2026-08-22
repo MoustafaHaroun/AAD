@@ -23,6 +23,7 @@ import {
     PopoverClose,
 } from "@/presentation/components/primitives/rnreusables";
 import { MapPin, Pencil, Trash, EllipsisVertical, Heart, ImageOff } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import {
     useGetApiListing,
     useDeleteApiListing,
@@ -31,15 +32,19 @@ import {
     useGetFavorites,
     useCreateMessage,
     useCurrentUserId,
+    useCurrentUser,
+    useGetUser,
 } from "@/presentation/hooks";
 import { SwipableImageGallery } from "@/presentation/components/primitives/custom";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
+import { formatDistanceLabel } from "@/presentation/utils/distance.util";
 
 /**
  *
  */
 export default function ListingScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
     const { data: listing } = useGetApiListing(id);
     const { mutate: mutateDeleteListing } = useDeleteApiListing();
@@ -48,9 +53,14 @@ export default function ListingScreen(): React.JSX.Element {
     const { mutate: deleteFavoriteItem, isPending: isUnfavoriting } = useDeleteFavorite();
     const { mutate: sendMessage } = useCreateMessage();
     const currentUserId = useCurrentUserId();
+    const currentUser = useCurrentUser();
+    const { data: viewer } = useGetUser(currentUserId ?? "");
 
     const favorite = favorites?.find(f => f.listingId === id);
     const isFavorited = favorite != null;
+    const canManage = listing != null
+        && (listing.user?.id === currentUserId || currentUser?.role === "admin");
+    const distanceLabel = viewer == null ? undefined : formatDistanceLabel(t, viewer, listing?.user ?? {});
 
     /**
      *
@@ -82,7 +92,7 @@ export default function ListingScreen(): React.JSX.Element {
         const posterId = listing.user.id;
 
         sendMessage(
-            { content: `Hi, I'm interested in your listing "${listing.title}".`, recipientId: posterId },
+            { content: t("listing.tradeRequestMessage", { title: listing.title }), recipientId: posterId },
             { onSuccess: () => { router.push(`/chats/${posterId}`); } },
         );
     }
@@ -93,7 +103,7 @@ export default function ListingScreen(): React.JSX.Element {
         <>
             <Stack.Screen options={{
                 ...SCREEN_OPTIONS,
-                headerRight: () => (<Popover>
+                headerRight: !canManage ? undefined : () => (<Popover>
                         <PopoverTrigger asChild>
                             <Pressable className="flex items-center justify-center w-8 aspect-square">
                                 <Icon className="size-5"
@@ -110,7 +120,7 @@ as={EllipsisVertical} />
                                     <Icon className="size-4"
 as={Pencil} />
 
-                                    <Text className="text-sm font-medium">Edit</Text>
+                                    <Text className="text-sm font-medium">{t("common.edit")}</Text>
                                 </PopoverClose>
 
                                 <PopoverClose>
@@ -120,26 +130,26 @@ as={Pencil} />
                                                 <Icon className="size-4"
 as={Trash} />
 
-                                                <Text className="text-sm font-medium">Delete</Text>
+                                                <Text className="text-sm font-medium">{t("common.delete")}</Text>
                                             </View>
                                         </AlertDialogTrigger>
 
                                         <AlertDialogContent>
                                             <AlertDialogHeader>
-                                                <AlertDialogTitle>Delete Listing</AlertDialogTitle>
+                                                <AlertDialogTitle>{t("listing.deleteTitle")}</AlertDialogTitle>
 
                                                 <AlertDialogDescription>
-                                                    This action cannot be undone. Are you sure you wish to permanently delete your listing?
+                                                    {t("listing.deleteDescription")}
                                                 </AlertDialogDescription>
                                             </AlertDialogHeader>
 
                                             <AlertDialogFooter>
                                                 <AlertDialogCancel>
-                                                    <Text>Cancel</Text>
+                                                    <Text>{t("common.cancel")}</Text>
                                                 </AlertDialogCancel>
 
                                                 <AlertDialogAction onPress={deleteListing}>
-                                                    <Text>Delete</Text>
+                                                    <Text>{t("common.delete")}</Text>
                                                 </AlertDialogAction>
                                             </AlertDialogFooter>
                                         </AlertDialogContent>
@@ -190,6 +200,11 @@ as={Trash} />
                                             {listing.user.location}
                                         </Text>
                                     </View>}
+
+                                {distanceLabel != null &&
+                                    <Text className="font-noto-medium text-[14px] text-forehued">
+                                        {distanceLabel}
+                                    </Text>}
                             </View>
 
                             <Separator />
@@ -236,7 +251,7 @@ as={Trash} />
                 {listing != null && listing.user?.id !== currentUserId &&
                     <View className="border-t border-border bg-background px-4 pb-4 pt-3">
                         <GradientButton onPress={onTradeRequest}>
-                            Trade Request
+                            {t("listing.tradeRequest")}
                         </GradientButton>
                     </View>}
             </SafeAreaView>

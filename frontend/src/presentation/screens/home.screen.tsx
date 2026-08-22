@@ -3,14 +3,22 @@ import * as React from "react";
 import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ClipboardList, MessageSquare, Plus, Search, User } from "lucide-react-native";
+import { Search } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { QuickActionTile } from "@/presentation/components/domain/home/quick-action-tile";
+import {
+    AccountIcon,
+    ChatsIcon,
+    MyListingsIcon,
+    NewListingIcon,
+} from "@/presentation/components/domain/home/quick-action-icons";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
 import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
-import { useConversations, useGetApiListings } from "@/presentation/hooks";
+import { useConversations, useCurrentUserId, useGetApiListings, useGetUser } from "@/presentation/hooks";
+import { formatDistanceLabel } from "@/presentation/utils/distance.util";
 
 const CHATS_PREVIEW_LIMIT = 5;
 
@@ -21,7 +29,10 @@ const NEW_LISTINGS_LIMIT = 4;
  */
 export default function HomeScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const [query, setQuery] = useState("");
+    const currentUserId = useCurrentUserId();
+    const { data: currentUser } = useGetUser(currentUserId ?? "");
     const { data: listings } = useGetApiListings();
     const { conversations } = useConversations();
     const newListings = listings?.slice(0, NEW_LISTINGS_LIMIT) ?? [];
@@ -55,7 +66,7 @@ export default function HomeScreen(): React.JSX.Element {
                             className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
                             onChangeText={setQuery}
                             onSubmitEditing={onSearchSubmit}
-                            placeholder="Search"
+                            placeholder={t("common.search")}
                             returnKeyType="search"
                             value={query}
                         />
@@ -68,43 +79,43 @@ export default function HomeScreen(): React.JSX.Element {
                 >
                     <View className="flex-row gap-2">
                         <QuickActionTile
-                            icon={Plus}
-                            label="New listing"
+                            icon={NewListingIcon}
+                            label={t("home.newListing")}
                             onPress={() => { router.push("/listings/new"); }}
                             variant="primary"
                         />
 
                         <QuickActionTile
-                            icon={ClipboardList}
-                            label="My listings"
+                            icon={MyListingsIcon}
+                            label={t("home.myListings")}
                             onPress={() => { router.push("/listings"); }}
                         />
 
                         <QuickActionTile
-                            icon={MessageSquare}
-                            label="Chats"
+                            icon={ChatsIcon}
+                            label={t("home.chats")}
                             onPress={() => { router.push("/chats"); }}
                         />
 
                         <QuickActionTile
-                            icon={User}
-                            label="Account"
+                            icon={AccountIcon}
+                            label={t("home.account")}
                             onPress={() => { router.push("/account"); }}
                         />
                     </View>
 
                     <View className="rounded-[10px] bg-accent p-4">
                         <View className="flex-row items-center justify-between">
-                            <Text className="text-[20px] font-noto-bold text-black">Chats</Text>
+                            <Text className="text-[20px] font-noto-bold text-black">{t("home.chats")}</Text>
 
                             <Pressable onPress={() => { router.push("/chats"); }}>
-                                <Text className="font-noto-semibold text-[16px] text-forehued">All Chats</Text>
+                                <Text className="font-noto-semibold text-[16px] text-forehued">{t("home.allChats")}</Text>
                             </Pressable>
                         </View>
 
                         {recentConversations.length === 0
                             ? <Text className="mt-3 font-noto text-sm text-muted-foreground">
-                                No conversations yet.
+                                {t("home.noConversations")}
                                 </Text>
 
                             : <ScrollView
@@ -130,25 +141,27 @@ export default function HomeScreen(): React.JSX.Element {
 
                     <View>
                         <View className="flex-row items-center justify-between">
-                            <Text className="text-[20px] font-noto-bold text-black">New Listings</Text>
+                            <Text className="text-[20px] font-noto-bold text-black">{t("home.newListingsHeading")}</Text>
 
                             <Pressable onPress={() => { router.push("/listings"); }}>
-                                <Text className="font-noto-semibold text-[16px] text-forehued">All Listings</Text>
+                                <Text className="font-noto-semibold text-[16px] text-forehued">{t("home.allListings")}</Text>
                             </Pressable>
                         </View>
 
                         <View className="mt-2 flex-row flex-wrap">
-                            {newListings.map(listing => (<Pressable
-                                    className="w-1/2 p-1"
-                                    key={listing.id}
-                                    onPress={() => { router.push(`/listings/${listing.id}`); }}
-                                >
-                                    <ListingItem listing={listing} />
-                                 </Pressable>),)}
+                            {newListings.map(listing => (
+                                <View className="w-1/2 p-1" key={listing.id}>
+                                    <ListingItem
+                                        distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
+                                        listing={listing}
+                                        onPress={() => { router.push(`/listings/${listing.id}`); }}
+                                    />
+                                </View>
+                            ))}
 
                             {newListings.length === 0 &&
                                 <Text className="p-2 font-noto text-sm text-muted-foreground">
-                                    No listings yet.
+                                    {t("home.noListings")}
                                 </Text>}
                         </View>
                     </View>

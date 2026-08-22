@@ -4,19 +4,21 @@ import { useMemo, useState } from "react";
 import { View, Pressable, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Plus, Search } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
 import { CategoryFilterChips } from "@/presentation/components/domain/listings/category-filter-chips";
-import { useCurrentUserId, useGetApiListings, useGetFavorites } from "@/presentation/hooks";
+import { useCurrentUserId, useGetApiListings, useGetFavorites, useGetUser } from "@/presentation/hooks";
 import type { ListingCategory } from "@/domain/entities/listing-category.entity";
 import { cn } from "@/presentation/utils/cn.util";
+import { formatDistanceLabel } from "@/presentation/utils/distance.util";
 
 const TABS = [
-    { key: "near", label: "Listings near you" },
-    { key: "liked", label: "Liked listings" },
-    { key: "my", label: "My listings" },
+    { key: "near" },
+    { key: "liked" },
+    { key: "my" },
 ] as const;
 
 type TabKey = (typeof TABS)[number]["key"];
@@ -26,6 +28,7 @@ type TabKey = (typeof TABS)[number]["key"];
  */
 export default function ListingsScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const params = useLocalSearchParams<{ q?: string, tab?: TabKey }>();
     const currentUserId = useCurrentUserId();
     const [tab, setTab] = useState<TabKey>(params.tab ?? "near");
@@ -36,6 +39,7 @@ export default function ListingsScreen(): React.JSX.Element {
         tab === "near" ? { q: query || undefined, category } : {},
     );
     const { data: favorites } = useGetFavorites();
+    const { data: currentUser } = useGetUser(currentUserId ?? "");
 
     const listings = useMemo(() => {
         if (data == null) { return undefined; }
@@ -75,25 +79,25 @@ export default function ListingsScreen(): React.JSX.Element {
                         <Input
                             className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
                             onChangeText={setQuery}
-                            placeholder="Search"
+                            placeholder={t("common.search")}
                             returnKeyType="search"
                             value={query}
                         />
                     </View>
 
                     <View className="flex-row gap-4 border-b border-border">
-                        {TABS.map(t => (<Pressable
-                                className={cn("pb-2", tab === t.key && "border-b-2 border-black")}
-                                key={t.key}
-                                onPress={() => { setTab(t.key); }}
+                        {TABS.map(tabItem => (<Pressable
+                                className={cn("pb-2", tab === tabItem.key && "border-b-2 border-black")}
+                                key={tabItem.key}
+                                onPress={() => { setTab(tabItem.key); }}
                             >
                                 <Text
                                     className={cn(
                                         "text-[15px]",
-                                        tab === t.key ? "font-noto-bold text-black" : "font-noto-medium text-forehued",
+                                        tab === tabItem.key ? "font-noto-bold text-black" : "font-noto-medium text-forehued",
                                     )}
                                 >
-                                    {t.label}
+                                    {t(`listings.tabs.${tabItem.key}`)}
                                 </Text>
                              </Pressable>),)}
                     </View>
@@ -127,22 +131,24 @@ export default function ListingsScreen(): React.JSX.Element {
                     {listings?.length === 0 &&
                         <View className="flex-1 items-center justify-center py-8">
                             <Text className="text-muted-foreground">
-                                {tab === "liked" && "You haven't liked any listings yet."}
+                                {tab === "liked" && t("listings.emptyLiked")}
 
-                                {tab === "my" && "You haven't posted any listings yet."}
+                                {tab === "my" && t("listings.emptyMy")}
 
-                                {tab === "near" && "No listings yet."}
+                                {tab === "near" && t("listings.emptyNear")}
                             </Text>
                         </View>}
 
                     <View className="-m-1 flex flex-row flex-wrap">
-                        {listings?.map(listing => (<Pressable
-                                className="w-1/2 p-1"
-                                key={listing.id}
-                                onPress={() => { router.push(`/listings/${listing.id}`); }}
-                            >
-                                <ListingItem listing={listing} />
-                             </Pressable>),)}
+                        {listings?.map(listing => (
+                            <View className="w-1/2 p-1" key={listing.id}>
+                                <ListingItem
+                                    distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
+                                    listing={listing}
+                                    onPress={() => { router.push(`/listings/${listing.id}`); }}
+                                />
+                            </View>
+                        ))}
                     </View>
                 </ScrollView>
 

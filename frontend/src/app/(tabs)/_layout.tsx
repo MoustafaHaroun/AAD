@@ -4,12 +4,15 @@ import { Slot, useRouter } from "expo-router";
 import { View } from "react-native";
 import { tokenStore } from "@/infrastructure/api";
 import { BottomNav } from "@/presentation/components/containers/bottom-nav";
+import { useSyncUserLocation } from "@/presentation/hooks";
 
 /**
  *
  */
 export default function TabsLayout(): React.JSX.Element | null {
     const router = useRouter();
+
+    useSyncUserLocation();
 
     useEffect(() => {
         if (tokenStore.get() == null) {

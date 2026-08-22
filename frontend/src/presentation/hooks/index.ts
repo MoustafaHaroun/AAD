@@ -7,6 +7,7 @@ export { useImageService } from "@/presentation/hooks/services/image-service.hoo
 // Auth
 export { useSignIn } from "@/presentation/hooks/mutations/sign-in.hook";
 export { useCurrentUser, useCurrentUserId } from "@/presentation/hooks/queries/current-user.hook";
+export { useSyncUserLocation } from "@/presentation/hooks/use-sync-user-location.hook";
 
 // Users
 export { useGetAllUsers } from "@/presentation/hooks/queries/get-all-users.hook";

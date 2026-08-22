@@ -5,6 +5,8 @@ export interface User {
     surname: string,
     role?: string,
     location?: string | null,
+    latitude?: number | null,
+    longitude?: number | null,
     avatar?: string | null,
 }
 
@@ -22,4 +24,6 @@ export interface UpdateUserBody {
     firstname?: string,
     surname?: string,
     location?: string | null,
+    latitude?: number | null,
+    longitude?: number | null,
 }

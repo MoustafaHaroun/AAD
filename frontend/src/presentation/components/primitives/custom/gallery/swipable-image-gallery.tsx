@@ -9,6 +9,7 @@ import {
     NativeSyntheticEvent
 } from "react-native";
 import { useState, useRef } from "react";
+import { FullscreenImageViewer } from "@/presentation/components/primitives/custom/gallery/fullscreen-image-viewer";
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -19,6 +20,7 @@ export interface SwipableImageGalleryProps {
 export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
     const scrollViewRef = useRef<ScrollView>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [fullscreenOpen, setFullscreenOpen] = useState(false);
 
     const validUris = uris?.filter(uri => uri != null) ?? [];
 
@@ -58,6 +60,7 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
                 {validUris.map((uri, index) => (
                     <Pressable
                         key={`${uri}-${index}`}
+                        onPress={() => setFullscreenOpen(true)}
                         style={{ width: SCREEN_WIDTH }}
                     >
                         <Image
@@ -75,6 +78,13 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
                     {currentIndex + 1} / {validUris.length}
                 </Text>
             </View>
+
+            <FullscreenImageViewer
+                initialIndex={currentIndex}
+                onClose={() => setFullscreenOpen(false)}
+                uris={validUris}
+                visible={fullscreenOpen}
+            />
         </View>
     );
 }

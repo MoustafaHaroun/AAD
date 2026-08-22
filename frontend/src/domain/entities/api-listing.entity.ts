@@ -12,6 +12,8 @@ export interface ApiListingUser {
     surname: string,
     role?: string,
     location?: string | null,
+    latitude?: number | null,
+    longitude?: number | null,
 }
 
 export interface ApiListing {
