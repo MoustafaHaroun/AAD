@@ -22,7 +22,7 @@
     "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm"
   },
   "offline": {
-    "banner": "Je bent offline. Opgeslagen gegevens worden getoond — bewerken is niet mogelijk tot je weer online bent."
+    "banner": "Je bent offline"
   },
   "nav": {
     "home": "Home",

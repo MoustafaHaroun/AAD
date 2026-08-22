@@ -22,7 +22,7 @@
     "viewPhoto": "View photo {{index}} of {{total}}, fullscreen"
   },
   "offline": {
-    "banner": "You're offline. Showing saved data — editing is disabled until you're back online."
+    "banner": "You're offline"
   },
   "nav": {
     "home": "Home",
