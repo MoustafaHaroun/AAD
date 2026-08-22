@@ -9,6 +9,8 @@ export interface User {
   surname: string;
   role: Role;
   location: string | null;
+  latitude: number | null;
+  longitude: number | null;
   avatar: string | null;
   listings: Listing[];
   notifications: Notification[];

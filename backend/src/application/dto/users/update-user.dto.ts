@@ -7,6 +7,8 @@ export const updateUserSchema = z.object({
   firstname: userSchema.firstname.optional(),
   surname: userSchema.surname.optional(),
   location: userSchema.location.nullable().optional(),
+  latitude: userSchema.latitude.nullable().optional(),
+  longitude: userSchema.longitude.nullable().optional(),
 });
 
 export const updateUserApi = {
@@ -30,6 +32,16 @@ export const updateUserApi = {
         type: 'string',
         nullable: true,
         example: 'Brussels, Belgium',
+      },
+      latitude: {
+        type: 'number',
+        nullable: true,
+        example: 50.8503,
+      },
+      longitude: {
+        type: 'number',
+        nullable: true,
+        example: 4.3517,
       },
     },
   },
