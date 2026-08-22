@@ -11,6 +11,7 @@ import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
 import { useConversations } from "@/presentation/hooks";
 import { formatConversationTimestamp } from "@/presentation/utils/format-timestamp.util";
+import { OfflineBanner } from "@/presentation/components/containers/offline-banner";
 
 /**
  *
@@ -27,13 +28,17 @@ export default function ChatsScreen(): React.JSX.Element {
         <>
             <Stack.Screen options={{ headerShown: false }} />
 
-            <SafeAreaView
-                className="flex-1 bg-background"
-                edges={["top"]}
-            >
-                <View className="bg-prim px-4 pb-4 pt-2">
-                    <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
-                </View>
+            <View className="flex-1 bg-background">
+                <SafeAreaView
+                    className="bg-prim"
+                    edges={["top"]}
+                >
+                    <View className="px-4 pb-4 pt-2">
+                        <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
+                    </View>
+                </SafeAreaView>
+
+                <OfflineBanner />
 
                 <View className="p-4">
                     <View className="flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
@@ -51,7 +56,10 @@ export default function ChatsScreen(): React.JSX.Element {
                     </View>
                 </View>
 
-                <ScrollView contentContainerStyle={{ gap: 8, padding: 16, paddingTop: 0 }}>
+                <ScrollView
+                    className="flex-1"
+                    contentContainerStyle={{ gap: 8, padding: 16, paddingTop: 0 }}
+                >
                     {isLoading ? <Text className="p-4 text-center text-muted-foreground">{t("common.loading")}</Text> : null}
 
                     {filtered?.length === 0 &&
@@ -96,7 +104,7 @@ export default function ChatsScreen(): React.JSX.Element {
                             </View>
                          </Pressable>,)}
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         </>
     );
 }

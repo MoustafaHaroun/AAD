@@ -10,7 +10,8 @@ import { Input } from "@/presentation/components/primitives/rnreusables/ui/input
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
 import { CategoryFilterChips } from "@/presentation/components/domain/listings/category-filter-chips";
-import { useCurrentUserId, useGetApiListings, useGetFavorites, useGetUser } from "@/presentation/hooks";
+import { useCurrentUserId, useGetApiListings, useGetFavorites, useGetUser, useNetworkStatus } from "@/presentation/hooks";
+import { OfflineBanner } from "@/presentation/components/containers/offline-banner";
 import type { ListingCategory } from "@/domain/entities/listing-category.entity";
 import { cn } from "@/presentation/utils/cn.util";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
@@ -40,6 +41,7 @@ export default function ListingsScreen(): React.JSX.Element {
     );
     const { data: favorites } = useGetFavorites();
     const { data: currentUser } = useGetUser(currentUserId ?? "");
+    const isOnline = useNetworkStatus();
 
     const listings = useMemo(() => {
         if (data == null) { return undefined; }
@@ -61,13 +63,17 @@ export default function ListingsScreen(): React.JSX.Element {
         <>
             <Stack.Screen options={{ headerShown: false }} />
 
-            <SafeAreaView
-                className="flex-1 bg-background"
-                edges={["top"]}
-            >
-                <View className="bg-prim px-4 pb-4 pt-2">
-                    <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
-                </View>
+            <View className="flex-1 bg-background">
+                <SafeAreaView
+                    className="bg-prim"
+                    edges={["top"]}
+                >
+                    <View className="px-4 pb-4 pt-2">
+                        <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
+                    </View>
+                </SafeAreaView>
+
+                <OfflineBanner />
 
                 <View className="gap-3 p-4">
                     <View className="flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
@@ -85,7 +91,12 @@ export default function ListingsScreen(): React.JSX.Element {
                         />
                     </View>
 
-                    <View className="flex-row gap-4 border-b border-border">
+                    <ScrollView
+                        className="border-b border-border"
+                        contentContainerStyle={{ gap: 16 }}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                    >
                         {TABS.map(tabItem => (<Pressable
                                 className={cn("pb-2", tab === tabItem.key && "border-b-2 border-black")}
                                 key={tabItem.key}
@@ -96,11 +107,12 @@ export default function ListingsScreen(): React.JSX.Element {
                                         "text-[15px]",
                                         tab === tabItem.key ? "font-noto-bold text-black" : "font-noto-medium text-forehued",
                                     )}
+                                    numberOfLines={1}
                                 >
                                     {t(`listings.tabs.${tabItem.key}`)}
                                 </Text>
                              </Pressable>),)}
-                    </View>
+                    </ScrollView>
 
                     {tab === "near" && <CategoryFilterChips
                         onChange={setCategory}
@@ -109,6 +121,7 @@ export default function ListingsScreen(): React.JSX.Element {
                 </View>
 
                 <ScrollView
+                    className="flex-1"
                     contentContainerStyle={{ padding: 16, paddingTop: 0, flexGrow: 1 }}
                     refreshControl={
                         <RefreshControl
@@ -154,7 +167,10 @@ export default function ListingsScreen(): React.JSX.Element {
 
                 <View className="absolute bottom-0 right-0 p-4">
                     <Pressable
-                        className="h-14 w-14 items-center justify-center rounded-full bg-prim shadow-lg shadow-black"
+                        accessibilityLabel={t("home.newListing")}
+                        accessibilityRole="button"
+                        className={cn("h-14 w-14 items-center justify-center rounded-full bg-prim shadow-lg shadow-black", !isOnline && "opacity-50")}
+                        disabled={!isOnline}
                         onPress={() => { router.push("/listings/new"); }}
                     >
                         <Icon
@@ -163,7 +179,7 @@ export default function ListingsScreen(): React.JSX.Element {
                         />
                     </Pressable>
                 </View>
-            </SafeAreaView>
+            </View>
         </>
     );
 }

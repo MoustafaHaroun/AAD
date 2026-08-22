@@ -17,6 +17,7 @@ import {
 } from "@/presentation/components/domain/home/quick-action-icons";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
 import { UserAvatar } from "@/presentation/components/primitives/user-avatar";
+import { OfflineBanner } from "@/presentation/components/containers/offline-banner";
 import { useConversations, useCurrentUserId, useGetApiListings, useGetUser } from "@/presentation/hooks";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
 
@@ -49,29 +50,33 @@ export default function HomeScreen(): React.JSX.Element {
         <>
             <Stack.Screen options={{ headerShown: false }} />
 
-            <SafeAreaView
-                className="flex-1 bg-background"
-                edges={["top"]}
-            >
-                <View className="bg-prim px-4 pb-4 pt-2">
-                    <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
+            <View className="flex-1 bg-background">
+                <SafeAreaView
+                    className="bg-prim"
+                    edges={["top"]}
+                >
+                    <View className="px-4 pb-4 pt-2">
+                        <Text className="text-center text-[28px] font-noto-bold text-black">Trade²</Text>
 
-                    <View className="mt-4 flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
-                        <Icon
-                            as={Search}
-                            className="size-6 text-forehued"
-                        />
+                        <View className="mt-4 flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
+                            <Icon
+                                as={Search}
+                                className="size-6 text-forehued"
+                            />
 
-                        <Input
-                            className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
-                            onChangeText={setQuery}
-                            onSubmitEditing={onSearchSubmit}
-                            placeholder={t("common.search")}
-                            returnKeyType="search"
-                            value={query}
-                        />
+                            <Input
+                                className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
+                                onChangeText={setQuery}
+                                onSubmitEditing={onSearchSubmit}
+                                placeholder={t("common.search")}
+                                returnKeyType="search"
+                                value={query}
+                            />
+                        </View>
                     </View>
-                </View>
+                </SafeAreaView>
+
+                <OfflineBanner />
 
                 <ScrollView
                     className="flex-1"
@@ -88,7 +93,7 @@ export default function HomeScreen(): React.JSX.Element {
                         <QuickActionTile
                             icon={MyListingsIcon}
                             label={t("home.myListings")}
-                            onPress={() => { router.push("/listings"); }}
+                            onPress={() => { router.push({ pathname: "/listings", params: { tab: "my" } }); }}
                         />
 
                         <QuickActionTile
@@ -149,15 +154,14 @@ export default function HomeScreen(): React.JSX.Element {
                         </View>
 
                         <View className="mt-2 flex-row flex-wrap">
-                            {newListings.map(listing => (
-                                <View className="w-1/2 p-1" key={listing.id}>
+                            {newListings.map(listing => <View className="w-1/2 p-1"
+key={listing.id}>
                                     <ListingItem
                                         distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
                                         listing={listing}
                                         onPress={() => { router.push(`/listings/${listing.id}`); }}
                                     />
-                                </View>
-                            ))}
+                                 </View>,)}
 
                             {newListings.length === 0 &&
                                 <Text className="p-2 font-noto text-sm text-muted-foreground">
@@ -166,7 +170,7 @@ export default function HomeScreen(): React.JSX.Element {
                         </View>
                     </View>
                 </ScrollView>
-            </SafeAreaView>
+            </View>
         </>
     );
 }

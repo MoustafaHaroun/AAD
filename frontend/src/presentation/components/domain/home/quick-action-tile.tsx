@@ -5,20 +5,25 @@ import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { BRAND_COLORS } from "@/presentation/styles/theme";
 
 interface QuickActionIconProps {
-    readonly size?: number;
-    readonly color?: string;
+    readonly size?: number,
+    readonly color?: string,
 }
 
 interface QuickActionTileProps {
-    readonly icon: React.ComponentType<QuickActionIconProps>;
-    readonly label: string;
-    readonly onPress: (event: GestureResponderEvent) => void;
-    readonly variant?: "primary" | "secondary";
+    readonly icon: React.ComponentType<QuickActionIconProps>,
+    readonly label: string,
+    readonly onPress: (event: GestureResponderEvent) => void,
+    readonly variant?: "primary" | "secondary",
 }
 
 /**
  * One of the four Home-screen quick-action tiles (New listing / My listings
  * / Chats / Account), matching the Figma design system.
+ * @param root0
+ * @param root0.icon
+ * @param root0.label
+ * @param root0.onPress
+ * @param root0.variant
  */
 export function QuickActionTile({
     icon: IconComponent,
@@ -28,26 +33,34 @@ export function QuickActionTile({
 }: QuickActionTileProps): React.JSX.Element {
     const color = variant === "primary" ? BRAND_COLORS.black : BRAND_COLORS.forehued;
 
-    const content = (
-        <View className="items-center justify-center gap-1 p-3">
+    const content =
+        <View className="items-center justify-center gap-1 px-1 py-3">
             <IconComponent color={color} size={28} />
 
             <Text
                 className={
                     variant === "primary"
-                        ? "text-[13px] font-noto-semibold text-black"
-                        : "text-[13px] font-noto-semibold text-forehued"
+                        ? "text-[11px] font-noto-semibold text-black"
+                        : "text-[11px] font-noto-semibold text-forehued"
                 }
+                numberOfLines={1}
             >
                 {label}
             </Text>
         </View>
-    );
+    ;
 
     if (variant === "primary") {
         return (
-            <Pressable className="flex-1 overflow-hidden rounded-[10px]" onPress={onPress}>
-                <LinearGradient colors={["#FCC010", "#F28D1B"]} end={{ x: 1, y: 1 }} start={{ x: 0, y: 0 }}>
+            <Pressable
+                className="flex-1 overflow-hidden rounded-[10px]"
+                onPress={onPress}
+            >
+                <LinearGradient
+                    colors={["#FCC010", "#F28D1B"]}
+                    end={{ x: 1, y: 1 }}
+                    start={{ x: 0, y: 0 }}
+                >
                     {content}
                 </LinearGradient>
             </Pressable>
@@ -55,7 +68,10 @@ export function QuickActionTile({
     }
 
     return (
-        <Pressable className="flex-1 rounded-[10px] bg-primdesat" onPress={onPress}>
+        <Pressable
+            className="flex-1 rounded-[10px] bg-primdesat"
+            onPress={onPress}
+        >
             {content}
         </Pressable>
     );
