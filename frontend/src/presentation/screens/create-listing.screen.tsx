@@ -1,6 +1,6 @@
 import { useRouter } from "expo-router";
 import { Stack } from "expo-router";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Plus } from "lucide-react-native";
 import { View, ScrollView, Platform, Pressable, Image } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
@@ -17,13 +17,14 @@ import { SegmentedControl } from "@/presentation/components/primitives/segmented
 import { CategoryPicker } from "@/presentation/components/domain/listings/category-picker";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { useCreateApiListing, useUploadListingAttachment, useImageService } from "@/presentation/hooks";
+import { useCreateApiListing, useUploadListingAttachment, useImageService, useNetworkStatus, useListingDraft } from "@/presentation/hooks";
 import {
     LISTING_CATEGORIES,
     LISTING_TYPES,
     type ListingCategory,
     type ListingType,
 } from "@/domain/entities/listing-category.entity";
+import { cn } from "@/presentation/utils/cn.util";
 
 const CATEGORY_VALUES = LISTING_CATEGORIES.map(c => c.value) as [ListingCategory, ...ListingCategory[]];
 const TYPE_VALUES = LISTING_TYPES.map(t => t.value) as [ListingType, ...ListingType[]];
@@ -46,7 +47,9 @@ export default function CreateListingScreen(): React.JSX.Element {
     const imageService = useImageService();
     const { mutateAsync: createListing, error } = useCreateApiListing();
     const { mutateAsync: uploadAttachment } = useUploadListingAttachment();
-    const { control, handleSubmit, watch, setValue } = useForm<z.infer<typeof createListingSchema>>({
+    const isOnline = useNetworkStatus();
+    const { draft, draftLoaded, saveDraft, clearDraft } = useListingDraft("new");
+    const { control, handleSubmit, watch, setValue, reset } = useForm<z.infer<typeof createListingSchema>>({
         resolver: zodResolver(createListingSchema),
         defaultValues: { title: "", description: "", type: "offer", category: undefined },
     });
@@ -55,6 +58,25 @@ export default function CreateListingScreen(): React.JSX.Element {
     const category = watch("category");
     const type = watch("type");
     const typeOptions = LISTING_TYPES.map(option => ({ value: option.value, label: t(`listingType.${option.value}`) }));
+
+    useEffect(() => {
+        if (draftLoaded && draft != null) {
+            reset({
+                title: draft.title ?? "",
+                description: draft.description ?? "",
+                type: (draft.type as ListingType | undefined) ?? "offer",
+                category: draft.category as ListingCategory | undefined,
+            });
+        }
+    }, [draftLoaded]);
+
+    useEffect(() => {
+        const subscription = watch(values => {
+            saveDraft({ title: values.title, description: values.description, category: values.category, type: values.type });
+        });
+
+        return () => { subscription.unsubscribe(); };
+    }, [watch]);
 
     /**
      *
@@ -98,6 +120,7 @@ export default function CreateListingScreen(): React.JSX.Element {
             });
         }
 
+        clearDraft();
         router.back();
     }
 
@@ -162,7 +185,10 @@ className={INPUT_CLASS}
 
                             <View className="flex-row gap-2">
                                 <Pressable
-                                    className="h-20 w-20 items-center justify-center rounded-[10px] bg-surfhued"
+                                    accessibilityLabel={t("common.addPhoto")}
+                                    accessibilityRole="button"
+                                    className={cn("h-20 w-20 items-center justify-center rounded-[10px] bg-surfhued", !isOnline && "opacity-50")}
+                                    disabled={!isOnline}
                                     onPress={addAttachment}
                                 >
                                     <View className="size-12 items-center justify-center rounded-full bg-forehued">
@@ -175,7 +201,10 @@ className={INPUT_CLASS}
 
                                 <ScrollView horizontal>
                                     <View className="flex-row gap-2">
-                                        {attachments.map(uri => <Pressable key={uri}
+                                        {attachments.map(uri => <Pressable
+accessibilityLabel={t("common.removePhoto")}
+accessibilityRole="button"
+key={uri}
 onPress={() => removeAttachment(uri)}>
                                                 <Image
                                                     className="h-20 w-20 rounded-[10px]"
@@ -194,7 +223,7 @@ onPress={() => removeAttachment(uri)}>
 
                     <View className="border-t border-border bg-background p-4">
                         <GradientButton
-                            disabled={category == null}
+                            disabled={category == null || !isOnline}
                             onPress={handleSubmit(onSubmit)}
                         >
                             {t("common.save")}
