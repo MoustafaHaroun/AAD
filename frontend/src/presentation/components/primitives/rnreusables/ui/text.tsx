@@ -75,6 +75,10 @@ function Text({
     className,
     asChild = false,
     variant = "default",
+    // System "larger text" accessibility settings should still make text grow —
+    // capping (rather than disabling) scaling just prevents runaway growth from
+    // breaking fixed-height chrome like buttons and tab bar labels.
+    maxFontSizeMultiplier = 1.5,
     ...props
 }: React.ComponentProps<typeof RNText> &
     TextVariantProps &
@@ -88,6 +92,7 @@ function Text({
         <Component
             aria-level={variant ? ARIA_LEVEL[variant] : undefined}
             className={cn(textVariants({ variant }), textClass, className)}
+            maxFontSizeMultiplier={maxFontSizeMultiplier}
             role={variant ? ROLE[variant] : undefined}
             {...props}
         />
