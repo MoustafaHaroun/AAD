@@ -285,7 +285,7 @@ onPress={() => removeNewAttachment(uri)}>
                             {t("common.save")}
                         </GradientButton>
 
-                        <AlertDialog>
+                        <AlertDialog className="w-16 self-stretch">
                             <AlertDialogTrigger asChild>
                                 <Pressable
                                     accessibilityLabel={t("common.delete")}
