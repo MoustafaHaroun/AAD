@@ -36,9 +36,11 @@ export default function ListingsScreen(): React.JSX.Element {
     const [query, setQuery] = useState(params.q ?? "");
     const [category, setCategory] = useState<ListingCategory | undefined>(undefined);
 
-    const { data, isFetching, isLoading, error, refetch } = useGetApiListings(
-        tab === "near" ? { q: query || undefined, category } : {},
-    );
+    // Always fetch the same unfiltered list — a single stable cache entry —
+    // and filter client-side below. Server-side filtering would mean every
+    // distinct search/category combination is its own network-only query
+    // with nothing to fall back on offline.
+    const { data, isFetching, isLoading, error, refetch } = useGetApiListings();
     const { data: favorites } = useGetFavorites();
     const { data: currentUser } = useGetUser(currentUserId ?? "");
     const isOnline = useNetworkStatus();
@@ -56,8 +58,17 @@ export default function ListingsScreen(): React.JSX.Element {
             return data.filter(listing => listing.user?.id === currentUserId);
         }
 
-        return data;
-    }, [data, favorites, tab, currentUserId]);
+        const normalizedQuery = query.trim().toLowerCase();
+
+        return data.filter(listing => {
+            const matchesQuery = normalizedQuery.length === 0
+                || listing.title.toLowerCase().includes(normalizedQuery)
+                || (listing.description?.toLowerCase().includes(normalizedQuery) ?? false);
+            const matchesCategory = category == null || listing.category === category;
+
+            return matchesQuery && matchesCategory;
+        });
+    }, [data, favorites, tab, currentUserId, query, category]);
 
     return (
         <>
@@ -136,9 +147,11 @@ export default function ListingsScreen(): React.JSX.Element {
                             </View>
                         : null}
 
-                    {error != null &&
+                    {error != null && data == null &&
                         <View className="flex-1 items-center justify-center">
-                            <Text className="text-center text-sm text-destructive">{error.message}</Text>
+                            <Text className="text-center text-sm text-destructive">
+                                {isOnline ? t("common.loadError") : t("common.notAvailableOffline")}
+                            </Text>
                         </View>}
 
                     {listings?.length === 0 &&
