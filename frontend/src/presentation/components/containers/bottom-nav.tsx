@@ -1,18 +1,23 @@
 import { usePathname, useRouter } from "expo-router";
-import { ClipboardList, Home, MessageSquare, User } from "lucide-react-native";
 import * as React from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTranslation } from "react-i18next";
-import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
+import {
+    HomeTabIcon,
+    ListingsTabIcon,
+    ChatsTabIcon,
+    AccountTabIcon,
+} from "@/presentation/components/containers/bottom-nav-icons";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
+import { BRAND_COLORS } from "@/presentation/styles/theme";
 import { cn } from "@/presentation/utils/cn.util";
 
 const TABS = [
-    { href: "/home", key: "home", icon: Home },
-    { href: "/listings", key: "listings", icon: ClipboardList },
-    { href: "/chats", key: "chats", icon: MessageSquare },
-    { href: "/account", key: "account", icon: User },
+    { href: "/home", key: "home", icon: HomeTabIcon },
+    { href: "/listings", key: "listings", icon: ListingsTabIcon },
+    { href: "/chats", key: "chats", icon: ChatsTabIcon },
+    { href: "/account", key: "account", icon: AccountTabIcon },
 ] as const;
 
 /**
@@ -33,6 +38,7 @@ export function BottomNav(): React.JSX.Element {
             <View className="flex-row pt-2">
                 {TABS.map(tab => {
                     const active = pathname.startsWith(tab.href);
+                    const IconComponent = tab.icon;
 
                     return (
                         <Pressable
@@ -43,9 +49,9 @@ export function BottomNav(): React.JSX.Element {
                             key={tab.href}
                             onPress={() => { router.push(tab.href); }}
                         >
-                            <Icon
-                                as={tab.icon}
-                                className={cn("size-7", active ? "text-black" : "text-forehued")}
+                            <IconComponent
+                                color={active ? BRAND_COLORS.black : BRAND_COLORS.forehued}
+                                size={28}
                             />
 
                             <Text
