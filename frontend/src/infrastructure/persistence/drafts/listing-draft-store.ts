@@ -16,30 +16,45 @@ export interface ListingDraft {
  * listing's own id for an edit-in-progress.
  */
 export const listingDraftStore = {
+    // Draft persistence is a convenience, not a critical path — a broken
+    // Local DB (e.g. a pending migration that hasn't run yet on this device)
+    // Must never crash or block the actual create/edit listing flow.
     async get(id: string): Promise<ListingDraft | null> {
-        const [row] = await db.select().from(listingDraftSchema).where(eq(listingDraftSchema.id, id));
+        try {
+            const [row] = await db.select().from(listingDraftSchema).where(eq(listingDraftSchema.id, id));
 
-        if (row == null) { return null; }
+            if (row == null) { return null; }
 
-        return {
-            title: row.title ?? undefined,
-            description: row.description ?? undefined,
-            category: row.category ?? undefined,
-            type: row.type ?? undefined,
-        };
+            return {
+                title: row.title ?? undefined,
+                description: row.description ?? undefined,
+                category: row.category ?? undefined,
+                type: row.type ?? undefined,
+            };
+        } catch {
+            return null;
+        }
     },
 
     async set(id: string, draft: ListingDraft): Promise<void> {
-        await db
-            .insert(listingDraftSchema)
-            .values({ id, ...draft, updatedAt: new Date().toISOString() })
-            .onConflictDoUpdate({
-                target: listingDraftSchema.id,
-                set: { ...draft, updatedAt: new Date().toISOString() },
-            });
+        try {
+            await db
+                .insert(listingDraftSchema)
+                .values({ id, ...draft, updatedAt: new Date().toISOString() })
+                .onConflictDoUpdate({
+                    target: listingDraftSchema.id,
+                    set: { ...draft, updatedAt: new Date().toISOString() },
+                });
+        } catch {
+            // Ignored — see comment above.
+        }
     },
 
     async clear(id: string): Promise<void> {
-        await db.delete(listingDraftSchema).where(eq(listingDraftSchema.id, id));
+        try {
+            await db.delete(listingDraftSchema).where(eq(listingDraftSchema.id, id));
+        } catch {
+            // Ignored — see comment above.
+        }
     },
 };
