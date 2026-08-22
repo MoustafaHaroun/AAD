@@ -6,7 +6,7 @@ import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "nativewind";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ActivityIndicator, Platform, Text } from "react-native";
 import { DATABASE_NAME, db } from "@/infrastructure/persistence/drizzle";
@@ -25,7 +25,7 @@ import {
     NotoSans_900Black,
     useFonts,
 } from "@expo-google-fonts/noto-sans";
-import { tokenStore } from "@/infrastructure/api";
+import { tokenStore, queryClient } from "@/infrastructure/api";
 import { BRAND_COLORS } from "@/presentation/styles/theme";
 import { initLanguage } from "@/presentation/i18n";
 
@@ -34,7 +34,6 @@ import { initLanguage } from "@/presentation/i18n";
  * @returns The Layout component.
  */
 export default function Layout() {
-    const queryClient = new QueryClient();
     const { success, error } = useMigrations(db, migrations);
     const { colorScheme, setColorScheme } = useColorScheme();
     const [fontsLoaded] = useFonts({
@@ -52,20 +51,20 @@ export default function Layout() {
     z.config(en());
 
     useEffect(() => {
-        void tokenStore.hydrate().then(() => setTokenHydrated(true));
-        void initLanguage().then(() => setLanguageReady(true));
+        void tokenStore.hydrate().then(() => { setTokenHydrated(true); });
+        void initLanguage().then(() => { setLanguageReady(true); });
     }, []);
 
     if (error) {
-        return (<Text>Shit broke</Text>)
+        return <Text>Shit broke</Text>;
     }
 
     if (!success) {
-        return (<Text>Shit is trying</Text>)
+        return <Text>Shit is trying</Text>;
     }
 
     if (!fontsLoaded || !tokenHydrated || !languageReady) {
-        return (<ActivityIndicator />);
+        return <ActivityIndicator />;
     }
 
     return (
@@ -78,10 +77,16 @@ export default function Layout() {
                 <QueryClientProvider client={queryClient}>
                     <KeyboardProvider>
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
-                            <StatusBar backgroundColor={BRAND_COLORS.primary} style="dark" />
+                            <StatusBar
+                                backgroundColor={BRAND_COLORS.primary}
+                                style="dark"
+                            />
 
                             <Stack>
-                                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                                <Stack.Screen
+                                    name="(tabs)"
+                                    options={{ headerShown: false }}
+                                />
                             </Stack>
 
                             <PortalHost />
