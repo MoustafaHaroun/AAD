@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Pressable, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Search } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
@@ -16,6 +17,7 @@ import { formatConversationTimestamp } from "@/presentation/utils/format-timesta
  */
 export default function ChatsScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const { conversations, isLoading } = useConversations();
     const [query, setQuery] = useState("");
 
@@ -43,18 +45,18 @@ export default function ChatsScreen(): React.JSX.Element {
                         <Input
                             className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
                             onChangeText={setQuery}
-                            placeholder="Search"
+                            placeholder={t("common.search")}
                             value={query}
                         />
                     </View>
                 </View>
 
                 <ScrollView contentContainerStyle={{ gap: 8, padding: 16, paddingTop: 0 }}>
-                    {isLoading ? <Text className="p-4 text-center text-muted-foreground">Loading…</Text> : null}
+                    {isLoading ? <Text className="p-4 text-center text-muted-foreground">{t("common.loading")}</Text> : null}
 
                     {filtered?.length === 0 &&
                         <Text className="p-4 text-center text-muted-foreground">
-                            No conversations yet.
+                            {t("chats.empty")}
                         </Text>}
 
                     {filtered?.map(({ counterpart, lastMessage }) => <Pressable
@@ -80,7 +82,7 @@ export default function ChatsScreen(): React.JSX.Element {
                                     </Text>
 
                                     <Text className="text-[14px] font-noto-medium text-forehued">
-                                        {formatConversationTimestamp(lastMessage.createdAt)}
+                                        {formatConversationTimestamp(lastMessage.createdAt, t)}
                                     </Text>
                                 </View>
 

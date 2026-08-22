@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Pressable, ScrollView } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { LISTING_CATEGORIES, type ListingCategory } from "@/domain/entities/listing-category.entity";
 import { cn } from "@/presentation/utils/cn.util";
@@ -18,6 +19,8 @@ interface CategoryPickerProps {
  * @param root0.onChange
  */
 export function CategoryPicker({ value, onChange }: CategoryPickerProps): React.JSX.Element {
+    const { t } = useTranslation();
+
     return (
         <ScrollView
             contentContainerStyle={{ gap: 8 }}
@@ -38,7 +41,7 @@ export function CategoryPicker({ value, onChange }: CategoryPickerProps): React.
                             value === category.value ? "text-white" : "text-forehued",
                         )}
                     >
-                        {category.label}
+                        {t(`listingCategory.${category.value}`)}
                     </Text>
                  </Pressable>,)}
         </ScrollView>

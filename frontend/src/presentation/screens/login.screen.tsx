@@ -6,6 +6,7 @@ import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { FormField } from "@/presentation/components/primitives/form-field";
@@ -20,21 +21,15 @@ const loginSchema = z.object({
 
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
-/**
- *
- */
 export default function LoginScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const { mutate: signIn, isPending, error } = useSignIn();
     const { control, handleSubmit } = useForm({
         resolver: zodResolver(loginSchema),
         defaultValues: { email: "", password: "" },
     });
 
-    /**
-     *
-     * @param data
-     */
     function onSubmit(data: z.infer<typeof loginSchema>) {
         signIn(
             { email: data.email, password: data.password },
@@ -71,7 +66,7 @@ export default function LoginScreen(): React.JSX.Element {
                         <View className="mt-10">
                             <FormField
                                 control={control}
-                                label="Email address"
+                                label={t("login.emailLabel")}
                                 name="email"
                             >
                                 {({ value, onChange }) => (<Input
@@ -80,14 +75,14 @@ export default function LoginScreen(): React.JSX.Element {
                                         className={INPUT_CLASS}
                                         keyboardType="email-address"
                                         onChangeText={onChange}
-                                        placeholder="example@email.com"
+                                        placeholder={t("login.emailPlaceholder")}
                                         value={value}
                                     />)}
                             </FormField>
 
                             <FormField
                                 control={control}
-                                label="Password"
+                                label={t("login.passwordLabel")}
                                 name="password"
                             >
                                 {({ value, onChange }) => (<PasswordInput
@@ -107,7 +102,7 @@ export default function LoginScreen(): React.JSX.Element {
                                 disabled={isPending}
                                 onPress={handleSubmit(onSubmit)}
                             >
-                                {isPending ? "Signing in…" : "Login"}
+                                {isPending ? t("login.submitting") : t("login.submit")}
                             </GradientButton>
                         </View>
 
@@ -115,11 +110,11 @@ export default function LoginScreen(): React.JSX.Element {
                             className="mt-6 text-center text-[16px] font-noto-medium text-forehued"
                             onPress={() => { router.push("/register"); }}
                         >
-                            Don’t have an account? Click{" "}
+                            {t("login.noAccountPrefix")}
 
-                            <Text className="font-noto-bold text-black">here</Text>
+                            <Text className="font-noto-bold text-black">{t("login.here")}</Text>
 
-                            {" "}to register.
+                            {t("login.noAccountSuffix")}
                         </Text>
                     </ScrollView>
                 </KeyboardAvoidingView>

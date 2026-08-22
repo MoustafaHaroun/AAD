@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { Image, View, ScrollView, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
 import { SecondaryButton } from "@/presentation/components/primitives/secondary-button";
@@ -13,24 +14,23 @@ import { NamesStep } from "@/presentation/components/domain/register/names-step"
 import { AddressStep } from "@/presentation/components/domain/register/address-step";
 import { PfpStep } from "@/presentation/components/domain/register/pfp-step";
 import {
-    registerSchema,
+    createRegisterSchema,
     REGISTER_STEPS,
     REGISTER_STEP_FIELDS,
     type RegisterFormValues,
 } from "@/presentation/components/domain/register/schema";
 import { useCreateUser, useSignIn, useUploadUserAvatar, useImageService } from "@/presentation/hooks";
 
-/**
- *
- */
 export default function RegisterScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const imageService = useImageService();
     const { mutateAsync: createUser, isPending: isCreating, error } = useCreateUser();
     const { mutateAsync: signIn, isPending: isSigningIn } = useSignIn();
     const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } = useUploadUserAvatar();
     const [stepIndex, setStepIndex] = useState(0);
     const [avatarUri, setAvatarUri] = useState<string | null>(null);
+    const registerSchema = useMemo(() => createRegisterSchema(t), [t]);
     const { control, handleSubmit, trigger } = useForm<RegisterFormValues>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -50,9 +50,6 @@ export default function RegisterScreen(): React.JSX.Element {
     const step = REGISTER_STEPS[stepIndex];
     const isPending = isCreating || isSigningIn || isUploadingAvatar;
 
-    /**
-     *
-     */
     async function goNext() {
         const valid = await trigger(REGISTER_STEP_FIELDS[step]);
 
@@ -61,9 +58,6 @@ export default function RegisterScreen(): React.JSX.Element {
         }
     }
 
-    /**
-     *
-     */
     function goBack() {
         if (stepIndex === 0) {
             router.back();
@@ -72,9 +66,6 @@ export default function RegisterScreen(): React.JSX.Element {
         }
     }
 
-    /**
-     *
-     */
     async function pickAvatar() {
         const uri = await imageService.pickImageFromGallery();
 
@@ -83,10 +74,6 @@ export default function RegisterScreen(): React.JSX.Element {
         }
     }
 
-    /**
-     *
-     * @param data
-     */
     async function onSubmit(data: RegisterFormValues) {
         const location = [data.street, data.city, data.postalCode, data.region, data.country]
             .filter(Boolean)
@@ -160,7 +147,7 @@ export default function RegisterScreen(): React.JSX.Element {
                                 className="flex-1"
                                 onPress={goBack}
                             >
-                                Back
+                                {t("common.back")}
                             </SecondaryButton>
 
                             {step === "pfp"
@@ -169,14 +156,14 @@ export default function RegisterScreen(): React.JSX.Element {
                                         disabled={isPending}
                                         onPress={handleSubmit(onSubmit)}
                                     >
-                                    {isPending ? "Creating account…" : "Continue"}
+                                    {isPending ? t("register.creatingAccount") : t("register.continue")}
                                   </GradientButton>
 
                                 : <GradientButton
                                         className="flex-1"
                                         onPress={goNext}
                                     >
-                                    Continue
+                                    {t("register.continue")}
                                     </GradientButton>}
                         </View>
 
@@ -184,11 +171,11 @@ export default function RegisterScreen(): React.JSX.Element {
                             className="mt-6 text-center text-[16px] font-noto-medium text-forehued"
                             onPress={() => { router.replace("/login"); }}
                         >
-                            Already have an account? Click{" "}
+                            {t("register.haveAccountPrefix")}
 
-                            <Text className="font-noto-bold text-black">here</Text>
+                            <Text className="font-noto-bold text-black">{t("register.here")}</Text>
 
-                            {" "}to login.
+                            {t("register.haveAccountSuffix")}
                         </Text>
                     </ScrollView>
                 </KeyboardAvoidingView>

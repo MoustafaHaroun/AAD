@@ -1,0 +1,173 @@
+{
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "loading": "Loading…",
+    "search": "Search",
+    "all": "All",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Home",
+    "listings": "Listings",
+    "chats": "Chats",
+    "account": "Account"
+  },
+  "landing": {
+    "tagline": "Trade your trades with others in your area.",
+    "login": "Login",
+    "register": "Register"
+  },
+  "login": {
+    "title": "Login",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "example@email.com",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot password?",
+    "submit": "Login",
+    "submitting": "Signing in…",
+    "noAccountPrefix": "Don’t have an account? Click ",
+    "noAccountSuffix": " to register.",
+    "here": "here"
+  },
+  "register": {
+    "title": "Register",
+    "continue": "Continue",
+    "creatingAccount": "Creating account…",
+    "haveAccountPrefix": "Already have an account? Click ",
+    "haveAccountSuffix": " to login.",
+    "here": "here",
+    "credentials": {
+      "emailLabel": "Email address",
+      "emailPlaceholder": "example@email.com",
+      "passwordLabel": "Password",
+      "confirmPasswordLabel": "Repeat password"
+    },
+    "names": {
+      "firstnameLabel": "Firstname",
+      "firstnamePlaceholder": "Jan",
+      "surnameLabel": "Lastname",
+      "surnamePlaceholder": "Jansen"
+    },
+    "address": {
+      "countryLabel": "Country",
+      "countryPlaceholder": "Nederland",
+      "regionLabel": "Region",
+      "regionPlaceholder": "Overijssel",
+      "cityLabel": "City",
+      "cityPlaceholder": "Enschede",
+      "postalCodeLabel": "Postal code",
+      "postalCodePlaceholder": "7511 AB",
+      "streetLabel": "Street",
+      "streetPlaceholder": "Hoofdstraat 1"
+    },
+    "pfp": {
+      "title": "Profile image"
+    },
+    "errors": {
+      "passwordTooShort": "Password must be at least 8 characters long",
+      "passwordLowercase": "Password must contain at least one lowercase letter",
+      "passwordUppercase": "Password must contain at least one uppercase letter",
+      "passwordNumber": "Password must contain at least one number",
+      "passwordSpecial": "Password must contain at least one special character",
+      "passwordMismatch": "Passwords do not match"
+    }
+  },
+  "home": {
+    "newListing": "New listing",
+    "myListings": "My listings",
+    "chats": "Chats",
+    "account": "Account",
+    "allChats": "All Chats",
+    "noConversations": "No conversations yet.",
+    "newListingsHeading": "New Listings",
+    "allListings": "All Listings",
+    "noListings": "No listings yet."
+  },
+  "listings": {
+    "tabs": {
+      "near": "Listings near you",
+      "liked": "Liked listings",
+      "my": "My listings"
+    },
+    "emptyLiked": "You haven't liked any listings yet.",
+    "emptyMy": "You haven't posted any listings yet.",
+    "emptyNear": "No listings yet.",
+    "distanceUnknown": "Distance unknown",
+    "distanceAway": "{{distance}} km away"
+  },
+  "listing": {
+    "tradeRequest": "Trade Request",
+    "tradeRequestMessage": "Hi, I'm interested in your listing \"{{title}}\".",
+    "deleteTitle": "Delete Listing",
+    "deleteDescription": "This action cannot be undone. Are you sure you wish to permanently delete your listing?"
+  },
+  "listingForm": {
+    "titleLabel": "Title",
+    "descriptionLabel": "Description",
+    "typeLabel": "Type",
+    "categoryLabel": "Category",
+    "photosLabel": "Photos"
+  },
+  "listingCategory": {
+    "moving": "Moving",
+    "cooking": "Cooking",
+    "gardening": "Gardening",
+    "carpentry": "Carpentry",
+    "childcare": "Childcare",
+    "cleaning": "Cleaning",
+    "tutoring": "Tutoring",
+    "tech_help": "Tech help",
+    "pet_care": "Pet care",
+    "other": "Other"
+  },
+  "listingType": {
+    "offer": "Offer",
+    "request": "Request"
+  },
+  "chats": {
+    "title": "Chats",
+    "empty": "No conversations yet.",
+    "sayHello": "Say hello — start the conversation.",
+    "sendMessage": "Send message"
+  },
+  "account": {
+    "menu": {
+      "personalInformation": "Personal Information",
+      "myListings": "My listings",
+      "notifications": "Notifications",
+      "privacy": "Privacy & Security",
+      "language": "Language"
+    },
+    "sectionTitle": "Account",
+    "logout": "Logout",
+    "settings": {
+      "firstnameLabel": "Firstname",
+      "surnameLabel": "Surname",
+      "emailLabel": "Email address",
+      "locationLabel": "Location",
+      "uploading": "Uploading…"
+    },
+    "comingSoon": "{{feature}} is coming soon."
+  },
+  "language": {
+    "english": "English",
+    "dutch": "Dutch"
+  },
+  "time": {
+    "yesterday": "Yesterday",
+    "daysAgo_one": "{{count}} day ago",
+    "daysAgo_other": "{{count}} days ago",
+    "weeksAgo_one": "{{count}} week ago",
+    "weeksAgo_other": "{{count}} weeks ago"
+  },
+  "permissions": {
+    "title": "Permissions required",
+    "message": "Camera and gallery access are needed."
+  }
+}

@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Image, Pressable, View } from "react-native";
 import { Plus, User as UserIcon } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 
@@ -16,9 +17,11 @@ interface PfpStepProps {
  * @param root0.onPick
  */
 export function PfpStep({ avatarUri, onPick }: PfpStepProps): React.JSX.Element {
+    const { t } = useTranslation();
+
     return (
         <View className="items-center">
-            <Text className="mb-3 text-[16px] font-noto-semibold text-black">Profile image</Text>
+            <Text className="mb-3 text-[16px] font-noto-semibold text-black">{t("register.pfp.title")}</Text>
 
             <Pressable
                 className="relative"

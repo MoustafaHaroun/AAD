@@ -3,15 +3,16 @@ import { ClipboardList, Home, MessageSquare, User } from "lucide-react-native";
 import * as React from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { cn } from "@/presentation/utils/cn.util";
 
 const TABS = [
-    { href: "/home", label: "Home", icon: Home },
-    { href: "/listings", label: "Listings", icon: ClipboardList },
-    { href: "/chats", label: "Chats", icon: MessageSquare },
-    { href: "/account", label: "Account", icon: User },
+    { href: "/home", key: "home", icon: Home },
+    { href: "/listings", key: "listings", icon: ClipboardList },
+    { href: "/chats", key: "chats", icon: MessageSquare },
+    { href: "/account", key: "account", icon: User },
 ] as const;
 
 /**
@@ -22,6 +23,7 @@ const TABS = [
 export function BottomNav(): React.JSX.Element {
     const router = useRouter();
     const pathname = usePathname();
+    const { t } = useTranslation();
 
     return (
         <SafeAreaView
@@ -49,7 +51,7 @@ export function BottomNav(): React.JSX.Element {
                                     active ? "font-noto-black text-black" : "font-noto-medium text-forehued",
                                 )}
                             >
-                                {tab.label}
+                                {t(`nav.${tab.key}`)}
                             </Text>
                         </Pressable>
                     );

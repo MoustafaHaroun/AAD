@@ -4,6 +4,7 @@ import {
     requestMediaLibraryPermissionsAsync,
 } from "expo-image-picker";
 import { Linking, Platform, Alert } from "react-native";
+import i18n from "@/presentation/i18n";
 import type { IImageService } from "@/domain/services";
 
 export class ImageService implements IImageService {
@@ -13,8 +14,8 @@ export class ImageService implements IImageService {
 
         if (cameraPerm.status !== "granted" || libraryPerm.status !== "granted") {
             Alert.alert(
-                "Permissions required",
-                "Camera and gallery access are needed.",
+                i18n.t("permissions.title"),
+                i18n.t("permissions.message"),
             );
             if (Platform.OS === "ios") {
                 await Linking.openURL("app-settings:");

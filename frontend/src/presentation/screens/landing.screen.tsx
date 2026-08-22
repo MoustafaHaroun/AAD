@@ -2,15 +2,14 @@ import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { Image, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useTranslation } from "react-i18next";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
 import { SecondaryButton } from "@/presentation/components/primitives/secondary-button";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 
-/**
- *
- */
 export default function LandingScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
 
     return (
         <>
@@ -32,7 +31,7 @@ export default function LandingScreen(): React.JSX.Element {
                         <View className="size-[10px] rounded-full bg-prim" />
 
                         <Text className="text-[15px] font-noto text-forehued">
-                            Trade your trades with others in your area.
+                            {t("landing.tagline")}
                         </Text>
 
                         <View className="size-[10px] rounded-full bg-prim" />
@@ -40,9 +39,9 @@ export default function LandingScreen(): React.JSX.Element {
                 </View>
 
                 <View className="gap-3 px-4 pb-4">
-                    <GradientButton onPress={() => { router.push("/login"); }}>Login</GradientButton>
+                    <GradientButton onPress={() => { router.push("/login"); }}>{t("landing.login")}</GradientButton>
 
-                    <SecondaryButton onPress={() => { router.push("/register"); }}>Register</SecondaryButton>
+                    <SecondaryButton onPress={() => { router.push("/register"); }}>{t("landing.register")}</SecondaryButton>
                 </View>
             </SafeAreaView>
         </>

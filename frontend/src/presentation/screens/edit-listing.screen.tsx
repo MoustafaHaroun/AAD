@@ -15,6 +15,7 @@ import { GradientButton } from "@/presentation/components/primitives/gradient-bu
 import { SegmentedControl } from "@/presentation/components/primitives/segmented-control";
 import { CategoryPicker } from "@/presentation/components/domain/listings/category-picker";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import {
     useGetApiListing,
     useUpdateApiListing,
@@ -46,6 +47,7 @@ const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px
  */
 export default function EditListingScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
     const imageService = useImageService();
     const { mutateAsync: updateListing, error } = useUpdateApiListing();
@@ -59,6 +61,7 @@ export default function EditListingScreen(): React.JSX.Element {
     const [newAttachments, setNewAttachments] = useState<string[]>([]);
     const category = watch("category");
     const type = watch("type");
+    const typeOptions = LISTING_TYPES.map(option => ({ value: option.value, label: t(`listingType.${option.value}`) }));
 
     useEffect(() => {
         if (listing != null) {
@@ -133,7 +136,7 @@ export default function EditListingScreen(): React.JSX.Element {
                     <ScrollView contentContainerStyle={{ padding: 16 }}>
                         <FormField
                             control={control}
-                            label="Title"
+                            label={t("listingForm.titleLabel")}
                             name="title"
                         >
                             {({ value, onChange }) => (<Input
@@ -144,18 +147,18 @@ className={INPUT_CLASS}
                         </FormField>
 
                         <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">Type</Text>
+                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.typeLabel")}</Text>
 
                             {type != null &&
                                 <SegmentedControl
                                     onChange={value => { setValue("type", value); }}
-                                    options={LISTING_TYPES}
+                                    options={typeOptions}
                                     value={type}
                                 />}
                         </View>
 
                         <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">Category</Text>
+                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.categoryLabel")}</Text>
 
                             <CategoryPicker
                                 onChange={value => { setValue("category", value); }}
@@ -165,7 +168,7 @@ className={INPUT_CLASS}
 
                         <FormField
                             control={control}
-                            label="Description"
+                            label={t("listingForm.descriptionLabel")}
                             name="description"
                         >
                             {({ value, onChange }) => <Textarea
@@ -177,7 +180,7 @@ className={INPUT_CLASS}
                         </FormField>
 
                         <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">Photos</Text>
+                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.photosLabel")}</Text>
 
                             <ScrollView horizontal>
                                 <View className="flex-row gap-2">
@@ -231,7 +234,7 @@ onPress={() => removeNewAttachment(uri)}>
                             disabled={listing == null}
                             onPress={handleSubmit(onSave)}
                         >
-                            Save
+                            {t("common.save")}
                         </GradientButton>
                     </View>
                 </KeyboardAvoidingView>

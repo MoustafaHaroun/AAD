@@ -26,6 +26,8 @@ import {
     useFonts,
 } from "@expo-google-fonts/noto-sans";
 import { tokenStore } from "@/infrastructure/api";
+import { BRAND_COLORS } from "@/presentation/styles/theme";
+import { initLanguage } from "@/presentation/i18n";
 
 /**
  * Render the Layout component.
@@ -43,6 +45,7 @@ export default function Layout() {
         NotoSans_900Black,
     });
     const [tokenHydrated, setTokenHydrated] = useState(false);
+    const [languageReady, setLanguageReady] = useState(false);
 
     setColorScheme("light"); // Forcefully set to light theme.
 
@@ -50,6 +53,7 @@ export default function Layout() {
 
     useEffect(() => {
         void tokenStore.hydrate().then(() => setTokenHydrated(true));
+        void initLanguage().then(() => setLanguageReady(true));
     }, []);
 
     if (error) {
@@ -60,7 +64,7 @@ export default function Layout() {
         return (<Text>Shit is trying</Text>)
     }
 
-    if (!fontsLoaded || !tokenHydrated) {
+    if (!fontsLoaded || !tokenHydrated || !languageReady) {
         return (<ActivityIndicator />);
     }
 
@@ -74,7 +78,7 @@ export default function Layout() {
                 <QueryClientProvider client={queryClient}>
                     <KeyboardProvider>
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
-                            <StatusBar style={colorScheme === "dark" ? "light" : "dark"} />
+                            <StatusBar backgroundColor={BRAND_COLORS.primary} style="dark" />
 
                             <Stack>
                                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />

@@ -52,7 +52,14 @@
         }
       ],
       "expo-secure-store",
-      "expo-font"
+      "expo-font",
+      "expo-localization",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Trade² uses your location to show how far away listings are from you."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

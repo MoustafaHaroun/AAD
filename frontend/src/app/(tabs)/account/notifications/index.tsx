@@ -1,9 +1,6 @@
 import ComingSoonScreen from "@/presentation/screens/coming-soon.screen";
 import * as React from "react";
 
-/**
- *
- */
 export default function Screen() {
-    return <ComingSoonScreen title="Notifications" />;
+    return <ComingSoonScreen titleKey="account.menu.notifications" />;
 }

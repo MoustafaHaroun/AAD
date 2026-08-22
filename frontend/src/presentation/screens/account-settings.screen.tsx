@@ -7,6 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Plus } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
@@ -37,6 +38,7 @@ const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px
  */
 export default function AccountSettingsScreen(): React.JSX.Element {
     const router = useRouter();
+    const { t } = useTranslation();
     const imageService = useImageService();
     const currentUserId = useCurrentUserId();
     const { data: user } = useGetUser(currentUserId ?? "");
@@ -115,12 +117,12 @@ export default function AccountSettingsScreen(): React.JSX.Element {
                                     </View>
                                 </View>
 
-                                {isUploadingAvatar ? <Text className="mt-2 text-sm text-muted-foreground">Uploading…</Text> : null}
+                                {isUploadingAvatar ? <Text className="mt-2 text-sm text-muted-foreground">{t("account.settings.uploading")}</Text> : null}
                             </Pressable>}
 
                         <FormField
                             control={control}
-                            label="Firstname"
+                            label={t("account.settings.firstnameLabel")}
                             name="firstname"
                         >
                             {({ value, onChange }) => (<Input
@@ -132,7 +134,7 @@ className={INPUT_CLASS}
 
                         <FormField
                             control={control}
-                            label="Surname"
+                            label={t("account.settings.surnameLabel")}
                             name="surname"
                         >
                             {({ value, onChange }) => (<Input
@@ -144,7 +146,7 @@ className={INPUT_CLASS}
 
                         <FormField
                             control={control}
-                            label="Email address"
+                            label={t("account.settings.emailLabel")}
                             name="email"
                         >
                             {({ value, onChange }) => <Input
@@ -158,7 +160,7 @@ className={INPUT_CLASS}
 
                         <FormField
                             control={control}
-                            label="Location"
+                            label={t("account.settings.locationLabel")}
                             name="location"
                         >
                             {({ value, onChange }) => (<Input
@@ -177,7 +179,7 @@ className={INPUT_CLASS}
                             disabled={isSaving}
                             onPress={handleSubmit(onSave)}
                         >
-                            {isSaving ? "Saving…" : "Save"}
+                            {isSaving ? t("common.saving") : t("common.save")}
                         </GradientButton>
                     </View>
                 </KeyboardAvoidingView>

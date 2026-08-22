@@ -6,6 +6,7 @@ import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Send } from "lucide-react-native";
+import { useTranslation } from "react-i18next";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
@@ -19,6 +20,7 @@ import { formatDateDivider } from "@/presentation/utils/format-timestamp.util";
  *
  */
 export default function ChatScreen(): React.JSX.Element {
+    const { t } = useTranslation();
     const { userId } = useLocalSearchParams<{ userId: string }>();
     const currentUserId = useCurrentUserId();
     const { data: counterpart } = useGetUser(userId);
@@ -102,7 +104,7 @@ export default function ChatScreen(): React.JSX.Element {
 
                         {thread.length === 0 &&
                             <Text className="mt-8 text-center text-muted-foreground">
-                                Say hello — start the conversation.
+                                {t("chats.sayHello")}
                             </Text>}
                     </ScrollView>
 
@@ -111,7 +113,7 @@ export default function ChatScreen(): React.JSX.Element {
                             className="h-14 flex-1 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued"
                             onChangeText={setDraft}
                             onSubmitEditing={onSend}
-                            placeholder="Send message"
+                            placeholder={t("chats.sendMessage")}
                             returnKeyType="send"
                             value={draft}
                         />
