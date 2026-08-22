@@ -26,12 +26,13 @@ export interface FullscreenImageViewerProps {
 }
 
 /**
- * A fullscreen, swipeable image lightbox opened by tapping a gallery image.
- * @param root0
- * @param root0.uris
- * @param root0.initialIndex
- * @param root0.visible
- * @param root0.onClose
+ * Render a fullscreen, swipeable image lightbox.
+ * @param props - The props.
+ * @param props.uris - The image URIs to display, in order.
+ * @param props.initialIndex - The index to open the lightbox on.
+ * @param props.visible - Whether the lightbox is shown.
+ * @param props.onClose - Called when the close button or backdrop is pressed.
+ * @returns The rendered lightbox modal.
  */
 export function FullscreenImageViewer({
     uris,
@@ -43,10 +44,10 @@ export function FullscreenImageViewer({
     const [index, setIndex] = useState(initialIndex);
 
     /**
-     *
-     * @param event
+     * Update the tracked page index as the lightbox settles on a page.
+     * @param event - The scroll event.
      */
-    function onMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    function onMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>): void {
         setIndex(Math.round(event.nativeEvent.contentOffset.x / SCREEN_WIDTH));
     }
 

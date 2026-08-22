@@ -8,9 +8,10 @@ import {
     type NativeScrollEvent,
     type NativeSyntheticEvent,
 } from "react-native";
+import * as React from "react";
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { FullscreenImageViewer } from "@/presentation/components/primitives/custom/gallery/fullscreen-image-viewer";
+import { FullscreenImageViewer } from "@/presentation/components/primitives/custom/fullscreen-image-viewer";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
@@ -19,11 +20,12 @@ export interface SwipableImageGalleryProps {
 }
 
 /**
- *
- * @param root0
- * @param root0.uris
+ * Render a horizontally paginated image gallery that opens a fullscreen viewer on tap.
+ * @param props - The props.
+ * @param props.uris - The image URIs to display, in order.
+ * @returns The rendered gallery, or null if no valid URIs are given.
  */
-export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
+export function SwipableImageGallery({ uris }: SwipableImageGalleryProps): React.JSX.Element | null {
     const { t } = useTranslation();
     const scrollViewRef = useRef<ScrollView>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -36,10 +38,10 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
     }
 
     /**
-     *
-     * @param event
+     * Update the current page index as the gallery is dragged.
+     * @param event - The scroll event.
      */
-    function handleScroll(event: any) {
+    function handleScroll(event: NativeSyntheticEvent<NativeScrollEvent>): void {
         const offsetX: number = event.nativeEvent.contentOffset.x;
         const index: number = Math.round(offsetX / SCREEN_WIDTH);
 
@@ -49,10 +51,10 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps) {
     }
 
     /**
-     *
-     * @param event
+     * Snap the current page index to the page the gallery settled on.
+     * @param event - The scroll event.
      */
-    function handleMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>) {
+    function handleMomentumScrollEnd(event: NativeSyntheticEvent<NativeScrollEvent>): void {
         const offsetX: number = event.nativeEvent.contentOffset.x;
         const index: number = Math.round(offsetX / SCREEN_WIDTH);
 
