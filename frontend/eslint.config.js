@@ -444,7 +444,9 @@ function getRules() {
             "react/prefer-read-only-props": "warn",
             "react/prefer-stateless-function": "warn",
             "react/prop-types": "error",
-            "react/react-in-jsx-scope": "error",
+            // Off: the project uses the automatic JSX runtime (jsxImportSource:
+            // "nativewind"), so React is never meant to be in scope.
+            "react/react-in-jsx-scope": "off",
             "react/require-default-props": "warn",
             "react/require-optimization": "warn",
             "react/require-render-return": "error",
