@@ -1,7 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Search } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
@@ -34,8 +34,8 @@ export default function HomeScreen(): React.JSX.Element {
     const [query, setQuery] = useState("");
     const currentUserId = useCurrentUserId();
     const { data: currentUser } = useGetUser(currentUserId ?? "");
-    const { data: listings } = useGetApiListings();
-    const { conversations } = useConversations();
+    const { data: listings, isFetching: isFetchingListings, refetch: refetchListings } = useGetApiListings();
+    const { conversations, isFetching: isFetchingConversations, refetch: refetchConversations } = useConversations();
     const newListings = listings?.slice(0, NEW_LISTINGS_LIMIT) ?? [];
     const recentConversations = conversations?.slice(0, CHATS_PREVIEW_LIMIT) ?? [];
 
@@ -81,6 +81,12 @@ export default function HomeScreen(): React.JSX.Element {
                 <ScrollView
                     className="flex-1"
                     contentContainerStyle={{ padding: 16, gap: 16 }}
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={() => { void refetchListings(); void refetchConversations(); }}
+                            refreshing={isFetchingListings || isFetchingConversations}
+                        />
+                    }
                 >
                     <View className="flex-row gap-2">
                         <QuickActionTile

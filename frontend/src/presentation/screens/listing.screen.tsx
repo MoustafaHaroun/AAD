@@ -1,6 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { Pressable, ScrollView, Share, View } from "react-native";
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Share, View } from "react-native";
 import * as Linking from "expo-linking";
 import { LinearGradient } from "expo-linear-gradient";
 import { AppHeader } from "@/presentation/components/containers/app-header";
@@ -30,7 +30,7 @@ export default function ListingScreen(): React.JSX.Element {
     const router = useRouter();
     const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: listing } = useGetApiListing(id);
+    const { data: listing, isLoading, isFetching, error, refetch } = useGetApiListing(id);
     const { data: favorites } = useGetFavorites();
     const { mutate: createFavorite, isPending: isFavoriting } = useCreateFavorite();
     const { mutate: deleteFavoriteItem, isPending: isUnfavoriting } = useDeleteFavorite();
@@ -123,17 +123,34 @@ export default function ListingScreen(): React.JSX.Element {
                 <ScrollView
                     bounces
                     className="flex-1"
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={refetch}
+                            refreshing={isFetching && !isLoading}
+                        />
+                    }
                 >
+
+                    {isLoading &&
+                        <View className="items-center justify-center p-8">
+                            <ActivityIndicator />
+                        </View>}
+
+                    {error != null &&
+                        <View className="items-center justify-center p-8">
+                            <Text className="text-center text-sm text-destructive">{error.message}</Text>
+                        </View>}
 
                     {/* Gallery */}
                     {attachmentPaths.length > 0
                         ? <SwipableImageGallery uris={attachmentPaths} />
-                        : <View className="w-full aspect-video items-center justify-center bg-muted">
-                            <Icon
+                        : listing != null &&
+                            <View className="w-full aspect-video items-center justify-center bg-muted">
+                                <Icon
                                     as={ImageOff}
                                     className="size-12 text-muted-foreground"
                                 />
-                          </View>}
+                            </View>}
 
                     {listing != null &&
                         <View className="flex flex-col gap-4 p-4">

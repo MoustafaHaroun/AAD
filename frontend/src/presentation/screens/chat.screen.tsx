@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -25,7 +25,7 @@ export default function ChatScreen(): React.JSX.Element {
     const { userId } = useLocalSearchParams<{ userId: string }>();
     const currentUserId = useCurrentUserId();
     const { data: counterpart } = useGetUser(userId);
-    const { data: messages } = useGetMessages();
+    const { data: messages, isFetching, refetch } = useGetMessages();
     const { mutate: sendMessage, isPending } = useCreateMessage();
     const isOnline = useNetworkStatus();
     const [draft, setDraft] = useState("");
@@ -81,6 +81,12 @@ export default function ChatScreen(): React.JSX.Element {
                     <ScrollView
                         className="flex-1 bg-surfhued"
                         contentContainerStyle={{ gap: 8, padding: 16 }}
+                        refreshControl={
+                            <RefreshControl
+                                onRefresh={refetch}
+                                refreshing={isFetching}
+                            />
+                        }
                     >
                         {thread.map(message => {
                             const dateLabel = formatDateDivider(message.createdAt);

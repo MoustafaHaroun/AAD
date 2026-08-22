@@ -1,7 +1,7 @@
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
+import { Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Search } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
@@ -19,7 +19,7 @@ import { OfflineBanner } from "@/presentation/components/containers/offline-bann
 export default function ChatsScreen(): React.JSX.Element {
     const router = useRouter();
     const { t } = useTranslation();
-    const { conversations, isLoading } = useConversations();
+    const { conversations, isLoading, isFetching, refetch } = useConversations();
     const [query, setQuery] = useState("");
 
     const filtered = conversations?.filter(({ counterpart }) => `${counterpart.firstname} ${counterpart.surname}`.toLowerCase().includes(query.toLowerCase()));
@@ -59,6 +59,12 @@ export default function ChatsScreen(): React.JSX.Element {
                 <ScrollView
                     className="flex-1"
                     contentContainerStyle={{ gap: 8, padding: 16, paddingTop: 0 }}
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={refetch}
+                            refreshing={isFetching && !isLoading}
+                        />
+                    }
                 >
                     {isLoading ? <Text className="p-4 text-center text-muted-foreground">{t("common.loading")}</Text> : null}
 
