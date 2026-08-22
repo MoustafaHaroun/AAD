@@ -14,12 +14,12 @@ interface AppHeaderProps {
 }
 
 /**
- * The yellow "Trade²" app bar used on non-tab screens (create/edit listing,
- * etc.), with an optional back button and right-side actions, matching the
- * Figma design system.
- * @param root0
- * @param root0.showBack
- * @param root0.right
+ * Render the yellow "Trade²" app bar used on non-tab screens (create/edit
+ * listing, etc.), with an optional back button and right-side actions.
+ * @param props - The props.
+ * @param props.showBack - Whether to show the back button. Defaults to true.
+ * @param props.right - Content rendered on the right side of the bar.
+ * @returns The rendered app bar.
  */
 export function AppHeader({ showBack = true, right }: AppHeaderProps): React.JSX.Element {
     const router = useRouter();

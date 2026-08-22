@@ -1,15 +1,17 @@
 import { cn } from "@/presentation/utils/cn.util";
+import * as React from "react";
 import { Platform, TextInput, type TextInputProps } from "react-native";
 
 /**
- *
- * @param root0
- * @param root0.className
+ * Render a themed single-line text input.
+ * @param props - The props.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @returns The rendered input.
  */
 function Input({
     className,
     ...props
-}: TextInputProps & React.RefAttributes<TextInput>) {
+}: TextInputProps & React.RefAttributes<TextInput>): React.JSX.Element {
     return (
         <TextInput
             className={cn(

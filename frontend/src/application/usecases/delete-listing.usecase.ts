@@ -7,12 +7,16 @@ import {
 } from "@/domain/repositories";
 import type { Listing } from "@/domain/entities";
 
-export type DeleteListingParams = {
+export interface DeleteListingParams {
     listing: Listing,
 }
 
+/**
+ * Delete a listing and its attachments.
+ */
 export class DeleteListing extends UseCaseBase<void, DeleteListingParams> {
     private readonly listingRepository;
+
     private readonly attachmentRepository;
 
     constructor() {
@@ -26,10 +30,15 @@ export class DeleteListing extends UseCaseBase<void, DeleteListingParams> {
         );
     }
 
+    /**
+     * Delete the listing.
+     * @param params - The use case parameters.
+     * @param params.listing - The listing to delete, including its attachments.
+     */
     public async execute({ listing }: DeleteListingParams): Promise<void> {
         await this.listingRepository.deleteListing(listing.id);
         await Promise.all(listing.attachments.map(async attachment => {
-            this.attachmentRepository.deleteAttachment(attachment)
-        }))
+            await this.attachmentRepository.deleteAttachment(attachment);
+        }));
     }
 }

@@ -1,12 +1,16 @@
 import { GetAllUsers } from "@/application/usecases";
 import type { User } from "@/domain/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 const getAllUsers = new GetAllUsers();
 
-export function useGetAllUsers() {
-    return useQuery<User[], Error>({
+/**
+ * Fetch all users.
+ * @returns The query for all users.
+ */
+export function useGetAllUsers(): UseQueryResult<User[]> {
+    return useQuery<User[]>({
         queryKey: ["users.get.all"],
-        queryFn: () => getAllUsers.execute(),
+        queryFn: async () => getAllUsers.execute(),
     });
 }

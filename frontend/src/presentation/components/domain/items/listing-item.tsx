@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Image, Pressable, View } from "react-native";
 import { useTranslation } from "react-i18next";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
@@ -14,13 +15,14 @@ export interface ListingItemProps {
 }
 
 /**
- *
- * @param root0
- * @param root0.listing
- * @param root0.onPress
- * @param root0.distanceLabel
+ * Render a listing card with cover image, favorite toggle, title, and location.
+ * @param props - The props.
+ * @param props.listing - The listing to display.
+ * @param props.onPress - Called when the card is pressed.
+ * @param props.distanceLabel - A precomputed "N km away" label, if the viewer's location is known.
+ * @returns The rendered card.
  */
-export default function ListingItem({ listing, onPress, distanceLabel }: ListingItemProps) {
+export default function ListingItem({ listing, onPress, distanceLabel }: ListingItemProps): React.JSX.Element {
     const { t } = useTranslation();
     const coverUri = listing.attachments?.[0]?.path;
     const location = listing.user?.location;
@@ -33,9 +35,9 @@ export default function ListingItem({ listing, onPress, distanceLabel }: Listing
     const isFavorited = favorite != null;
 
     /**
-     *
+     * Create or delete the favorite for this listing, based on its current state.
      */
-    function toggleFavorite() {
+    function toggleFavorite(): void {
         if (isFavoriting || isUnfavoriting || !isOnline) { return; }
 
         if (favorite != null) {

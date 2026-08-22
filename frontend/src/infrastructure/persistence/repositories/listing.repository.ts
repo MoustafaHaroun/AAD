@@ -137,23 +137,19 @@ export class ListingRepository implements IListingRepository {
 
             if (toDelete.length > 0) {
                 await Promise.all(
-                    toDelete.map(a =>
-                        db
-                            .delete(attachmentSchema)
-                            .where(eq(attachmentSchema.id, a.id))
-                    )
+                    toDelete.map(a => db
+                        .delete(attachmentSchema)
+                        .where(eq(attachmentSchema.id, a.id))),
                 );
             }
 
             if (toAdd.length > 0) {
                 await Promise.all(
-                    toAdd.map(path =>
-                        db.insert(attachmentSchema).values({
-                            id: uuid(),
-                            listingId: listing.id,
-                            path,
-                        })
-                    )
+                    toAdd.map(path => db.insert(attachmentSchema).values({
+                        id: uuid(),
+                        listingId: listing.id,
+                        path,
+                    })),
                 );
             }
 

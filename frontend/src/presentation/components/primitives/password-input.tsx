@@ -7,9 +7,10 @@ import { Input } from "@/presentation/components/primitives/rnreusables/ui/input
 import { cn } from "@/presentation/utils/cn.util";
 
 /**
- * A password input with a show/hide toggle, matching the Figma design system.
- * @param root0
- * @param root0.className
+ * Render a password input with show/hide toggle.
+ * @param props - The props.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @returns The rendered password input.
  */
 export function PasswordInput({
     className,

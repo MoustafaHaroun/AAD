@@ -1,14 +1,15 @@
 import { GetApiListing } from "@/application/usecases";
 import type { ApiListing } from "@/domain/entities";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 
 const getApiListing = new GetApiListing();
 
 /**
- *
- * @param id
+ * Fetch a single listing by id, falling back to any cached list data.
+ * @param id - The listing id.
+ * @returns The query for the listing.
  */
-export function useGetApiListing(id: string) {
+export function useGetApiListing(id: string): UseQueryResult<ApiListing> {
     const queryClient = useQueryClient();
 
     return useQuery<ApiListing>({

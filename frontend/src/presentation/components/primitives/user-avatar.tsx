@@ -5,8 +5,9 @@ import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 const INITIAL_COLORS = ["#38362E", "#F28D1B", "#4C6B54", "#5B4B8A", "#B23A48", "#2E6E8E"];
 
 /**
- *
- * @param seed
+ * Derive a deterministic color for a given seed string.
+ * @param seed - The string to derive the color from (typically a user id).
+ * @returns A hex color from the fixed initials-color palette.
  */
 function colorFor(seed: string): string {
     let hash = 0;
@@ -27,14 +28,14 @@ interface UserAvatarProps {
 }
 
 /**
- * A circular user avatar — the user's photo if set, otherwise a colored
- * circle with their initials (color derived deterministically from their id).
- * @param root0
- * @param root0.id
- * @param root0.firstname
- * @param root0.surname
- * @param root0.avatar
- * @param root0.size
+ * Render a circular user avatar — the user's photo if set, otherwise a colored circle with their initials.
+ * @param props - The props.
+ * @param props.id - The user's id, used to derive a deterministic fallback color.
+ * @param props.firstname - The user's first name, used for the fallback initial.
+ * @param props.surname - The user's surname, used for the fallback initial.
+ * @param props.avatar - The user's photo URI, if set.
+ * @param props.size - The avatar's diameter in pixels.
+ * @returns The rendered avatar.
  */
 export function UserAvatar({ id, firstname, surname, avatar, size = 48 }: UserAvatarProps): React.JSX.Element {
     if (avatar != null) {

@@ -1,13 +1,17 @@
 import { DeleteFavorite, type DeleteFavoriteParams } from "@/application/usecases";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 
 const deleteFavorite = new DeleteFavorite();
 
-export function useDeleteFavorite() {
+/**
+ * Unfavorite a listing, then invalidate cached favorites.
+ * @returns The mutation for unfavoriting a listing.
+ */
+export function useDeleteFavorite(): UseMutationResult<void, Error, DeleteFavoriteParams> {
     const queryClient = useQueryClient();
 
     return useMutation<void, Error, DeleteFavoriteParams>({
-        mutationFn: (params) => deleteFavorite.execute(params),
+        mutationFn: async params => deleteFavorite.execute(params),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["favorites.get"] });
         },

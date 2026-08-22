@@ -11,10 +11,11 @@ interface PfpStepProps {
 }
 
 /**
- *
- * @param root0
- * @param root0.avatarUri
- * @param root0.onPick
+ * Render the profile-picture step of the registration wizard.
+ * @param props - The props.
+ * @param props.avatarUri - The locally picked avatar image URI, or null if none picked yet.
+ * @param props.onPick - Called when the avatar circle is pressed, to open the image picker.
+ * @returns The rendered step content.
  */
 export function PfpStep({ avatarUri, onPick }: PfpStepProps): React.JSX.Element {
     const { t } = useTranslation();

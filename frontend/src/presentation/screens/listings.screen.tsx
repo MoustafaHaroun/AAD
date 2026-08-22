@@ -25,7 +25,8 @@ const TABS = [
 type TabKey = (typeof TABS)[number]["key"];
 
 /**
- *
+ * Render the browsable listings grid with tabs, search, and category filtering.
+ * @returns The rendered listings screen.
  */
 export default function ListingsScreen(): React.JSX.Element {
     const router = useRouter();
@@ -136,7 +137,7 @@ export default function ListingsScreen(): React.JSX.Element {
                     contentContainerStyle={{ padding: 16, paddingTop: 0, flexGrow: 1 }}
                     refreshControl={
                         <RefreshControl
-                            onRefresh={refetch}
+                            onRefresh={() => { void refetch(); }}
                             refreshing={isFetching && !isLoading}
                         />
                     }

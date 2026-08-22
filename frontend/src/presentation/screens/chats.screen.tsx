@@ -14,7 +14,8 @@ import { formatConversationTimestamp } from "@/presentation/utils/format-timesta
 import { OfflineBanner } from "@/presentation/components/containers/offline-banner";
 
 /**
- *
+ * Render the conversation list with a name search filter.
+ * @returns The rendered chats screen.
  */
 export default function ChatsScreen(): React.JSX.Element {
     const router = useRouter();
@@ -61,7 +62,7 @@ export default function ChatsScreen(): React.JSX.Element {
                     contentContainerStyle={{ gap: 8, padding: 16, paddingTop: 0 }}
                     refreshControl={
                         <RefreshControl
-                            onRefresh={refetch}
+                            onRefresh={() => { void refetch(); }}
                             refreshing={isFetching && !isLoading}
                         />
                     }

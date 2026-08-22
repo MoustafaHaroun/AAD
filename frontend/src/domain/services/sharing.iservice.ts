@@ -7,5 +7,5 @@ export interface ISharingService {
      * Prompt to share a listing.
      * @param listing - The listing to share.
      */
-    shareListing(listing: Listing): Promise<void>,
+    shareListing: (listing: Listing) => Promise<void>,
 }

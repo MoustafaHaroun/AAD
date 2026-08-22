@@ -9,10 +9,11 @@ interface MessageBubbleProps {
 }
 
 /**
- *
- * @param root0
- * @param root0.content
- * @param root0.isOwn
+ * Render a single chat message bubble, aligned by whether the viewer sent it.
+ * @param props - The props.
+ * @param props.content - The message text.
+ * @param props.isOwn - Whether the viewer is the sender, controlling alignment/color.
+ * @returns The rendered bubble.
  */
 export function MessageBubble({ content, isOwn }: MessageBubbleProps): React.JSX.Element {
     return (

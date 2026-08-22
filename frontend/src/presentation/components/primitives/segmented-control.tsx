@@ -15,12 +15,12 @@ interface SegmentedControlProps<T extends string> {
 }
 
 /**
- * A two-or-more-way toggle (e.g. Offer / Request), matching the Figma
- * design system's bordered-input styling.
- * @param root0
- * @param root0.options
- * @param root0.value
- * @param root0.onChange
+ * Render a two-or-more-way toggle (e.g. Offer / Request).
+ * @param props - The props.
+ * @param props.options - The selectable options, in display order.
+ * @param props.value - The currently selected value.
+ * @param props.onChange - Called with the newly selected value.
+ * @returns The rendered segmented control.
  */
 export function SegmentedControl<T extends string>({
     options,

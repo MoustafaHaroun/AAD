@@ -12,6 +12,10 @@ const resources = {
     nl: { translation: nl },
 };
 
+/**
+ * Detect the device's language, falling back to English for anything unsupported.
+ * @returns The detected app language.
+ */
 function detectDeviceLanguage(): AppLanguage {
     return Localization.getLocales()[0]?.languageCode === "nl" ? "nl" : "en";
 }
@@ -26,14 +30,19 @@ void i18n
     });
 
 /**
- * Restores the user's previously chosen language (if any), otherwise falls
+ * Restore the user's previously chosen language (if any), otherwise fall
  * back to the device's language. Must be awaited once at app boot.
  */
 export async function initLanguage(): Promise<void> {
     const stored = await languageStore.get();
+
     await i18n.changeLanguage(stored ?? detectDeviceLanguage());
 }
 
+/**
+ * Persist the chosen language and switch the active i18n instance to it.
+ * @param language - The language to switch to.
+ */
 export async function setLanguage(language: AppLanguage): Promise<void> {
     languageStore.set(language);
     await i18n.changeLanguage(language);

@@ -1,3 +1,4 @@
+import * as React from "react";
 import Layout from "@/presentation/components/containers/layout";
 
 export {
@@ -6,10 +7,10 @@ export {
 } from "expo-router";
 
 /**
- * Render the RootLayout.
- * @returns The RootLayout component.
+ * Render the app's root layout.
+ * @returns The rendered root layout.
  */
-export default function RootLayout() {
+export default function RootLayout(): React.JSX.Element {
     return (
         <Layout />
     );

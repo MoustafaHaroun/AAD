@@ -1,14 +1,18 @@
 import { DeleteNotification, type DeleteNotificationParams } from "@/application/usecases";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 
 const deleteNotification = new DeleteNotification();
 
-export function useDeleteNotification() {
+/**
+ * Delete a notification, then evict it from the cache.
+ * @returns The mutation for deleting a notification.
+ */
+export function useDeleteNotification(): UseMutationResult<void, Error, DeleteNotificationParams> {
     const queryClient = useQueryClient();
 
     return useMutation<void, Error, DeleteNotificationParams>({
-        mutationFn: (params) => deleteNotification.execute(params),
-        onSuccess: async (_, variables) => {
+        mutationFn: async params => deleteNotification.execute(params),
+        onSuccess: (_, variables) => {
             queryClient.removeQueries({ queryKey: ["notifications.get", variables.id] });
         },
     });

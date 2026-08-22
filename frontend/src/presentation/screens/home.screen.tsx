@@ -26,7 +26,8 @@ const CHATS_PREVIEW_LIMIT = 5;
 const NEW_LISTINGS_LIMIT = 4;
 
 /**
- *
+ * Render the home screen with search, quick actions, chat previews, and new listings.
+ * @returns The rendered home screen.
  */
 export default function HomeScreen(): React.JSX.Element {
     const router = useRouter();
@@ -40,9 +41,9 @@ export default function HomeScreen(): React.JSX.Element {
     const recentConversations = conversations?.slice(0, CHATS_PREVIEW_LIMIT) ?? [];
 
     /**
-     *
+     * Navigate to the listings screen, carrying the search query if one was entered.
      */
-    function onSearchSubmit() {
+    function onSearchSubmit(): void {
         router.push(query.trim().length > 0 ? { pathname: "/listings", params: { q: query.trim() } } : "/listings");
     }
 

@@ -10,12 +10,12 @@ interface GradientButtonProps extends PressableProps {
 }
 
 /**
- * Primary call-to-action button using the Trade² brand gradient
- * (`prim` → `sec`), matching the Figma design system.
- * @param root0
- * @param root0.children
- * @param root0.className
- * @param root0.disabled
+ * Render the primary call-to-action button using the Trade² brand gradient.
+ * @param props - The props.
+ * @param props.children - The button label.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @param props.disabled - Whether the button is disabled.
+ * @returns The rendered gradient button.
  */
 export function GradientButton({
     children,
@@ -25,7 +25,7 @@ export function GradientButton({
 }: GradientButtonProps): React.JSX.Element {
     return (
         <Pressable
-            className={cn("overflow-hidden rounded-[10px]", disabled && "opacity-50", className)}
+            className={cn("overflow-hidden rounded-[10px]", disabled === true && "opacity-50", className)}
             disabled={disabled}
             {...props}
         >

@@ -17,13 +17,14 @@ interface QuickActionTileProps {
 }
 
 /**
- * One of the four Home-screen quick-action tiles (New listing / My listings
- * / Chats / Account), matching the Figma design system.
- * @param root0
- * @param root0.icon
- * @param root0.label
- * @param root0.onPress
- * @param root0.variant
+ * Render one of the four Home-screen quick-action tiles (New listing / My
+ * listings / Chats / Account).
+ * @param props - The props.
+ * @param props.icon - The icon component rendered inside the tile.
+ * @param props.label - The tile's label text.
+ * @param props.onPress - Called when the tile is pressed.
+ * @param props.variant - The tile's visual style: gradient "primary" or flat "secondary". Defaults to "secondary".
+ * @returns The rendered tile.
  */
 export function QuickActionTile({
     icon: IconComponent,

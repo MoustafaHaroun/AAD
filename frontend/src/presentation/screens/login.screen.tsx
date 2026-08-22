@@ -21,6 +21,10 @@ const loginSchema = z.object({
 
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
+/**
+ * Render the login screen and sign the user in on submit.
+ * @returns The rendered login screen.
+ */
 export default function LoginScreen(): React.JSX.Element {
     const router = useRouter();
     const { t } = useTranslation();
@@ -30,7 +34,11 @@ export default function LoginScreen(): React.JSX.Element {
         defaultValues: { email: "", password: "" },
     });
 
-    function onSubmit(data: z.infer<typeof loginSchema>) {
+    /**
+     * Sign the user in and navigate to the home screen on success.
+     * @param data - The validated email and password.
+     */
+    function onSubmit(data: z.infer<typeof loginSchema>): void {
         signIn(
             { email: data.email, password: data.password },
             { onSuccess: () => { router.replace("/home"); } },
@@ -57,7 +65,7 @@ export default function LoginScreen(): React.JSX.Element {
                         <View className="items-center">
                             <Image
                                 className="size-[163px] rounded-[24px]"
-                                source={require("@/assets/images/logo.png")}
+                                source={require("@/assets/images/logo.png") as number}
                             />
 
                             <Text className="mt-6 text-[40px] font-noto-bold text-black">Trade²</Text>
@@ -100,7 +108,7 @@ export default function LoginScreen(): React.JSX.Element {
                         <View className="mt-4 gap-3">
                             <GradientButton
                                 disabled={isPending}
-                                onPress={handleSubmit(onSubmit)}
+                                onPress={() => { void handleSubmit(onSubmit)(); }}
                             >
                                 {isPending ? t("login.submitting") : t("login.submit")}
                             </GradientButton>

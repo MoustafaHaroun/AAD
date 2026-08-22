@@ -11,12 +11,13 @@ interface CategoryPickerProps {
 }
 
 /**
- * Required, single-select category chip picker for the create/edit listing
- * forms (as opposed to `CategoryFilterChips`, which is nullable and used to
- * filter the listings feed).
- * @param root0
- * @param root0.value
- * @param root0.onChange
+ * Render a required, single-select category chip picker for the
+ * create/edit listing forms (as opposed to `CategoryFilterChips`, which is
+ * nullable and used to filter the listings feed).
+ * @param props - The props.
+ * @param props.value - The currently selected category.
+ * @param props.onChange - Called with the newly selected category.
+ * @returns The rendered chip row.
  */
 export function CategoryPicker({ value, onChange }: CategoryPickerProps): React.JSX.Element {
     const { t } = useTranslation();

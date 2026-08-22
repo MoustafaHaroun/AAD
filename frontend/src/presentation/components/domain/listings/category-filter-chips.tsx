@@ -11,10 +11,12 @@ interface CategoryFilterChipsProps {
 }
 
 /**
- *
- * @param root0
- * @param root0.value
- * @param root0.onChange
+ * Render a scrollable row of category filter chips, including an "All" chip
+ * that clears the filter.
+ * @param props - The props.
+ * @param props.value - The currently selected category, or undefined for "All".
+ * @param props.onChange - Called with the newly selected category, or undefined to clear it.
+ * @returns The rendered chip row.
  */
 export function CategoryFilterChips({ value, onChange }: CategoryFilterChipsProps): React.JSX.Element {
     const { t } = useTranslation();

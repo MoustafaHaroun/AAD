@@ -5,7 +5,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const editListing = new EditListing();
 
 /**
- * Use the edit listing mutation.
+ * Edit a listing, then invalidate its cached copy and the owner's cached listings.
+ * @returns The mutation for editing a listing.
  */
 export function useEditListing(): ReturnType<
     typeof useMutation<void, Error, EditListingParams>

@@ -21,9 +21,10 @@ const TABS = [
 ] as const;
 
 /**
- * Persistent bottom tab bar (Home / Listings / Chats / Account) matching the
- * Trade² Figma design system. Custom-built rather than expo-router's `<Tabs>`
- * to match the mockup's exact visual spec.
+ * Render the persistent bottom tab bar (Home / Listings / Chats / Account).
+ * Custom-built rather than expo-router's `<Tabs>` to match the Figma
+ * mockup's exact visual spec.
+ * @returns The rendered tab bar.
  */
 export function BottomNav(): React.JSX.Element {
     const router = useRouter();

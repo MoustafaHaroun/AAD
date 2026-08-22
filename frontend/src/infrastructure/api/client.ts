@@ -5,9 +5,10 @@ import { queryClient } from "@/infrastructure/api/query-client";
 const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL ?? "http://localhost:3000";
 
 /**
- *
- * @param path
- * @param init
+ * Send an authenticated request to the API and decode its JSON response.
+ * @param path - The request path, appended to the API base URL.
+ * @param init - The fetch options.
+ * @returns The decoded response body.
  */
 async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     const token = tokenStore.get();
@@ -16,7 +17,7 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
         ...init.body != null && !(init.body instanceof FormData)
             ? { "Content-Type": "application/json" }
             : {},
-        ...token ? { Authorization: `Bearer ${token}` } : {},
+        ...token != null ? { Authorization: `Bearer ${token}` } : {},
         ...init.headers as Record<string, string> ?? {},
     };
 
@@ -45,19 +46,47 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 }
 
 export const apiClient = {
-    get: async <T>(path: string) => request<T>(path, { method: "GET" }),
+    /**
+     * Send a GET request.
+     * @param path - The request path, appended to the API base URL.
+     * @returns The decoded response body.
+     */
+    get: async <T>(path: string): Promise<T> => request<T>(path, { method: "GET" }),
 
-    post: async <T>(path: string, body?: unknown) => request<T>(path, {
+    /**
+     * Send a POST request with a JSON body.
+     * @param path - The request path, appended to the API base URL.
+     * @param body - The value to send as the JSON body.
+     * @returns The decoded response body.
+     */
+    post: async <T>(path: string, body?: unknown): Promise<T> => request<T>(path, {
         method: "POST",
         body: body != null ? JSON.stringify(body) : undefined,
     }),
 
-    patch: async <T>(path: string, body?: unknown) => request<T>(path, {
+    /**
+     * Send a PATCH request with a JSON body.
+     * @param path - The request path, appended to the API base URL.
+     * @param body - The value to send as the JSON body.
+     * @returns The decoded response body.
+     */
+    patch: async <T>(path: string, body?: unknown): Promise<T> => request<T>(path, {
         method: "PATCH",
         body: body != null ? JSON.stringify(body) : undefined,
     }),
 
-    delete: async (path: string) => request<void>(path, { method: "DELETE" }),
+    /**
+     * Send a DELETE request.
+     * @param path - The request path, appended to the API base URL.
+     * @returns Undefined, once the request completes.
+     */
+    delete: async (path: string): Promise<undefined> => request<undefined>(path, { method: "DELETE" }),
 
-    postFormData: async <T>(path: string, formData: FormData) => request<T>(path, { method: "POST", body: formData }),
+    /**
+     * Send a POST request with a multipart form-data body.
+     * @param path - The request path, appended to the API base URL.
+     * @param formData - The form data to send.
+     * @returns The decoded response body.
+     */
+    postFormData: async <T>(path: string, formData: FormData): Promise<T> => request<T>(path, { method: "POST", body: formData }),
 };

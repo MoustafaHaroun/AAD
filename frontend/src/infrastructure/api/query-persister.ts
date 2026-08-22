@@ -1,5 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
+import type { PersistedClient } from "@tanstack/query-persist-client-core";
 
 // Bumping this key orphans any snapshot written under the old key — used
 // Once already to discard a bad cache saved during the blocking-restore bug.
@@ -23,8 +24,15 @@ const asyncStoragePersister = createAsyncStoragePersister({
  */
 export const queryPersister = {
     ...asyncStoragePersister,
-    restoreClient: async () => Promise.race([
+
+    /**
+     * Restore the persisted query cache, giving up after a timeout.
+     * @returns The persisted client snapshot, or undefined if none was found or the restore timed out.
+     */
+    restoreClient: async (): Promise<PersistedClient | undefined> => Promise.race([
         asyncStoragePersister.restoreClient(),
-        new Promise<undefined>(resolve => { setTimeout(() => { resolve(undefined); }, RESTORE_TIMEOUT_MS); }),
+        new Promise<undefined>(resolve => {
+            setTimeout(() => { resolve(undefined); }, RESTORE_TIMEOUT_MS);
+        }),
     ]),
 };

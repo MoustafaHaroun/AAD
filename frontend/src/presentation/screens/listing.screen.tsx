@@ -25,7 +25,8 @@ import { formatDistanceLabel } from "@/presentation/utils/distance.util";
 import { cn } from "@/presentation/utils/cn.util";
 
 /**
- *
+ * Render a listing's detail page with favoriting, sharing, and starting a trade chat.
+ * @returns The rendered listing screen.
  */
 export default function ListingScreen(): React.JSX.Element {
     const router = useRouter();
@@ -49,7 +50,7 @@ export default function ListingScreen(): React.JSX.Element {
     const distanceLabel = viewer == null ? undefined : formatDistanceLabel(t, viewer, listing?.user ?? {});
 
     /**
-     *
+     * Favorite or unfavorite the listing.
      */
     function toggleFavorite(): void {
         if (isFavoriting || isUnfavoriting || listing == null || !isOnline) { return; }
@@ -62,7 +63,7 @@ export default function ListingScreen(): React.JSX.Element {
     }
 
     /**
-     *
+     * Open the native share sheet with a link to this listing.
      */
     function onShare(): void {
         if (listing == null) { return; }
@@ -73,7 +74,8 @@ export default function ListingScreen(): React.JSX.Element {
     }
 
     /**
-     *
+     * Open the conversation with the listing's poster, sending the canned trade-request
+     * message only the first time a conversation with them is started.
      */
     function onSendMessage(): void {
         if (listing?.user == null) { return; }
@@ -133,7 +135,7 @@ export default function ListingScreen(): React.JSX.Element {
                     className="flex-1"
                     refreshControl={
                         <RefreshControl
-                            onRefresh={refetch}
+                            onRefresh={() => { void refetch(); }}
                             refreshing={isFetching && !isLoading}
                         />
                     }

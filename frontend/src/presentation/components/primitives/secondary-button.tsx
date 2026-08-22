@@ -9,12 +9,12 @@ interface SecondaryButtonProps extends PressableProps {
 }
 
 /**
- * Secondary/desaturated button (e.g. "Back", "Register" on the landing
- * screen), matching the Figma design system.
- * @param root0
- * @param root0.children
- * @param root0.className
- * @param root0.disabled
+ * Render a secondary, desaturated button (e.g. "Back", "Register" on the landing screen).
+ * @param props - The props.
+ * @param props.children - The button label.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @param props.disabled - Whether the button is disabled.
+ * @returns The rendered secondary button.
  */
 export function SecondaryButton({
     children,
@@ -26,7 +26,7 @@ export function SecondaryButton({
         <Pressable
             className={cn(
                 "items-center justify-center rounded-[10px] bg-primdesat py-[15px]",
-                disabled && "opacity-50",
+                disabled === true && "opacity-50",
                 className,
             )}
             disabled={disabled}

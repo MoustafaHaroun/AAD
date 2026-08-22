@@ -1,17 +1,19 @@
 import { cn } from "@/presentation/utils/cn.util";
 import type { LucideIcon, LucideProps } from "lucide-react-native";
 import { cssInterop } from "nativewind";
+import * as React from "react";
 
 type IconProps = LucideProps & {
     readonly as: LucideIcon,
 };
 
 /**
- *
- * @param root0
- * @param root0.as
+ * Render the given Lucide icon component with its forwarded props.
+ * @param props - The props.
+ * @param props.as - The Lucide icon component to render.
+ * @returns The rendered icon.
  */
-function IconImpl({ as: IconComponent, ...props }: IconProps) {
+function IconImpl({ as: IconComponent, ...props }: IconProps): React.JSX.Element {
     return <IconComponent {...props} />;
 }
 
@@ -26,18 +28,12 @@ cssInterop(IconImpl, {
 });
 
 /**
- * A wrapper component for Lucide icons with Nativewind `className` support via `cssInterop`.
- *
- * This component allows you to render any Lucide icon while applying utility classes
- * using `nativewind`. It avoids the need to wrap or configure each icon individually.
- * @param as - The Lucide icon component to render.
- * @param as.as
- * @param className - Utility classes to style the icon using Nativewind.
- * @param as.className
- * @param size - Icon size (defaults to 14).
- * @param as.size
- * @param ...props - Additional Lucide icon props passed to the "as" icon.
- * @component
+ * Render a Lucide icon with NativeWind `className` support via `cssInterop`.
+ * @param props - The props.
+ * @param props.as - The Lucide icon component to render.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @param props.size - The icon size.
+ * @returns The rendered icon.
  * @example
  * ```tsx
  * import { ArrowRight } from 'lucide-react-native';
@@ -46,7 +42,7 @@ cssInterop(IconImpl, {
  * <Icon as={ArrowRight} className="text-red-500" size={16} />
  * ```
  */
-function Icon({ as: IconComponent, className, size = 14, ...props }: IconProps) {
+function Icon({ as: IconComponent, className, size = 14, ...props }: IconProps): React.JSX.Element {
     return (
         <IconImpl
             as={IconComponent}

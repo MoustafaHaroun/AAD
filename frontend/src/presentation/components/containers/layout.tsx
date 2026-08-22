@@ -13,6 +13,7 @@ import { ActivityIndicator, Platform, Text } from "react-native";
 import { DATABASE_NAME, db } from "@/infrastructure/persistence/drizzle";
 import migrations from "@/../drizzle/migrations";
 import { useMigrations } from "drizzle-orm/expo-sqlite/migrator";
+import * as React from "react";
 import { Suspense, useEffect, useState } from "react";
 import { SQLiteProvider } from "expo-sqlite";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -33,10 +34,11 @@ import { initLanguage } from "@/presentation/i18n";
 const PERSIST_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
 
 /**
- * Render the Layout component.
- * @returns The Layout component.
+ * Render the app's root layout: font/migration/auth/language gating, then
+ * the query, keyboard, theme, and navigation providers.
+ * @returns The rendered root layout.
  */
-export default function Layout() {
+export default function Layout(): React.JSX.Element {
     const { success, error } = useMigrations(db, migrations);
     const { colorScheme, setColorScheme } = useColorScheme();
     const [fontsLoaded] = useFonts({

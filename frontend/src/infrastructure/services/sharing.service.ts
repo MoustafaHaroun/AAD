@@ -1,10 +1,17 @@
-import { ISharingService } from "@/domain/services";
+import type { ISharingService } from "@/domain/services";
 import type { Listing } from "@/domain/entities";
 import Share from "react-native-share";
 import { copyFileToCache } from "@/infrastructure/persistence/fs";
 
+/**
+ * Share a listing's first photo through the OS share sheet.
+ */
 export class SharingService implements ISharingService {
-    async shareListing(listing: Listing): Promise<void> {
+    /**
+     * Share the listing.
+     * @param listing - The listing to share.
+     */
+    public async shareListing(listing: Listing): Promise<void> {
         try {
             const uri = copyFileToCache(listing.attachments[0]);
 

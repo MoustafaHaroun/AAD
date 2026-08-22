@@ -14,7 +14,8 @@ const LANGUAGES: Array<{ value: AppLanguage, labelKey: string, flag: string }> =
 ];
 
 /**
- *
+ * Render the language preference picker.
+ * @returns The rendered preferences screen.
  */
 export default function PreferencesScreen(): React.JSX.Element {
     const { t, i18n } = useTranslation();

@@ -11,11 +11,11 @@ class TokenStore {
      * Restores the token from SecureStore into the in-memory mirror. Must be
      * awaited once at app boot, before any route guard reads `get()`.
      */
-    async hydrate(): Promise<void> {
+    public async hydrate(): Promise<void> {
         this.token = await SecureStore.getItemAsync(SECURE_STORE_KEY);
     }
 
-    set(token: string | null): void {
+    public set(token: string | null): void {
         this.token = token;
 
         if (token == null) {
@@ -25,11 +25,11 @@ class TokenStore {
         }
     }
 
-    get(): string | null {
+    public get(): string | null {
         return this.token;
     }
 
-    getPayload(): JwtPayload | null {
+    public getPayload(): JwtPayload | null {
         if (this.token == null) {
             return null;
         }
@@ -41,11 +41,11 @@ class TokenStore {
         }
     }
 
-    getUserId(): string | null {
+    public getUserId(): string | null {
         return this.getPayload()?.sub ?? null;
     }
 
-    clear(): void {
+    public clear(): void {
         this.token = null;
         void SecureStore.deleteItemAsync(SECURE_STORE_KEY);
     }

@@ -4,11 +4,12 @@ import { listingDraftStore, type ListingDraft } from "@/infrastructure/persisten
 const SAVE_DEBOUNCE_MS = 500;
 
 /**
- * Autosaves in-progress create/edit listing form state locally (SQLite),
- * and restores it once on mount, so a draft survives an app kill or
+ * Autosave in-progress create/edit listing form state locally (SQLite),
+ * and restore it once on mount, so a draft survives an app kill or
  * accidental back-navigation.
  * @param id - `"new"` for the create-listing draft, or the listing's own id
  * for an edit-in-progress.
+ * @returns The restored draft, whether it's finished loading, and functions to save/clear it.
  */
 export function useListingDraft(id: string): {
     draft: ListingDraft | null,
@@ -35,7 +36,7 @@ export function useListingDraft(id: string): {
 
     /**
      * Debounced write — avoids hitting SQLite on every keystroke.
-     * @param nextDraft
+     * @param nextDraft - The draft state to persist.
      */
     function saveDraft(nextDraft: ListingDraft): void {
         if (timeoutRef.current != null) { clearTimeout(timeoutRef.current); }
@@ -46,7 +47,7 @@ export function useListingDraft(id: string): {
     }
 
     /**
-     *
+     * Discard the persisted draft, canceling any pending debounced save.
      */
     function clearDraft(): void {
         if (timeoutRef.current != null) { clearTimeout(timeoutRef.current); }

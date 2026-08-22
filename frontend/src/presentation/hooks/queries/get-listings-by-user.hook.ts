@@ -5,9 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 const getListingsByUser = new GetListingsByUser();
 
 /**
- * Use the getListingsByUser query.
- * @param userId
- * @returns The query values.
+ * Fetch the listings belonging to a user.
+ * @param userId - The listings' owner id.
+ * @returns The query for the user's listings.
  */
 export function useGetListingsByUser(userId: string): ReturnType<typeof useQuery<void, Error, Listing[]>> {
     return useQuery({

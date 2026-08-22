@@ -1,21 +1,23 @@
 import { cn } from "@/presentation/utils/cn.util";
+import * as React from "react";
 import { Platform, TextInput, type TextInputProps } from "react-native";
 
 /**
- *
- * @param root0
- * @param root0.className
- * @param root0.multiline
- * @param root0.numberOfLines
- * @param root0.placeholderClassName
+ * Render a themed multi-line text input.
+ * @param props - The props.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @param props.multiline - Whether the input wraps to multiple lines.
+ * @param props.numberOfLines - The initial height on web, or the maximum height on native, in lines.
+ * @param props.placeholderClassName - The NativeWind classes applied to the placeholder text.
+ * @returns The rendered textarea.
  */
 function Textarea({
     className,
     multiline = true,
-    numberOfLines = Platform.select({ web: 2, native: 8 }), // On web, numberOfLines also determines initial height. On native, it determines the maximum height.
+    numberOfLines = Platform.select({ web: 2, native: 8 }),
     placeholderClassName,
     ...props
-}: TextInputProps & React.RefAttributes<TextInput>) {
+}: TextInputProps & React.RefAttributes<TextInput>): React.JSX.Element {
     return (
         <TextInput
             className={cn(

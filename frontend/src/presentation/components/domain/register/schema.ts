@@ -2,6 +2,11 @@ import { z } from "zod";
 import type { Path } from "react-hook-form";
 import type { TFunction } from "i18next";
 
+/**
+ * Build the zod schema for the registration form, with translated error messages.
+ * @param t - The translation function used for validation error messages.
+ * @returns The registration form schema.
+ */
 export function createRegisterSchema(t: TFunction) {
     return z
         .object({

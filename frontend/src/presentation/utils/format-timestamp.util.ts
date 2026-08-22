@@ -1,10 +1,11 @@
 import type { TFunction } from "i18next";
 
 /**
- * Formats a timestamp for a conversation list row: time-of-day if today,
+ * Format a timestamp for a conversation list row: time-of-day if today,
  * otherwise a short relative "N days/weeks ago" string.
- * @param iso
- * @param t
+ * @param iso - The ISO timestamp to format.
+ * @param t - The translation function.
+ * @returns The formatted timestamp label.
  */
 export function formatConversationTimestamp(iso: string, t: TFunction): string {
     const date = new Date(iso);
@@ -28,8 +29,9 @@ export function formatConversationTimestamp(iso: string, t: TFunction): string {
 }
 
 /**
- * Formats a timestamp for a date-divider inside a conversation thread.
- * @param iso
+ * Format a timestamp for a date-divider inside a conversation thread.
+ * @param iso - The ISO timestamp to format.
+ * @returns The formatted date label.
  */
 export function formatDateDivider(iso: string): string {
     return new Date(iso).toLocaleDateString(undefined, { day: "numeric", month: "long" });

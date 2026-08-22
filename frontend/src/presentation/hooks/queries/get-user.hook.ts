@@ -1,13 +1,18 @@
 import { GetUser } from "@/application/usecases";
 import type { User } from "@/domain/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 const getUser = new GetUser();
 
-export function useGetUser(id: string) {
-    return useQuery<User, Error>({
+/**
+ * Fetch a single user by id.
+ * @param id - The user id.
+ * @returns The query for the user.
+ */
+export function useGetUser(id: string): UseQueryResult<User> {
+    return useQuery<User>({
         queryKey: ["users.get", id],
-        queryFn: () => getUser.execute({ id }),
+        queryFn: async () => getUser.execute({ id }),
         enabled: id != null,
     });
 }

@@ -3,13 +3,14 @@ import Svg, { Path } from "react-native-svg";
 import { resolveIconColor, type FigmaIconProps } from "@/presentation/utils/figma-icon.util";
 
 /**
- * The four bottom-nav tab icons, exported directly from the Figma file
- * (bottom-nav component, node id 103:105) rather than substituted with a
- * generic icon set.
- * @param root0
- * @param root0.size
- * @param root0.color
- * @param root0.style
+ * Render the "Home" bottom-nav tab icon, exported directly from the Figma
+ * file (bottom-nav component, node id 103:105) rather than substituted with
+ * a generic icon set.
+ * @param props - The props.
+ * @param props.size - The icon size in pixels. Defaults to 24.
+ * @param props.color - The fill color. Falls back to `style.color`, then a default.
+ * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
+ * @returns The rendered icon.
  */
 export function HomeTabIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
     return (
@@ -28,11 +29,14 @@ export function HomeTabIcon({ size = 24, color, style }: FigmaIconProps): React.
 }
 
 /**
- *
- * @param root0
- * @param root0.size
- * @param root0.color
- * @param root0.style
+ * Render the "Listings" bottom-nav tab icon, exported directly from the
+ * Figma file (bottom-nav component, node id 103:105) rather than
+ * substituted with a generic icon set.
+ * @param props - The props.
+ * @param props.size - The icon size in pixels. Defaults to 24.
+ * @param props.color - The fill color. Falls back to `style.color`, then a default.
+ * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
+ * @returns The rendered icon.
  */
 export function ListingsTabIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
     const fill = resolveIconColor(color, style);
@@ -60,11 +64,14 @@ export function ListingsTabIcon({ size = 24, color, style }: FigmaIconProps): Re
 }
 
 /**
- *
- * @param root0
- * @param root0.size
- * @param root0.color
- * @param root0.style
+ * Render the "Chats" bottom-nav tab icon, exported directly from the Figma
+ * file (bottom-nav component, node id 103:105) rather than substituted with
+ * a generic icon set.
+ * @param props - The props.
+ * @param props.size - The icon size in pixels. Defaults to 24.
+ * @param props.color - The fill color. Falls back to `style.color`, then a default.
+ * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
+ * @returns The rendered icon.
  */
 export function ChatsTabIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
     return (
@@ -83,11 +90,14 @@ export function ChatsTabIcon({ size = 24, color, style }: FigmaIconProps): React
 }
 
 /**
- *
- * @param root0
- * @param root0.size
- * @param root0.color
- * @param root0.style
+ * Render the "Account" bottom-nav tab icon, exported directly from the
+ * Figma file (bottom-nav component, node id 103:105) rather than
+ * substituted with a generic icon set.
+ * @param props - The props.
+ * @param props.size - The icon size in pixels. Defaults to 24.
+ * @param props.color - The fill color. Falls back to `style.color`, then a default.
+ * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
+ * @returns The rendered icon.
  */
 export function AccountTabIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
     return (

@@ -18,7 +18,8 @@ import { formatDateDivider } from "@/presentation/utils/format-timestamp.util";
 import { cn } from "@/presentation/utils/cn.util";
 
 /**
- *
+ * Render a single conversation thread and let the user send a reply.
+ * @returns The rendered chat screen.
  */
 export default function ChatScreen(): React.JSX.Element {
     const { t } = useTranslation();
@@ -38,9 +39,9 @@ export default function ChatScreen(): React.JSX.Element {
     );
 
     /**
-     *
+     * Send the current draft message and clear the input on success.
      */
-    function onSend() {
+    function onSend(): void {
         const content = draft.trim();
 
         if (content.length === 0 || isPending || !isOnline) { return; }
@@ -83,7 +84,7 @@ export default function ChatScreen(): React.JSX.Element {
                         contentContainerStyle={{ gap: 8, padding: 16 }}
                         refreshControl={
                             <RefreshControl
-                                onRefresh={refetch}
+                                onRefresh={() => { void refetch(); }}
                                 refreshing={isFetching}
                             />
                         }

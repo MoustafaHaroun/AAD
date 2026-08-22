@@ -65,26 +65,28 @@ const ARIA_LEVEL: Partial<Record<TextVariant, string>> = {
 const TextClassContext = React.createContext<string | undefined>(undefined);
 
 /**
- *
- * @param root0
- * @param root0.className
- * @param root0.asChild
- * @param root0.variant
+ * Render themed text, applying the variant's role and accessibility level.
+ * @param props - The props.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @param props.asChild - Whether to merge props onto the single child instead of rendering a Text element.
+ * @param props.variant - The typographic variant.
+ * @param props.maxFontSizeMultiplier - The maximum system font-scaling multiplier applied.
+ * @returns The rendered text.
  */
 function Text({
     className,
     asChild = false,
     variant = "default",
     // System "larger text" accessibility settings should still make text grow —
-    // capping (rather than disabling) scaling just prevents runaway growth from
-    // breaking fixed-height chrome like buttons and tab bar labels.
+    // Capping (rather than disabling) scaling just prevents runaway growth from
+    // Breaking fixed-height chrome like buttons and tab bar labels.
     maxFontSizeMultiplier = 1.5,
     ...props
 }: React.ComponentProps<typeof RNText> &
     TextVariantProps &
     React.RefAttributes<RNText> & {
         readonly asChild?: boolean,
-    }) {
+    }): React.JSX.Element {
     const textClass = React.useContext(TextClassContext);
     const Component = asChild ? Slot.Text : RNText;
 

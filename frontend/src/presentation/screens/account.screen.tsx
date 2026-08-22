@@ -22,7 +22,8 @@ const MENU_ITEMS = [
 ];
 
 /**
- *
+ * Render the account overview screen with profile summary, menu, and logout.
+ * @returns The rendered account screen.
  */
 export default function AccountScreen(): React.JSX.Element {
     const router = useRouter();
@@ -32,9 +33,9 @@ export default function AccountScreen(): React.JSX.Element {
     const { data: user } = useGetUser(currentUserId ?? "");
 
     /**
-     *
+     * Clear the session and cache, then return to the landing screen.
      */
-    function onLogout() {
+    function onLogout(): void {
         tokenStore.clear();
         queryClient.clear();
         router.replace("/");

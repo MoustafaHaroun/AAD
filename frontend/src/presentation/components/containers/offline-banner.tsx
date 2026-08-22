@@ -7,8 +7,9 @@ import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { useNetworkStatus } from "@/presentation/hooks";
 
 /**
- * Persistent banner shown app-wide while the device has no connection —
- * the app still shows the last-fetched data, but editing is disabled.
+ * Render a persistent banner while the device has no connection — the app
+ * still shows the last-fetched data, but editing is disabled.
+ * @returns The rendered banner, or null while online.
  */
 export function OfflineBanner(): React.JSX.Element | null {
     const { t } = useTranslation();

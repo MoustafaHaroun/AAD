@@ -7,6 +7,10 @@ import { GradientButton } from "@/presentation/components/primitives/gradient-bu
 import { SecondaryButton } from "@/presentation/components/primitives/secondary-button";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 
+/**
+ * Render the pre-auth landing screen with sign-in and register entry points.
+ * @returns The rendered landing screen.
+ */
 export default function LandingScreen(): React.JSX.Element {
     const router = useRouter();
     const { t } = useTranslation();
@@ -22,7 +26,7 @@ export default function LandingScreen(): React.JSX.Element {
                 <View className="flex-1 items-center justify-center px-6">
                     <Image
                         className="size-[163px] rounded-[24px]"
-                        source={require("@/assets/images/logo.png")}
+                        source={require("@/assets/images/logo.png") as number}
                     />
 
                     <Text className="mt-6 text-[40px] font-noto-bold text-black">Trade²</Text>

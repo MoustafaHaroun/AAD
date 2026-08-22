@@ -5,9 +5,10 @@ import { useRouter } from "expo-router";
 import { tokenStore } from "@/infrastructure/api";
 
 /**
- *
+ * Render the landing route, redirecting to Home when already signed in.
+ * @returns The rendered landing screen, or null while redirecting a signed-in user.
  */
-export default function Screen() {
+export default function Screen(): React.JSX.Element | null {
     const router = useRouter();
 
     useEffect(() => {
