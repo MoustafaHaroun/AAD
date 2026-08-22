@@ -6,7 +6,7 @@ import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "nativewind";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { ActivityIndicator, Platform, Text } from "react-native";
 import { DATABASE_NAME, db } from "@/infrastructure/persistence/drizzle";
@@ -25,9 +25,11 @@ import {
     NotoSans_900Black,
     useFonts,
 } from "@expo-google-fonts/noto-sans";
-import { tokenStore, queryClient } from "@/infrastructure/api";
+import { tokenStore, queryClient, queryPersister } from "@/infrastructure/api";
 import { BRAND_COLORS } from "@/presentation/styles/theme";
 import { initLanguage } from "@/presentation/i18n";
+
+const PERSIST_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
 
 /**
  * Render the Layout component.
@@ -74,7 +76,10 @@ export default function Layout() {
                 options={{ enableChangeListener: true }}
                 useSuspense
             >
-                <QueryClientProvider client={queryClient}>
+                <PersistQueryClientProvider
+                    client={queryClient}
+                    persistOptions={{ maxAge: PERSIST_MAX_AGE_MS, persister: queryPersister }}
+                >
                     <KeyboardProvider>
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
                             <StatusBar
@@ -95,7 +100,7 @@ export default function Layout() {
                                 <ReactQueryDevtools initialIsOpen={false} />}
                         </ThemeProvider>
                     </KeyboardProvider>
-                </QueryClientProvider>
+                </PersistQueryClientProvider>
             </SQLiteProvider>
         </Suspense>
     );
