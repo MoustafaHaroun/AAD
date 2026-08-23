@@ -1,11 +1,6 @@
 \section{Introduction}\label{sec:hd-testreport-introduction}
+This document records the execution and outcomes of the manual test cases defined in the \tradesq{} Front-End Test Plan. It documents the actual test environment, the result assigned to each executed test case, observed behaviour that differs from the expected result, supporting evidence where available, and the resulting coverage of the front-end requirements defined in the Technical Specification.
 
-This document is the test report for the front-end of Trade2, the mobile application built as part of the Hybrid Development track. It records the execution of the functional test cases defined in the companion Test Plan document, which verify the front-end functional requirements defined in the \emph{Requirements} section of the Technical Specification, and maps every requirement to the test case(s) that cover it.
+The test report should be read together with the \tradesq{} Front-End Test Plan. The test plan defines the test approach, required test environment, test cases, pre-conditions, execution steps, expected results, and planned requirement coverage. This report does not repeat those definitions. Instead, it records how the tests were carried out in practice, what behaviour was observed, and whether the tested build satisfies the requirements within the scope of manual functional testing.
 
-\subsection{Scope}\label{sec:hd-testreport-scope}
-
-The front-end currently has no automated test suite (no unit, component, or end-to-end tests are configured in the Expo project). Every test case here is therefore executed by hand, on-device, against a running instance of the app and the backend API, rather than by a test runner.
-
-\subsection{Out of scope}\label{sec:hd-testreport-out-of-scope}
-
-User requirements U1--U14 are referenced by the Technical Specification but are not yet defined anywhere in this repository (they originate from a separate Design Essentials deliverable), so no test cases are derived from them here. Non-functional requirements beyond NFR1 are likewise marked as not yet defined in the Technical Specification's \emph{Requirements} section and are not covered.
+Test cases are recorded as Passed, Failed, Blocked, or Not run. A Passed result indicates that the observed behaviour matched the expected result. A Failed result indicates that the observed behaviour differed from the expected result. A Blocked result indicates that the test could not be completed because a prerequisite, required test data, or part of the test environment was unavailable. A Not run result indicates that the test case was not executed during the reported test period.

@@ -1,0 +1,191 @@
+\documentclass[fleqn,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel} % 'dutch' will use Saxion Hogeschool logo, any other language uses Saxion University of Applied Sciences logo.
+\usepackage[backend=biber]{biblatex}
+\usepackage[normalem]{ulem}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{import}
+
+\usepackage{puml}
+\usepackage{longlisting}
+\usepackage{stylabletables}
+\usepackage{saxion}
+
+\makeatletter
+\newcommand{\setrootdepth}[1]{
+    \def\rootpath{}
+    \count0=0
+    \loop
+        \ifnum\count0<#1
+            \edef\rootpath{\rootpath../}
+            \advance\count0 by 1
+    \repeat
+
+    \graphicspath{{\rootpath fig/}{\rootpath uml/}} % Change this to be a relative path to your figures.
+    \addbibresource{\rootpath bib/references.bib} % Change this to be a relative path to your references.bib file.
+    \def\input@path{{\rootpath inc/}} % Change this to be a relative path to your included tex files.
+}
+\makeatother
+
+\setrootdepth{3} % Set this to correct nesting from the doc/ directory.
+
+\newcommand{\tradesq}{Trade\textsuperscript{2}}
+
+\title{Hybrid Development}
+\subtitle{A Test Report for the Front-End of \tradesq{}}
+\author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\section{Changelog}\label{sec:changelog}
+
+\begin{htable}[
+        caption = {Changelog},
+        label = {tab:changelog},
+    ]{
+        colspec={llX},
+    }
+    Version & Date & Description \\
+    1.0 & \today & Initial draft. \\
+\end{htable}
+
+\newpage
+\tableofcontents
+
+\newpage
+\input{hd/test-report/introduction.tex}
+
+\newpage
+\section{Test Execution}\label{sec:hd-testreport-execution}
+The manual test cases defined in the \tradesq{} Front-End Test Plan were executed against the \tradesq{} Mobile Application running through Expo on a Oneplus 11. The application was connected to the self-hosted \tradesq{} Back-end API at \texttt{https://api.mufasadev.nl}.
+
+Testing used a primary regular account registered through the application's registration flow. A second independent regular account was used where a test case required a listing owner, messaging counterpart, or target account for a permission-related check. The configured admin account was used for the admin-gated listing-management test cases.
+
+The test cases were executed manually. For each case, the tester prepared the required pre-conditions, completed the planned steps, compared the observed behaviour with the expected result in the test plan, and recorded the outcome in this report. Where relevant, device settings and network connectivity were changed to test accessibility, session restoration, error handling, local drafts, and offline behaviour.
+
+\subsection{Test Environment}\label{sec:hd-testreport-environment}
+
+\begin{htable}[
+    caption = {Test Environment},
+    label = {tab:hd-testreport-environment},
+    presep = 1em,
+]
+    {
+        colspec = {lX},
+    }
+        Item & Value \\
+        Application & \tradesq{} Mobile Application \\
+        Application runtime & Expo \\
+        Device & Oneplus 11 \\
+        Operating system & Android \\
+        Back-end API & \texttt{https://api.mufasadev.nl} \\
+        Test method & Manual functional testing \\
+        Primary account & Regular account registered through the application \\
+        Additional accounts & Second regular account and configured admin account, where required by the test case \\
+        Test period & 23rd of August 2026 \\
+        Tested by & William Rothman \\
+\end{htable}
+
+The Android system accessibility settings were used for the accessibility-related test cases. TalkBack was enabled for the screen-reader test case, and the system text or font size was increased for the text-scaling test case. Network connectivity was disabled and restored for the offline and error-handling test cases.
+
+\newpage
+\section{Test Results}\label{sec:hd-testreport-results}
+
+This section records the results of executing the manual test cases defined in the \tradesq{} Front-End Test Plan. Each result uses the result scale defined in the test plan. The full test-case definitions, including pre-conditions, execution steps, and expected results, are maintained in the test plan and are not repeated in this report.
+
+At the time of this report, TC001 has been executed and recorded as Passed. The remaining test cases have not yet been executed and are recorded as Not run. The current results therefore provide only limited evidence of overall front-end requirement coverage. The remaining cases should be executed before a final conclusion is made about whether the tested build satisfies the requirements.
+
+\begin{htable}[
+    caption = {Test Execution Summary},
+    label = {tab:hd-testreport-summary},
+    presep = 1em,
+]
+    {
+        colspec = {lX},
+    }
+        Metric & Value \\
+        Planned test cases & 32 \\
+        Executed test cases & 1 \\
+        Passed & 1 \\
+        Failed & 0 \\
+        Blocked & 0 \\
+        Not run & 31 \\
+        Pass rate of executed test cases & 100\% \\
+\end{htable}
+
+\begin{htable}[
+    caption = {Test Case Results},
+    label = {tab:hd-testreport-results},
+    presep = 1em,
+]
+    {
+        colspec = {lX},
+    }
+        Test Case & Result \\
+        TC001 & Passed \\
+        TC002 & Not run \\
+        TC003 & Not run \\
+        TC004 & Not run \\
+        TC005 & Not run \\
+        TC006 & Not run \\
+        TC007 & Not run \\
+        TC008 & Not run \\
+        TC009 & Not run \\
+        TC010 & Not run \\
+        TC011 & Not run \\
+        TC012 & Not run \\
+        TC013 & Not run \\
+        TC014 & Not run \\
+        TC015 & Not run \\
+        TC016 & Not run \\
+        TC017 & Not run \\
+        TC018 & Not run \\
+        TC019 & Not run \\
+        TC020 & Not run \\
+        TC021 & Not run \\
+        TC022 & Not run \\
+        TC023 & Not run \\
+        TC024 & Not run \\
+        TC025 & Not run \\
+        TC026 & Not run \\
+        TC027 & Not run \\
+        TC028 & Not run \\
+        TC029 & Not run \\
+        TC030 & Not run \\
+        TC031 & Not run \\
+        TC032 & Not run \\
+\end{htable}
+
+\newpage
+\section{Findings and Deviations}\label{sec:hd-testreport-findings}
+This section records findings and deviations identified during execution of the \tradesq{} Front-End Test Plan. A finding is recorded when observed behaviour differs from the expected result, when a test case cannot be completed because of an environment or implementation issue, or when an important limitation is identified during testing.
+
+\begin{htable}[
+    caption = {Findings Overview},
+    label = {tab:hd-testreport-findings},
+    presep = 1em,
+]
+    {
+        colspec = {lX},
+    }
+        Test Case & Details \\
+        TC000 & \textcolor{red}{This is an example but here you can tell what went wrong and why and where and how etc. Also remove the red text color here} \\
+\end{htable}
+
+\newpage
+\section{Conclusion}
+\textcolor{red}{
+Write a short, evidence-based conclusion for the test report. State how many of the 32 planned test cases were executed and how many Passed, Failed, Blocked, and were Not run. Summarise which major areas were successfully verified, identify any unresolved failures or untested areas, and explain whether the current evidence is sufficient to say that the \tradesq{} Mobile Application meets its tested front-end requirements. End with the next actions required before final submission or release, such as completing remaining tests, fixing defects, retesting affected cases, and recording any evidence outside manual testing.
+}
+
+
+\newpage
+\printbibliography
+
+\end{document}

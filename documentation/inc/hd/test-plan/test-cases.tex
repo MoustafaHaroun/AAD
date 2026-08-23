@@ -1,125 +1,180 @@
 \section{Test Cases}\label{sec:hd-testplan-test-cases}
+This section defines the manual test cases that a tester should execute to verify the front-end functional requirements and selected non-functional requirements of the \tradesq{} Mobile Application. Each test case provides a unique identifier, a short name and description, the requirement or requirements it covers, the required pre-condition, the ordered steps to perform, the intended end condition, and the expected result.
 
-Each test case below states the requirement(s) it verifies, its pre-condition, the steps to execute it, and its expected result.
+Before executing a test case, the tester should confirm that its pre-condition is satisfied and prepare any required accounts, listings, notifications, network state, device settings, or other test data. The tester should perform the steps in the stated order, compare the observed behaviour with the expected result, and record the outcome as Passed, Failed, Blocked, or Not run in the separate test report. Where the observed result differs from the expected result, the tester should record the deviation and any relevant evidence, such as screenshots, error messages, reproduction steps, or device and API details.
+
 
 \begin{htable}[caption = {TC001}, label = {tc:001}, presep = 1em, postsep = 2em]{colspec={lX}}
     Test Case ID & TC001 \\
     Name & Register a new account with valid data \\
     Description & A new user successfully creates an account through the registration wizard. \\
     Requirements & FR1 \\
-    Pre-condition & The app is installed and the user is on the Landing screen; the email address used is not already registered. \\
-    Steps & 1) Tap Register. 2) Enter a unique email and a password meeting the policy (min. 8 characters, incl. lowercase, uppercase, digit, and special character), and confirm it. 3) Continue and enter first/last name. 4) Continue and enter address fields. 5) Continue and optionally skip the profile photo step. 6) Tap Create account. \\
+    Pre-condition & The \tradesq{} Mobile Application is installed and the user is on the Landing screen; the email address used is not already registered. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Tap Register.
+            \item Enter a unique email address and a password meeting the policy: at least eight characters, including lowercase, uppercase, a digit, and a special character. Confirm the password.
+            \item Continue and enter the first and last name.
+            \item Continue and enter the address fields.
+            \item Continue and optionally skip the profile-photo step.
+            \item Tap Create account.
+        \end{enumerate}
+    } \\
     End condition & The account exists and the user is signed in. \\
-    Expected result & The app signs the new user in automatically and navigates to the Home screen. \\
-    Result & PASSED \\
+    Expected result & The application signs the new user in automatically and navigates to the Home screen. \\
 \end{htable}
 
 \begin{htable}[caption = {TC002}, label = {tc:002}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC002 \\
-    Name & Register with an email already in use \\
+    Name & Register with an email address already in use \\
     Description & Registration is rejected when the email address is already registered. \\
     Requirements & FR1 \\
-    Pre-condition & An account already exists with the email address used in this test (see TC001). \\
-    Steps & 1) Start registration. 2) Enter the same email used in TC001. 3) Complete the remaining steps and submit. \\
+    Pre-condition & An account already exists with the email address used in this test, for example from TC001. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Start the registration flow.
+            \item Enter the same email address used in TC001.
+            \item Complete the remaining registration steps and submit the form.
+        \end{enumerate}
+    } \\
     End condition & No new account is created. \\
-    Expected result & The app shows an error and the user remains on the registration flow (the backend returns 409 Conflict). \\
-    Result & Not run \\
+    Expected result & The application displays an understandable error and the user remains in the registration flow. The \tradesq{} Back-end API returns HTTP 409 Conflict. \\
 \end{htable}
 
 \begin{htable}[caption = {TC003}, label = {tc:003}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC003 \\
     Name & Log in with valid credentials \\
-    Description & A registered user can sign in with the correct email and password. \\
+    Description & A registered user can sign in with the correct email address and password. \\
     Requirements & FR1 \\
-    Pre-condition & An account exists (TC001). \\
-    Steps & 1) On the Login screen, enter the account's email and password. 2) Tap Log in. \\
+    Pre-condition & A registered account exists, for example from TC001. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item On the Login screen, enter the account's email address and password.
+            \item Tap Log in.
+        \end{enumerate}
+    } \\
     End condition & The user is signed in. \\
-    Expected result & The app navigates to the Home screen and the session token is stored. \\
-    Result & Not run \\
+    Expected result & The application navigates to the Home screen and stores the authenticated session securely. \\
 \end{htable}
 
 \begin{htable}[caption = {TC004}, label = {tc:004}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC004 \\
     Name & Log in with an incorrect password \\
-    Description & Login is rejected when the password does not match. \\
+    Description & Login is rejected when the password does not match the account. \\
     Requirements & FR1 \\
-    Pre-condition & An account exists. \\
-    Steps & 1) On the Login screen, enter the account's email and an incorrect password. 2) Tap Log in. \\
+    Pre-condition & A registered account exists. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item On the Login screen, enter the account's email address and an incorrect password.
+            \item Tap Log in.
+        \end{enumerate}
+    } \\
     End condition & The user is not signed in. \\
-    Expected result & An error message is shown and the app remains on the Login screen. \\
-    Result & Not run \\
+    Expected result & An understandable error message is displayed and the application remains on the Login screen. \\
 \end{htable}
 
 \begin{htable}[caption = {TC005}, label = {tc:005}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC005 \\
-    Name & Session survives an app restart \\
-    Description & A signed-in session is not lost when the app is fully closed and reopened. \\
-    Requirements & FR1 \\
-    Pre-condition & The user is signed in (TC003). \\
-    Steps & 1) Force-quit the app. 2) Reopen the app. \\
-    End condition & n/a \\
-    Expected result & The app opens directly to the Home screen without requiring the user to log in again. \\
-    Result & Not run \\
+    Name & Session survives an application restart \\
+    Description & An authenticated session is not lost when the application is fully closed and reopened. \\
+    Requirements & FR1, FR13 \\
+    Pre-condition & The user is signed in, for example through TC003. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Force-quit the \tradesq{} Mobile Application.
+            \item Reopen the application.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The application opens directly to the Home screen without requiring the user to sign in again. \\
 \end{htable}
 
 \begin{htable}[caption = {TC006}, label = {tc:006}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC006 \\
-    Name & Log out clears the session \\
-    Description & Logging out ends the session and clears cached data. \\
-    Requirements & FR1 \\
+    Name & Log out clears the authenticated session \\
+    Description & Logging out ends the authenticated session and clears protected session information. \\
+    Requirements & FR1, NFR18 \\
     Pre-condition & The user is signed in. \\
-    Steps & 1) Open the Account tab. 2) Tap Logout. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Account tab.
+            \item Tap Logout.
+            \item Fully close and reopen the application.
+        \end{enumerate}
+    } \\
     End condition & The user is signed out. \\
-    Expected result & The app returns to the Landing screen; reopening the app does not restore the previous session. \\
-    Result & Not run \\
+    Expected result & The application returns to the Landing screen. Reopening the application does not restore the previous authenticated session. \\
 \end{htable}
 
 \begin{htable}[caption = {TC007}, label = {tc:007}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC007 \\
     Name & View and edit own profile \\
-    Description & A signed-in user can view and update their own profile fields. \\
+    Description & An authenticated user can view and update their own profile fields. \\
     Requirements & FR2 \\
     Pre-condition & The user is signed in. \\
-    Steps & 1) Open Account > Personal Information. 2) Change the first name, surname, email, and/or location. 3) Save. \\
-    End condition & n/a \\
-    Expected result & The updated values are saved and displayed the next time the screen is opened. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open Account and then Personal Information.
+            \item Change the first name, surname, email address, location, or a combination of these fields.
+            \item Save the changes.
+            \item Reopen the Personal Information screen.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The updated values are saved and displayed when the profile screen is reopened. \\
 \end{htable}
 
 \begin{htable}[caption = {TC008}, label = {tc:008}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC008 \\
     Name & Create a new offer listing \\
-    Description & A user can publish a new listing offering a skill. \\
+    Description & An authenticated user can publish a new listing offering a skill. \\
     Requirements & FR3 \\
     Pre-condition & The user is signed in. \\
-    Steps & 1) Tap New listing. 2) Enter a title (3--64 characters) and description (up to 255 characters). 3) Select type Offer and a category. 4) Save. \\
-    End condition & n/a \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Tap New listing.
+            \item Enter a title between 3 and 64 characters and a description of up to 255 characters.
+            \item Select Offer as the listing type and select a category.
+            \item Save the listing.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
     Expected result & The listing is created and appears in the Listings screen and in My Listings. \\
-    Result & Not run \\
 \end{htable}
 
 \begin{htable}[caption = {TC009}, label = {tc:009}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC009 \\
     Name & Create a new request listing \\
-    Description & A user can publish a new listing requesting a skill. \\
+    Description & An authenticated user can publish a new listing requesting a skill. \\
     Requirements & FR3 \\
     Pre-condition & The user is signed in. \\
-    Steps & Same as TC008, selecting type Request instead of Offer. \\
-    End condition & n/a \\
-    Expected result & The listing is created with type Request and appears in Listings and My Listings. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Tap New listing.
+            \item Enter a title between 3 and 64 characters and a description of up to 255 characters.
+            \item Select Request as the listing type and select a category.
+            \item Save the listing.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The listing is created with the Request type and appears in the Listings screen and in My Listings. \\
 \end{htable}
 
 \begin{htable}[caption = {TC010}, label = {tc:010}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC010 \\
     Name & Create a listing with a too-short title \\
-    Description & Listing creation is blocked client-side when the title does not meet the length requirement. \\
-    Requirements & FR3 \\
-    Pre-condition & The user is signed in and on the Create Listing screen. \\
-    Steps & 1) Enter a title shorter than 3 characters. 2) Leave the rest of the form valid. 3) Attempt to save. \\
-    End condition & n/a \\
-    Expected result & A validation error is shown and the listing is not submitted. \\
-    Result & Not run \\
+    Description & Listing creation is blocked when the title does not meet the minimum-length requirement. \\
+    Requirements & FR3, NFR13 \\
+    Pre-condition & The user is signed in and is on the Create Listing screen. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Enter a title shorter than three characters.
+            \item Complete the remaining required fields with valid values.
+            \item Attempt to save the listing.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & A visible validation error is shown in text, and the listing is not submitted. \\
 \end{htable}
 
 \begin{htable}[caption = {TC011}, label = {tc:011}, postsep = 2em]{colspec={lX}}
@@ -127,11 +182,17 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Name & Edit an existing own listing \\
     Description & The owner of a listing can change its fields. \\
     Requirements & FR4 \\
-    Pre-condition & The user owns at least one listing (TC008/TC009). \\
-    Steps & 1) Open the listing's detail screen. 2) Tap Edit. 3) Change the title, description, category, or type. 4) Save. \\
-    End condition & n/a \\
-    Expected result & The changes are saved and reflected on the listing's detail screen and in the listings grid. \\
-    Result & Not run \\
+    Pre-condition & The user owns at least one listing, for example from TC008 or TC009. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the detail screen for a listing owned by the signed-in user.
+            \item Tap Edit.
+            \item Change the title, description, category, listing type, or a combination of these fields.
+            \item Save the changes.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The changes are saved and displayed on the listing detail screen and in the listings grid. \\
 \end{htable}
 
 \begin{htable}[caption = {TC012}, label = {tc:012}, postsep = 2em]{colspec={lX}}
@@ -140,10 +201,15 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Description & The owner of a listing can permanently remove it. \\
     Requirements & FR4 \\
     Pre-condition & The user owns at least one listing. \\
-    Steps & 1) Open the listing's Edit screen. 2) Tap Delete and confirm in the dialog. \\
-    End condition & n/a \\
-    Expected result & The listing no longer appears in Listings, My Listings, or anyone's favorites. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Edit screen for a listing owned by the signed-in user.
+            \item Tap Delete.
+            \item Confirm the deletion in the confirmation dialog.
+        \end{enumerate}
+    } \\
+    End condition & The listing is deleted. \\
+    Expected result & The listing no longer appears in Listings, My Listings, or the signed-in user's favourites where applicable. \\
 \end{htable}
 
 \begin{htable}[caption = {TC013}, label = {tc:013}, postsep = 2em]{colspec={lX}}
@@ -151,11 +217,17 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Name & Admin edits another user's listing \\
     Description & An admin account can edit a listing it does not own. \\
     Requirements & FR4 \\
-    Pre-condition & The signed-in account has the admin role; another user owns a listing. \\
-    Steps & 1) As the admin, open a listing owned by another user. 2) Confirm the Edit control is shown. 3) Tap Edit, change a field, and save. \\
-    End condition & n/a \\
-    Expected result & Unlike for a regular, non-owning user, the Edit control is shown; the change is saved and reflected on the listing's detail screen. \\
-    Result & Not run \\
+    Pre-condition & The signed-in account has the admin role and another user owns a listing. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Sign in with the admin account.
+            \item Open a listing owned by another user.
+            \item Confirm that the Edit control is displayed.
+            \item Tap Edit, change a field, and save the changes.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The Edit control is displayed for the admin account, and the saved change is reflected on the listing detail screen. \\
 \end{htable}
 
 \begin{htable}[caption = {TC014}, label = {tc:014}, postsep = 2em]{colspec={lX}}
@@ -163,35 +235,49 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Name & Admin deletes another user's listing \\
     Description & An admin account can delete a listing it does not own. \\
     Requirements & FR4 \\
-    Pre-condition & The signed-in account has the admin role; another user owns a listing. \\
-    Steps & 1) As the admin, open a listing owned by another user. 2) Tap Edit, then Delete, and confirm in the dialog. \\
-    End condition & n/a \\
-    Expected result & The listing is deleted and no longer appears in Listings for any user. \\
-    Result & Not run \\
+    Pre-condition & The signed-in account has the admin role and another user owns a listing. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Sign in with the admin account.
+            \item Open a listing owned by another user.
+            \item Tap Edit and then tap Delete.
+            \item Confirm the deletion in the confirmation dialog.
+        \end{enumerate}
+    } \\
+    End condition & The listing is deleted. \\
+    Expected result & The listing is deleted and no longer appears in the Listings screen for any user. \\
 \end{htable}
 
 \begin{htable}[caption = {TC015}, label = {tc:015}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC015 \\
     Name & Listing shows distance from the viewer \\
-    Description & A listing detail screen shows how far the poster is from the viewer, when both locations are known. \\
+    Description & A listing detail screen displays the distance between the listing owner and viewer when both locations are known. \\
     Requirements & FR5 \\
-    Pre-condition & Both the viewer's account and the listing owner's account have a saved location. \\
-    Steps & 1) Open a listing posted by another user whose location is set. \\
-    End condition & n/a \\
-    Expected result & A distance label (e.g. "N km away") is shown; if the viewer's own location is not yet known, no distance label is shown instead of an incorrect one. \\
-    Result & Not run \\
+    Pre-condition & Both the viewer account and the listing-owner account have saved locations. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open a listing posted by another user whose location is set.
+            \item Observe the location or distance information on the listing detail screen.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & A distance label, such as ``N km away'', is displayed. If the viewer's own location is not known, no inaccurate distance label is displayed. \\
 \end{htable}
 
 \begin{htable}[caption = {TC016}, label = {tc:016}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC016 \\
     Name & Start a chat from a listing \\
-    Description & A user can express interest in a listing, which starts a conversation with its poster. \\
+    Description & An authenticated user can express interest in a listing and start a conversation with its owner. \\
     Requirements & FR6 \\
-    Pre-condition & The user has not previously messaged the listing's poster. \\
-    Steps & 1) Open a listing posted by another user. 2) Tap the send-message / trade-request action. \\
-    End condition & n/a \\
-    Expected result & A new conversation with the poster is created containing a canned trade-request message referencing the listing, and the app navigates to that conversation. \\
-    Result & Not run \\
+    Pre-condition & The user has not previously messaged the listing owner. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open a listing posted by another user.
+            \item Tap the send-message or trade-request action.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & A conversation with the listing owner is created with a trade-request message that references the listing, and the application navigates to the conversation. \\
 \end{htable}
 
 \begin{htable}[caption = {TC017}, label = {tc:017}, postsep = 2em]{colspec={lX}}
@@ -199,119 +285,167 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Name & Search listings by keyword \\
     Description & The listings grid can be filtered by a free-text search query. \\
     Requirements & FR7 \\
-    Pre-condition & At least two listings exist with clearly different titles. \\
-    Steps & 1) Open the Listings screen. 2) Type a keyword that matches only one listing's title or description into the search box. \\
-    End condition & n/a \\
-    Expected result & Only listings whose title or description contains the keyword are shown. \\
-    Result & Not run \\
+    Pre-condition & At least two listings exist with clearly different titles or descriptions. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Listings screen.
+            \item Enter a keyword that matches only one listing title or description in the search field.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & Only listings whose title or description contains the entered keyword are displayed. \\
 \end{htable}
 
 \begin{htable}[caption = {TC018}, label = {tc:018}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC018 \\
-    Name & Favorite a listing \\
-    Description & A user can mark a listing as a favorite. \\
+    Name & Favourite a listing \\
+    Description & An authenticated user can mark a listing as a favourite. \\
     Requirements & FR8 \\
-    Pre-condition & The user is signed in and viewing a listing they have not favorited. \\
-    Steps & 1) Open a listing. 2) Tap the favorite toggle. \\
-    End condition & n/a \\
-    Expected result & The listing appears under the favorites view. \\
-    Result & Not run \\
+    Pre-condition & The user is signed in and is viewing a listing they have not favourited. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open a listing.
+            \item Tap the favourite toggle.
+            \item Open the favourites view.
+        \end{enumerate}
+    } \\
+    End condition & The listing is marked as a favourite. \\
+    Expected result & The listing appears in the favourites view. \\
 \end{htable}
 
 \begin{htable}[caption = {TC019}, label = {tc:019}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC019 \\
-    Name & Remove a listing from favorites \\
-    Description & A user can remove a previously favorited listing. \\
+    Name & Remove a listing from favourites \\
+    Description & An authenticated user can remove a previously favourited listing. \\
     Requirements & FR8 \\
-    Pre-condition & The listing from TC018 is favorited. \\
-    Steps & 1) Open the same listing. 2) Tap the favorite toggle again. \\
-    End condition & n/a \\
-    Expected result & The listing no longer appears under the favorites view. \\
-    Result & Not run \\
+    Pre-condition & The listing from TC018 is favourited. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the previously favourited listing.
+            \item Tap the favourite toggle again.
+            \item Open the favourites view.
+        \end{enumerate}
+    } \\
+    End condition & The listing is no longer marked as a favourite. \\
+    Expected result & The listing no longer appears in the favourites view. \\
 \end{htable}
 
 \begin{htable}[caption = {TC020}, label = {tc:020}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC020 \\
     Name & Send and receive messages in a conversation \\
-    Description & Two users can exchange messages and see them in chronological order. \\
+    Description & Two users can exchange messages and view them in chronological order. \\
     Requirements & FR9 \\
-    Pre-condition & A conversation exists between two accounts (e.g. from TC016). \\
-    Steps & 1) As account A, open the conversation and send a message. 2) As account B, open the same conversation. \\
-    End condition & n/a \\
-    Expected result & Both messages are visible to both accounts, ordered oldest to newest, grouped under date dividers. \\
-    Result & Not run \\
+    Pre-condition & A conversation exists between two accounts, for example from TC016. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item As account A, open the conversation and send a message.
+            \item As account B, open or refresh the same conversation.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & After the conversation is refreshed or reopened as required by the application, both users can view the messages ordered from oldest to newest and grouped under date dividers where applicable. Immediate real-time delivery is not required. \\
 \end{htable}
 
 \begin{htable}[caption = {TC021}, label = {tc:021}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC021 \\
     Name & Sending a message notifies the recipient \\
     Description & Sending a message creates a notification for the recipient. \\
-    Requirements & FR9, FR12 \\
-    Pre-condition & Account A can message account B. \\
-    Steps & 1) As account A, send a message to account B. 2) As account B, open the Notifications screen. \\
-    End condition & n/a \\
-    Expected result & A new, unread notification referencing the sender appears for account B. \\
-    Result & Not run \\
+    Requirements & FR9, FR12, NFR8 \\
+    Pre-condition & Account A can send a message to account B. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item As account A, send a message to account B.
+            \item As account B, open or refresh the Notifications screen.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & After the Notifications screen is refreshed or reopened as required by the application, a new unread notification referencing account A is displayed for account B. \\
 \end{htable}
 
 \begin{htable}[caption = {TC022}, label = {tc:022}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC022 \\
     Name & Filter listings by category and type \\
-    Description & The listings grid can be narrowed down by category and by offer/request type. \\
+    Description & The listings grid can be narrowed by category and supported listing-type filters. \\
     Requirements & FR10 \\
-    Pre-condition & Listings exist across at least two categories and both types. \\
-    Steps & 1) Open the Listings screen. 2) Select a category filter chip. 3) Switch between the available tabs (e.g. near/liked/my). \\
-    End condition & n/a \\
-    Expected result & Only listings matching the selected category and tab are shown. \\
-    Result & Not run \\
+    Pre-condition & Listings exist across at least two categories and include both Offer and Request types. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Listings screen.
+            \item Select a category filter.
+            \item Switch between the available listing tabs or filters, such as near, liked, or my listings.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & Only listings matching the selected category and active filter are displayed. \\
 \end{htable}
 
 \begin{htable}[caption = {TC023}, label = {tc:023}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC023 \\
     Name & Upload a photo when creating a listing \\
-    Description & A user can attach a photo to a new listing. \\
+    Description & An authenticated user can attach a photo to a new listing. \\
     Requirements & FR11 \\
-    Pre-condition & The user is on the Create Listing screen. \\
-    Steps & 1) Fill in the required fields. 2) Tap the photo picker and choose an image from the camera or gallery. 3) Save the listing. \\
-    End condition & n/a \\
-    Expected result & The photo is uploaded and displayed in the listing's image gallery on its detail screen. \\
-    Result & Not run \\
+    Pre-condition & The user is signed in and is on the Create Listing screen. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Complete the required listing fields.
+            \item Tap the photo picker and select an image from the device camera or gallery.
+            \item Save the listing.
+            \item Open the created listing.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The image is uploaded and displayed in the listing image gallery on the listing detail screen. \\
 \end{htable}
 
 \begin{htable}[caption = {TC024}, label = {tc:024}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC024 \\
     Name & Upload, replace, and remove a profile avatar \\
-    Description & A user can set, change, and remove their profile picture. \\
+    Description & An authenticated user can set, change, and remove their profile picture. \\
     Requirements & FR11 \\
     Pre-condition & The user is signed in. \\
-    Steps & 1) Open Account Settings. 2) Tap the avatar and choose a photo. 3) Confirm it is displayed. 4) Repeat to replace it with a different photo. 5) Remove the avatar. \\
-    End condition & n/a \\
-    Expected result & The avatar updates immediately after each change and reverts to the initials placeholder after removal. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open Account Settings.
+            \item Tap the avatar and choose a photo.
+            \item Confirm that the selected avatar is displayed.
+            \item Replace the avatar with a different photo.
+            \item Remove the avatar.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The avatar updates after each change and reverts to the initials placeholder after removal. \\
 \end{htable}
 
 \begin{htable}[caption = {TC025}, label = {tc:025}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC025 \\
     Name & View notifications and mark one as read \\
-    Description & Notifications can be viewed and are marked read on interaction. \\
-    Requirements & FR12 \\
-    Pre-condition & At least one unread notification exists (e.g. from TC021). \\
-    Steps & 1) Open the Notifications screen. 2) Tap the unread notification. \\
-    End condition & n/a \\
-    Expected result & The notification's unread indicator is cleared, and the notification bell's unread count on Home decreases accordingly. \\
-    Result & Not run \\
+    Description & Notifications can be viewed and are marked as read when opened. \\
+    Requirements & FR12, NFR8 \\
+    Pre-condition & At least one unread notification exists, for example from TC021. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Notifications screen.
+            \item Tap an unread notification.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The notification's unread indicator is cleared, and the notification bell's unread count on the Home screen decreases accordingly. \\
 \end{htable}
 
 \begin{htable}[caption = {TC026}, label = {tc:026}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC026 \\
     Name & Delete a notification \\
-    Description & A user can remove a notification from their list. \\
-    Requirements & FR12 \\
+    Description & An authenticated user can remove a notification from their notification list. \\
+    Requirements & FR12, NFR8 \\
     Pre-condition & At least one notification exists. \\
-    Steps & 1) Open the Notifications screen. 2) Delete a notification. \\
-    End condition & n/a \\
-    Expected result & The notification no longer appears in the list. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Notifications screen.
+            \item Delete a notification.
+        \end{enumerate}
+    } \\
+    End condition & The notification is deleted. \\
+    Expected result & The deleted notification no longer appears in the notification list. \\
 \end{htable}
 
 \begin{htable}[caption = {TC027}, label = {tc:027}, postsep = 2em]{colspec={lX}}
@@ -319,69 +453,99 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Name & Screen reader announces on-screen content \\
     Description & Core screens are usable with a screen reader enabled. \\
     Requirements & NFR12 \\
-    Pre-condition & The device's screen reader (TalkBack) is turned on in system settings. \\
-    Steps & 1) Enable TalkBack in the device's Accessibility settings. 2) Open the app and navigate through Login/Register, Home, Listings, and a listing detail screen using swipe gestures. 3) Focus each interactive element (buttons, inputs, tabs) along the way. \\
-    End condition & n/a \\
-    Expected result & Every focused button, input, and navigation element is announced with a meaningful label, and the login, browse-listings, and view-listing flows can be completed using only screen-reader navigation. \\
-    Result & Not run \\
+    Pre-condition & The device screen reader, TalkBack, is enabled in the device accessibility settings. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Enable TalkBack in the device Accessibility settings.
+            \item Open the \tradesq{} Mobile Application and navigate through Login or Register, Home, Listings, and a listing detail screen using swipe gestures.
+            \item Focus interactive controls, including buttons, inputs, and tabs.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & Every focused button, input, and navigation control is announced with a meaningful label. The login, browse-listings, and view-listing flows can be completed using screen-reader navigation. \\
 \end{htable}
 
 \begin{htable}[caption = {TC028}, label = {tc:028}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC028 \\
-    Name & App respects the device's text size setting \\
-    Description & The app's text scales when the device's system font/text size setting is increased. \\
+    Name & Application respects the device text-size setting \\
+    Description & Text scales when the device system font or text-size setting is increased. \\
     Requirements & NFR11 \\
     Pre-condition & None. \\
-    Steps & 1) In the device's system settings, increase the text/font size to the largest available option. 2) Open the app and navigate through Home, Listings, and a listing detail screen. \\
-    End condition & n/a \\
-    Expected result & Text throughout the app scales up accordingly and stays readable, with no truncated or overlapping text and no clipped buttons. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item In the device system settings, increase the text or font size to the largest available option.
+            \item Open the \tradesq{} Mobile Application.
+            \item Navigate through the Home screen, Listings screen, and a listing detail screen.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & Text scales appropriately and remains readable, without truncated or overlapping text or clipped buttons that prevent access to essential functionality. \\
 \end{htable}
 
 \begin{htable}[caption = {TC029}, label = {tc:029}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC029 \\
     Name & Protected screens require sign-in \\
-    Description & A signed-out user cannot reach protected app functionality; the app directs them to the sign-in flow instead. \\
+    Description & A signed-out user cannot access protected application functionality and is directed to the sign-in flow. \\
     Requirements & FR14 \\
     Pre-condition & None. \\
-    Steps & 1) Log out (TC006). 2) Attempt to return to a tab that requires an authenticated session, for example by reopening the app or navigating back. \\
-    End condition & n/a \\
-    Expected result & The app shows the Landing/Login screen; the previously visited protected tab is not shown. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Log out, for example by completing TC006.
+            \item Attempt to return to a protected tab by reopening the application or navigating back.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & The application displays the Landing or Login screen and does not display the previously visited protected tab. \\
 \end{htable}
 
 \begin{htable}[caption = {TC030}, label = {tc:030}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC030 \\
-    Name & Listings show loading, empty, and error/retry states \\
-    Description & Asynchronous listing loads show an appropriate state for each outcome: loading, no results, and a failed request. \\
+    Name & Listings show loading, empty, and error or retry states \\
+    Description & Asynchronous listing loads show an appropriate state for loading, no results, and failed requests. \\
     Requirements & FR15, NFR15 \\
     Pre-condition & None. \\
-    Steps & 1) Open the Listings screen and observe the loading indicator while it fetches. 2) Search using a keyword that matches no listings and observe the empty state. 3) Turn off the device's network connection, then pull-to-refresh or reopen the Listings screen. \\
-    End condition & Restore the device's network connection. \\
-    Expected result & A loading indicator is shown while fetching; a clear "no results" state is shown for the empty search; a clear error state with a retry action is shown when the request fails, and retrying after connectivity is restored loads the listings. \\
-    Result & Not run \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Listings screen and observe the loading indicator while listings are retrieved.
+            \item Search for a keyword that matches no listings and observe the empty state.
+            \item Disable the device network connection and pull to refresh or reopen the Listings screen.
+            \item Restore connectivity and use the retry action where available.
+        \end{enumerate}
+    } \\
+    End condition & The device network connection is restored. \\
+    Expected result & A loading indicator is displayed while data is retrieved. A clear no-results state is displayed for an empty search. When a request fails, the application displays a clear error state with a retry action, and retrying after connectivity is restored loads the listings. \\
 \end{htable}
 
 \begin{htable}[caption = {TC031}, label = {tc:031}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC031 \\
     Name & Listing draft is preserved when leaving the create form \\
-    Description & Incomplete listing input is kept as a local draft if the user navigates away without submitting. \\
+    Description & Incomplete listing input is retained as a local draft when the user leaves the form without submitting it. \\
     Requirements & FR16, NFR5 \\
-    Pre-condition & The user is on the Create Listing screen. \\
-    Steps & 1) Fill in some fields (e.g. the title) without saving. 2) Navigate away from the screen. 3) Return to Create Listing. \\
-    End condition & n/a \\
-    Expected result & The previously entered field values are restored. \\
-    Result & Not run \\
+    Pre-condition & The user is signed in and is on the Create Listing screen. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Enter content in one or more listing fields, such as the title, without saving the listing.
+            \item Navigate away from the Create Listing screen.
+            \item Return to the Create Listing screen.
+        \end{enumerate}
+    } \\
+    End condition & Not applicable. \\
+    Expected result & Previously entered field values are restored from the local draft. \\
 \end{htable}
 
 \begin{htable}[caption = {TC032}, label = {tc:032}, postsep = 2em]{colspec={lX}}
     Test Case ID & TC032 \\
     Name & Previously loaded listings remain visible offline \\
-    Description & Listings retrieved while online stay visible, with an offline indicator, once the device loses connectivity. \\
+    Description & Listings retrieved while online remain visible with an offline indicator when the device loses connectivity. \\
     Requirements & FR17, NFR5 \\
-    Pre-condition & The Listings screen has been opened at least once while online. \\
-    Steps & 1) Open the Listings screen while online and let it load. 2) Turn off the device's network connection. 3) Reopen or revisit the Listings screen. \\
-    End condition & Restore the device's network connection. \\
-    Expected result & The previously loaded listings are still displayed, and an offline indicator/banner is shown. \\
-    Result & Not run \\
+    Pre-condition & The Listings screen has been opened at least once while the device was online. \\
+    Steps & \parbox{\linewidth}{
+        \begin{enumerate}
+            \item Open the Listings screen while connected to the internet and wait for listings to load.
+            \item Disable the device network connection.
+            \item Reopen or revisit the Listings screen.
+        \end{enumerate}
+    } \\
+    End condition & The device network connection is restored. \\
+    Expected result & Previously loaded listings remain visible, and the application displays an offline indicator or banner. Cached listing data is presented as potentially outdated rather than as current authoritative data. \\
 \end{htable}

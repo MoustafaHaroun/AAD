@@ -1,8 +1,11 @@
 \section{Approach}\label{sec:hd-testplan-approach}
 
-\subsection{Test environment}\label{sec:hd-testplan-environment}
+\subsection{Test Environment}\label{sec:hd-testplan-environment}
+A tester should execute the test cases against a running instance of the \tradesq{} Mobile Application connected to an available instance of the \tradesq{} Back-end API.
+The tester should use a physical Android or iOS device where possible, because several test cases require device capabilities or system settings, including image selection, network connectivity changes, screen-reader navigation, and system text scaling.
 
-The test cases are executed against the Expo app running on a Xiaomi Redmi Note 14 Pro, connected to an instance of the backend API self-hosted at \texttt{https://api.mufasadev.nl}. Two accounts are needed:
+Before test execution, the tester should prepare a primary regular test account and, where applicable, an admin account.
+The tester should also prepare a second independent regular account for test cases that require a listing owner, messaging counterpart, or target account for permission-related checks.
 
 \begin{htable}[
     caption = {Test Accounts},
@@ -10,18 +13,19 @@ The test cases are executed against the Expo app running on a Xiaomi Redmi Note 
     presep = 1em,
 ]
     {
-        colspec={lXl},
+        colspec = {lXl},
     }
         Account & Description & Credentials \\
-        Regular test account & Registered through the app's own registration flow (TC001). & n/a (registered by the tester) \\
-        Admin account & Used only for the admin-gated cases in \cref{sec:hd-testplan-test-cases}. An admin account has been created ahead of time for testers to log in with. & \texttt{admin@trade2.com} / \texttt{Admin123!} \\
+        Regular test account & Register through the application's own registration flow in TC001. & Registered by the tester \\
+        Admin account & Use only for the admin-gated test cases in \cref{sec:hd-testplan-test-cases}. & \parbox{}{\texttt{admin@trade2.com} \\ \texttt{Admin123!}} \\
 \end{htable}
 
-Some test cases require a second, independent regular account (to act as a listing owner, message counterpart, or the target of a permission check) in addition to the primary test account.
+The test report should record the actual application version, device model, operating-system version, \tradesq{} Back-end API instance, test date, and any deviations from this planned environment.
 
-\subsection{Result scale}\label{sec:hd-testplan-result-scale}
+\subsection{Result Scale}\label{sec:hd-testplan-result-scale}
 
-Each test case is recorded in \cref{sec:hd-testplan-test-report} with one of the following results once executed:
+When executing a test case, the tester should assign one of the following results.
+The completed results and any supporting evidence should be recorded in the separate test report.
 
 \begin{htable}[
     caption = {Result Scale},
@@ -29,10 +33,11 @@ Each test case is recorded in \cref{sec:hd-testplan-test-report} with one of the
     presep = 1em,
 ]
     {
-        colspec={lX},
+        colspec = {lX},
     }
         Result & Meaning \\
-        Passed & The app behaved as described in the case's expected result. \\
-        Failed & The app did not behave as described. \\
-        Blocked & The case could not be executed (for example, because a prerequisite case failed). \\
+        Passed & The application behaves as described in the test case's expected result. \\
+        Failed & The application does not behave as described in the test case's expected result. \\
+        Blocked & The test case cannot be completed because a prerequisite fails or the required test environment or data is unavailable. \\
+        Not run & The test case has not yet been executed. \\
 \end{htable}

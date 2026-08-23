@@ -1,11 +1,12 @@
 \section{Introduction}\label{sec:hd-testplan-introduction}
+This document describes the test plan for the front-end of \tradesq{}, the mobile application developed as part of the Hybrid Development course.
+It defines manual test cases that verify the front-end functional requirements and selected non-functional requirements defined in the \emph{Requirements} section of the Technical Specification. 
 
-This document describes the test plan for the front-end of Trade2, the mobile application built as part of the Hybrid Development track. It defines a set of functional test cases that verify the front-end functional requirements defined in the \emph{Requirements} section of the Technical Specification, records the result of executing them, and maps every requirement to the test case(s) that cover it.
+The front-end currently has no automated test suite: no unit, component, or end-to-end tests are configured in the Expo project.
+This document therefore defines a \emph{manual functional} test plan.
+Each test case is executed by hand against a running instance of the \tradesq{} Mobile Application and the \tradesq{} Back-end API rather than by a test runner.
+The cases primarily assess user-facing mobile-app behaviour.
+Where a requirement can only be meaningfully verified through direct interaction with the \tradesq{} Back-end API, such as confirming a permission check that the mobile interface does not expose directly, the relevant test case states this explicitly.
 
-\subsection{Scope}\label{sec:hd-testplan-scope}
-
-The front-end currently has no automated test suite (no unit, component, or end-to-end tests are configured in the Expo project). This document is therefore a \emph{manual, functional} test plan: each test case is executed by hand against a running instance of the app and the backend API, rather than by a test runner. Test cases target the mobile app's user-facing behaviour; where a requirement can only be meaningfully verified by calling the backend API directly (for example, to demonstrate that a permission check exists even though the app's own UI never exposes the unsafe path), the test case says so explicitly.
-
-\subsection{Out of scope}\label{sec:hd-testplan-out-of-scope}
-
-User requirements U1--U14 are referenced by the Technical Specification but are not yet defined anywhere in this repository (they originate from a separate Design Essentials deliverable), so no test cases are derived from them here. Non-functional requirements beyond NFR1 are likewise marked as not yet defined in the Technical Specification's \emph{Requirements} section and are not covered.
+The test cases are derived from the front-end functional requirements and selected non-functional requirements defined in the Technical Specification.
+Requirements that need source-code inspection, release-process evidence, specialist security assessment, or automated-test evidence are outside the scope of this manual test plan.
