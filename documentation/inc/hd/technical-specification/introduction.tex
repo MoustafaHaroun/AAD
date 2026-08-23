@@ -1,4 +1,25 @@
-\section{Introduction}\label{sec:hd-introduction}
-This document describes the design of the front-end of \textit{Trade2}, a mobile application that helps retired elderly people combat social isolation and loss of purpose by connecting them with neighbours to exchange skills and knowledge.
+\section{Introduction}
+\label{sec:introduction}
 
-It covers the problem the application solves, its stakeholders, the functional, non-functional, business, and user requirements, user stories, the use case diagram, the system context, container, and component architecture of the mobile application, the libraries used, wireframes and navigation, and the test cases and report.
+\tradesq{} is a mobile application that supports trade trading within local neighbourhoods.
+In this document, trade trading refers to the exchange of skills, knowledge, and practical help between users.
+The application aims to facilitate meaningful social interaction and a sense of purpose by helping people connect with others in their local community.
+
+The primary target group includes retired older adults.
+This target group influences the technical design because the application must remain understandable, predictable, and accessible for users with different levels of digital experience.
+The application therefore prioritises clear navigation, readable content, understandable feedback, sufficiently large interactive controls, system text scaling, and compatibility with mobile accessibility services.
+
+Users authenticate before accessing application functionality.
+Authenticated users can manage their profile, create and manage trade listings, upload images, save favourites, express interest in listings, receive notifications, and access other account-specific functionality.
+The application communicates with the \tradesq{} Back-end API to retrieve and update shared application data.
+
+This document specifies the technical design of the \tradesq{} Mobile Application.
+It describes local storage, session handling, communication with the \tradesq{} Back-end API, accessibility, offline behaviour, and implementation decisions.
+The document provides a shared technical reference for developers, assessors, and other project stakeholders.
+
+This technical specification covers the \tradesq{} Mobile Application implemented with Expo, React Native, and TypeScript.
+It describes local storage, session handling, communication with the \tradesq{} Back-end API, accessibility, offline behaviour, error handling, build and release configuration, and testing.
+The \tradesq{} Back-end API is an external dependency of the mobile application.
+
+The internal implementation of the Back-end API, including server-side business logic, databases, object storage, monitoring, logging, deployment infrastructure, and server-side testing, is outside the scope of this document.
+These concerns are documented separately in the Back-end technical specification.

@@ -1,72 +1,78 @@
-\section{Requirements}\label{sec:hd-requirements}
-The requirements below are adapted from the backend's functional/non-functional requirements (\cref{sec:technical-requirements} of the Technical Specification), rephrased from the mobile app's perspective. IDs and priorities are kept consistent with the backend document for traceability.
+\section{Requirements}
+\label{sec:requirements}
 
-\subsection{Functional Requirements}\label{sec:hd-functional-requirements}
+The \tradesq{} Mobile Application must satisfy the functional and non-functional requirements in this section.
+The requirements are derived from the Design Essentials user requirements, the Back-end technical specification, and the requirements of Hybrid Development Rubrics.
+
+\subsection{Functional Requirements}
+\label{sec:functional-requirements}
 
 \begin{htable}[
     caption = {Front-end Functional Requirements},
-    label = {tab:hd-functional-requirements},
+    label = {tab:functional-requirements},
 ]
     {
         colspec={lXl},
     }
-        Id & Requirement & MoSCoW \\
-        FR1 & Allow a user to register and log in & Must \\
-        FR2 & Allow a user to create and manage their profile & Must \\
-        FR3 & Allow a user to create skill listings for offers and requests & Must \\
-        FR4 & Allow a user to edit and delete their listings & Must \\
-        FR5 & Show listings based on the user's location & Could \\
-        FR6 & Allow a user to express interest in a listing & Must \\
-        FR7 & Allow a user to search listings by skill & Should \\
-        FR8 & Allow a user to save and view favorite listings & Could \\
-        FR9 & Provide real-time or near-real-time messaging between users & Could \\
-        FR10 & Allow a user to filter listings by criteria & Must \\
-        FR11 & Allow a user to upload images for their profile and listings & Must \\
-        FR12 & Show notifications for messages and listing interest & Should \\
+        ID & Requirement & Priority \\
+        FR1 & Allow a user to register and sign in through the mobile application. & Must \\
+        FR2 & Allow an authenticated user to create, view, and manage their profile. & Must \\
+        FR3 & Allow an authenticated user to create trade listings for offers and requests. & Must \\
+        FR4 & Allow an authenticated user to edit and delete their own trade listings. & Must \\
+        FR5 & Display trade listings based on the user's location or selected local area. & Could \\
+        FR6 & Allow an authenticated user to express interest in a trade listing. & Must \\
+        FR7 & Allow a user to search trade listings by trade or search term. & Should \\
+        FR8 & Allow an authenticated user to save and view favourite trade listings. & Could \\
+        FR9 & Provide real-time or near-real-time messaging between authenticated users. & Could \\
+        FR10 & Allow a user to filter trade listings by supported criteria. & Must \\
+        FR11 & Allow an authenticated user to select and upload images for their profile and trade listings. & Must \\
+        FR12 & Display notifications for messages and listing-interest events. & Should \\
+        FR13 & Restore a valid authenticated session when the application starts. & Must \\
+        FR14 & Direct an unauthenticated user to the sign-in flow before protected application functionality is accessed. & Must \\
+        FR15 & Display loading, empty, successful, error, and retry states for asynchronous user actions. & Must \\
+        FR16 & Preserve incomplete listing input as a local draft when the user leaves a listing form or connectivity is unavailable. & Should \\
+        FR17 & Display previously retrieved non-sensitive listing data when the device is offline. & Should \\
+        FR18 & Inform the user when an action requires an internet connection and allow the action to be retried after connectivity is restored. & Must \\
 \end{htable}
 
-\subsection{Non-functional Requirements}\label{sec:hd-non-functional-requirements}
+\subsection{Non-Functional Requirements}
+\label{sec:non-functional-requirements}
 
 \begin{htable}[
-    caption = {Front-end Non-functional Requirements},
-    label = {tab:hd-non-functional-requirements},
+    caption = {Front-end Non-Functional Requirements},
+    label = {tab:non-functional-requirements},
 ]
     {
         colspec={lXl},
     }
-        Id & Requirement & MoSCoW \\
-        NFR1 & Communicates with the backend over a REST API using HTTPS & Must \\
-        % TODO: front-end-specific NFRs (accessibility for elderly users,
-        % offline behaviour, platform support, performance) are not covered
-        % in the backend docs.
+        ID & Requirement & Priority \\
+        NFR1 & The application must communicate with the \tradesq{} Back-end API through HTTPS for all standard API communication. & Must \\
+        NFR2 & Authentication tokens and other sensitive session values must be stored through encrypted platform-backed secure storage. & Must \\
+        NFR3 & Location-related information displayed or entered by the user must be handled with appropriate privacy measures. & Must \\
+        NFR4 & API communication must use maintained and documented API contracts. & Should \\
+        NFR5 & The application must recover gracefully from temporary Back-end unavailability by retaining suitable cached data and local drafts and by providing understandable retry feedback. & Must \\
+        NFR6 & The application must provide understandable user-facing feedback for critical failures without exposing sensitive information or raw technical errors. & Must \\
+        NFR7 & Local persistence operations for cached data and form drafts must maintain data consistency. & Must \\
+        NFR8 & The application must support the display of user notifications when notification functionality is available. & Must \\
+        NFR9 & The application must be implemented with Expo, React Native, and TypeScript. & Must \\
+        NFR10 & The application must support Android and iOS through a shared React Native codebase. & Must \\
+        NFR11 & The application must support system text scaling without clipping essential content or preventing access to application functionality. & Must \\
+        NFR12 & Interactive controls must provide visible labels or meaningful programmatic accessibility labels, roles, and states. & Must \\
+        NFR13 & The application must not use colour as the only means of communicating errors, status, selection, or required input. & Must \\
+        NFR14 & Interactive controls must provide sufficiently large touch targets and spacing for users with reduced motor precision. & Must \\
+        NFR15 & The application must provide understandable loading, empty, error, success, offline, and retry states. & Must \\
+        NFR16 & The application must use local persistence only for non-sensitive cached data, user preferences, and form drafts. & Must \\
+        NFR17 & The application must distinguish cached data from current data retrieved from the \tradesq{} Back-end API. & Must \\
+        NFR18 & The application must clear protected session information after sign-out or after the \tradesq{} Back-end API rejects an authenticated session. & Must \\
+        NFR19 & The application must be checked with static code analysis before release, and identified warnings and errors must be resolved or documented. & Must \\
+        NFR20 & The application must include automated tests for critical application behaviour. & Must \\
 \end{htable}
 
-\subsection{Business Requirements}\label{sec:hd-business-requirements}
+\subsection{Prioritisation}
+\label{sec:prioritisation}
 
-\begin{htable}[
-    caption = {Front-end Business Requirements},
-    label = {tab:hd-business-requirements},
-]
-    {
-        colspec={lXl},
-    }
-        Id & Requirement & MoSCoW \\
-        B1 & The mobile application is built with React Native & Must \\
-        % TODO: other business requirements (code standards, platform
-        % support, documentation, linting) are not stated for the front-end
-        % anywhere in the backend docs.
-\end{htable}
-
-\subsection{User Requirements}\label{sec:hd-user-requirements}
-The backend's Functional Requirements table references user requirements U1--U14, but their text is not defined anywhere in the backend documents (they come from the separate Design Essentials deliverable, which is not part of this repository).
-
-\begin{htable}[
-    caption = {Front-end User Requirements},
-    label = {tab:hd-user-requirements},
-]
-    {
-        colspec={lXl},
-    }
-        Id & Requirement & MoSCoW \\
-        % U1--U14 & TODO -- see Design Essentials & \\
-\end{htable}
+Requirements are prioritised using the MoSCoW method.
+Must requirements are required for an acceptable final application release.
+Should requirements are important and are implemented unless a documented technical limitation prevents their inclusion.
+Could requirements are valuable enhancements that may be omitted without preventing the core application from operating.
+Won't requirements are intentionally excluded from the current project scope.

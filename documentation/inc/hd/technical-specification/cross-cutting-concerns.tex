@@ -1,0 +1,71 @@
+\section{Cross-cutting Concerns}
+\label{sec:cross-cutting-concerns}
+Cross-cutting concerns are technical concerns that affect multiple components and layers of the \tradesq{} Mobile Application.
+They cannot be assigned to one specific screen, use case, repository, or infrastructure adapter.
+Instead, they influence how the application behaves consistently across the architecture.
+
+\subsection{Offline Usage, Caching, and Drafts}
+\label{sec:offline}
+
+The \tradesq{} Mobile Application supports limited offline use through cached non-sensitive data and locally stored listing drafts.
+The application remains dependent on the \tradesq{} Back-end API for current shared data and all operations that change server-side data.
+Offline support is therefore designed to provide clear feedback and retain useful information during temporary connectivity loss rather than to provide full offline functionality.
+
+The application detects connectivity changes through the network-status hook.
+The offline banner displays a visible indication when the device has no network connection.
+This ensures that users understand why current data cannot be refreshed or why an action that requires the Back-end API is unavailable.
+
+TanStack React Query caches retrieved server data in memory during application use.
+The query persister retains suitable non-sensitive query data between application launches.
+Cached listing data and listing details are additionally supported by the local persistence layer, which uses Expo SQLite and Drizzle ORM.
+The application can display previously retrieved listing information when the device is offline, but cached content is not treated as authoritative because it may differ from the current data stored by the \tradesq{} Back-end API.
+
+The application stores incomplete listing forms through the listing-draft store.
+The listing-draft hook provides draft data to the create-listing and edit-listing screens.
+Drafts prevent accidental navigation, application restarts, or temporary connectivity loss from unnecessarily discarding user-entered listing information.
+A local draft does not indicate that a listing has been created, updated, or otherwise confirmed by the \tradesq{} Back-end API.
+
+The application does not queue or automatically synchronise data-changing operations while offline.
+Actions that change shared data, including creating, editing, deleting, favouriting, expressing interest in, uploading attachments to, or sending messages about listings, require a network connection.
+When an action is unavailable because the device is offline, the application informs the user that an internet connection is required.
+After connectivity is restored, the user can manually retry the action and refresh the relevant data.
+
+\subsection{Accessibility}
+\label{sec:accessibility}
+
+Accessibility is a cross-cutting concern because it affects navigation, shared components, forms, feedback states, and feature-specific interface elements throughout the \tradesq{} Mobile Application.
+The primary target group includes retired older adults, so the application is designed to support users with different levels of digital experience, reduced visual acuity, reduced motor precision, and users who rely on mobile accessibility services.
+
+The application uses visible labels and programmatic accessibility information for interactive controls.
+The \texttt{accessibilityLabel} and \texttt{accessibilityRole} properties are used across shared and feature-specific components.
+These properties provide meaningful names and roles for controls used by screen-reader software.
+The application uses \texttt{accessibilityState} for the active bottom-navigation tab to communicate the currently selected application area.
+
+Icon-only controls provide accessible labels.
+This includes bottom-navigation icons, the notification bell, favourite actions in listing cards and listing details, edit and delete actions, image-gallery controls, image addition and removal controls, and fullscreen-image close controls.
+This ensures that the function of an icon is available without relying on its visual appearance alone.
+
+The form-field component displays a visible label above an input when a label is provided.
+It displays an error message below the input when validation fails.
+The application therefore communicates validation feedback through text rather than colour alone.
+The listing-deletion dialog requires explicit user confirmation through separate cancel and delete actions, which reduces the risk of accidental destructive actions.
+
+The application supports English and Dutch through \texttt{react-i18next}.
+The internationalisation module centralises translated interface text and active-language state.
+This approach allows labels, validation messages, buttons, navigation controls, and other user-facing content to remain consistent across supported languages.
+
+The application is designed to respect system text scaling.
+Fixed-height text containers are reviewed and adjusted where they can clip or truncate enlarged text.
+This includes the listing-title wrapper in listing cards, the description text area in create-listing and edit-listing forms, and search-input wrappers in the home, listings, and chats screens.
+Essential information must remain readable and usable when a user increases the system font size.
+
+The visual theme is reviewed for sufficient colour contrast before release.
+Colour is not used as the only indicator of validation errors, active state, selected state, or offline status.
+Written labels, icons, accessible state information, and error messages supplement visual colour differences.
+
+The offline banner is exposed as an accessible status message.
+It uses an appropriate accessibility role, label, and live-region behaviour so that screen-reader users are informed when connectivity changes.
+Important loading, success, error, and offline feedback is likewise exposed through meaningful text and accessible status information where supported by the platform.
+
+Accessibility is verified through manual checks using increased system text size, screen-reader software, keyboard or external-input navigation where available, and colour-contrast evaluation.
+The corresponding tests and results are documented in the test report.

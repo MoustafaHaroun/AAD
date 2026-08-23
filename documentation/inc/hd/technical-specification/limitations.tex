@@ -1,0 +1,10 @@
+\section{Limitations and Future Work}
+\label{sec:limitations}
+
+The current offline design supports cached read-only data and local listing drafts.
+The application does not queue or automatically synchronise data-changing operations while offline.
+Users must restore connectivity and manually retry actions such as creating, editing, deleting, favouriting, expressing interest in, or uploading attachments to listings.
+
+Notification data is retrieved through authenticated HTTPS requests to the \tradesq{} Back-end API.
+The application does not use WebSocket communication for real-time messaging or live notification delivery.
+Real-time updates, device push notifications, and automatic offline mutation synchronisation may be considered in a future version if the Back-end API and project scope support them.

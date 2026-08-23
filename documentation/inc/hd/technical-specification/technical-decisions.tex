@@ -1,0 +1,34 @@
+\section{Technical Decisions and Dependencies}
+\label{sec:technical-decisions}
+
+The \tradesq{} Mobile Application uses Expo, React Native, and TypeScript.
+This combination provides a shared codebase for Android and iOS while retaining access to device capabilities through Expo and React Native platform APIs.
+Flutter and Ionic were considered as alternative cross-platform approaches.
+React Native was selected because the project team has experience with TypeScript and React-based development, and because the Expo ecosystem provides suitable integrations for routing, local storage, secure storage, image selection, localisation, and native application builds.
+
+The application follows a layered Clean Architecture variant with presentation, application, domain, and infrastructure layers.
+This approach was selected to separate screens and reusable user-interface components from application use cases, domain contracts, and technical integrations.
+A simpler feature-only structure with direct API calls from screens was considered but rejected because it would couple interface code to the Back-end API, local persistence, and device services.
+The layered structure supports isolated testing, replacement of repository implementations, and clear dependency direction.
+
+\begin{htable}[
+    caption = {Key third-party libraries and technical decisions},
+    label = {tab:libraries},
+]
+    {
+        colspec = {p{0.22\textwidth} p{0.24\textwidth} X},
+    }
+        \textbf{Technology} & \textbf{Purpose} & \textbf{Selection rationale and alternatives} \\
+        Expo Router & File-based routing with Stack and tab navigation. & Expo Router was selected because it integrates with Expo and keeps route definitions close to route files. Manually configured React Navigation was considered but would require more navigation configuration. \\
+        TanStack React Query & Server-state retrieval, mutations, cache management, and query persistence. & React Query was selected because it provides a consistent query and mutation model with cache invalidation and persisted query support. Manual \texttt{useEffect} requests, Context-only state, Zustand, and Redux Toolkit Query were considered. \\
+        React Hook Form and Zod & Form state management and schema-based validation. & This combination reduces form boilerplate and provides typed validation schemas. Formik, Yup, and manual component state were considered as alternatives. \\
+        Expo SecureStore & Encrypted storage of session tokens. & SecureStore was selected because it uses platform-backed protected storage. AsyncStorage and SQLite were rejected for tokens because they are intended for non-sensitive application data. \\
+        Expo SQLite and Drizzle ORM & Local persistence of cached data and listing drafts. & SQLite provides structured persistent storage, while Drizzle provides typed schema and query definitions. AsyncStorage alone was considered but is less suitable for structured listing and draft data. \\
+        React Native NetInfo & Network-connectivity status. & NetInfo provides explicit connectivity information for the offline banner and the prevention of unavailable actions. Relying only on failed API requests was considered but provides less immediate feedback. \\
+        Expo Image Picker and React Native Share & Image selection and native sharing. & These libraries provide cross-platform access to device media selection and sharing capabilities. Custom native implementations were not selected because they would increase platform-specific maintenance. \\
+        react-i18next & English and Dutch localisation. & The library centralises translations and language state. Manually maintained translation objects were considered but would make localisation logic harder to maintain. \\
+        NativeWind & Utility-based styling for React Native components. & NativeWind was selected because it provides Tailwind-style utility classes and keeps component styling close to the relevant interface code. React Native \texttt{StyleSheet} objects and styled-components were considered as alternatives. \\
+        react-native-reusables & Reusable accessible interface primitives. & The library provides composable low-level controls that can be styled with NativeWind. NativewindUI was considered as a prebuilt NativeWind-compatible alternative but was not selected because it is a paid dependency. The selected open-source libraries provide the required flexibility. \\
+        Lucide React Native & Icon library for application controls and navigation. & Lucide was selected because it provides a consistent and broad icon set for React Native. Expo Vector Icons and custom SVG assets were considered as alternatives. \\
+\end{htable}
+

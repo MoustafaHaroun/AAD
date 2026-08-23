@@ -1,28 +1,40 @@
-\section{System Context (C1)}
-The \tradesq{} Mobile Application is the user-facing part of \tradesq, a \emph{trade} trading application intended to help people exchange jobs and establish social connections within their local neighbourhood.
-The primary target group includes retired older adults.
-Users can create trade offers and requests, discover listings, manage their profile, save favourites, express interest in listings, and communicate with other users.
+\section{Architecture}
+\label{sec:architecture}
 
-At the C1 level, the mobile application is treated as one software system.
-Its internal structure, including screens, navigation, state management, local storage, and communication clients, is intentionally not shown here.
-These details are described in the later C2, and C3 sections.
-A C4 code-level section is omitted, as the code is subject to change and would therefore provide only a momentary representation of the implementation, while the C3 diagram sufficiently describes the application's architecture.
+This section describes the architecture of the \tradesq{} Mobile Application using the C4 model.
+The C4 model describes the system at increasing levels of technical detail through System Context, Container, and Component views.
+The C1 view describes the application within its external environment.
+The C2 view describes the major runtime and local storage containers of the mobile application.
+The C3 view describes the internal components of the Expo React Native Application container.
+
+A C4 code-level section is omitted because code-level diagrams become outdated more quickly than the higher-level architecture.
+The C3 component diagram provides sufficient detail to explain the application's main implementation structure.
+
+\subsection{System Context (C1)}
+\label{sec:c1}
+
+The \tradesq{} Mobile Application is the user-facing part of \tradesq{}, a trade trading application intended to help people exchange jobs and establish social connections within their local neighbourhood.
+The primary target group includes retired older adults.
+Users sign in before accessing application functionality.
+Authenticated users can create trade offers and requests, discover listings, manage their profile, save favourites, express interest in listings, upload images, and view notifications.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=\textwidth]{hd/diagrams/c1}
-    \caption{C1 System Context diagram}
+    \caption{C1 System Context diagram of the \tradesq{} Mobile Application.}
     \label{fig:c1}
 \end{figure}
 
 As shown in \cref{fig:c1}, the \tradesq{} User interacts directly with the \tradesq{} Mobile Application.
-The application is responsible for presenting information, collecting user input, guiding users through the available features, and providing understandable feedback for loading, success, empty, error, and offline states.
+The application provides the user interface through which authenticated users access trade listings, profiles, favourites, conversations, and notifications.
 
 The \tradesq{} Back-end API is an external dependency of the mobile application.
 The application communicates with the API through HTTPS to retrieve and update shared application data, including authentication, profiles, listings, favourites, notifications, and other user-facing information.
-If real-time messaging had been implemented, the application would additionally have used a WebSocket connection to receive and send messaging events.
-The app does not directly access server-side persistence or storage systems.
-Those systems are implementation details of the back-end and are outside the scope of this document.
+Notifications are retrieved through authenticated HTTPS requests and displayed in the application notification interface.
+The application does not use WebSocket communication because real-time messaging is outside the current application scope.
+
+The application does not directly access server-side persistence or storage systems.
+Those systems are implementation details of the Back-end and are outside the scope of this document.
 
 The application also uses services offered by the mobile operating system.
 These platform services provide secure storage for session credentials, network-connectivity information, media selection for profile and listing images, notification capabilities, and accessibility functionality such as screen readers and system text scaling.

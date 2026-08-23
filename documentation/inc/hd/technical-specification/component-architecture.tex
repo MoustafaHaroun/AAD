@@ -1,149 +1,161 @@
-\section{Component Architecture (C3)}
+\subsection{Component Architecture (C3)}
 \label{sec:c3}
 
 The C3 component diagram decomposes the Expo React Native Application container introduced in \cref{fig:c2}.
-It shows the main front-end components and the relationships between routing, presentation, application logic, domain contracts, and infrastructure adapters.
+It shows the main internal components of the application and the relationships between routing, presentation, application logic, domain contracts, and infrastructure adapters.
 The application follows a layered Clean Architecture variant to separate user-interface concerns, application behaviour, domain definitions, and technical integrations.
 
 \begin{figure}[H]
+    \centering
     \includegraphics[width=\textwidth]{hd/diagrams/c3}
     \caption{C3 Component diagram of the \tradesq{} Expo React Native Application.}
     \label{fig:c3}
 \end{figure}
 
-As shown in \cref{fig:c3} (also provided as a separate PNG file), the \textcolor[HTML]{806000}{presentation layer} contains Expo Router routes, screens, reusable user-interface components, and React Query hooks.
+As shown in \cref{fig:c3}, the \textcolor[HTML]{806000}{presentation layer} contains Expo Router routes, screens, reusable user-interface components, React Query hooks, and presentation utilities.
 The \textcolor[HTML]{A63D00}{application layer} contains use cases that coordinate individual user actions.
 The \textcolor[HTML]{6A4C93}{domain layer} contains entities and interfaces that define the application model independently of a specific API, storage mechanism, or device service.
-The \textcolor[HTML]{176B3A}{infrastructure layer} implements these interfaces using the \tradesq{} Back-end API, device storage, and Expo platform capabilities.
+The \textcolor[HTML]{176B3A}{infrastructure layer} implements these interfaces using the \tradesq{} Back-end API, local persistence, and Expo platform capabilities.
 
-\subsection{Expo Router and Application Shell}
+\subsubsection{Expo Router and Application}
+\label{sec:c3-router}
+
 Expo Router provides file-based routing for the application.
-The root layout configures a Stack navigator that manages transitions between routes.
-The application includes routes for registration, sign-in, listing overview, listing details, listing creation, listing editing, account management, favourites, notifications, and account-specific settings.
+The root layout provides the application and configures the root navigation structure.
+The application uses a Stack navigator for route transitions and a nested tab navigator for the main authenticated application areas.
 
-The application supports guest access to public listing functionality.
-A user can view the listing overview and individual listing details without signing in.
-When a guest attempts to access an account-specific page or action, the application displays a sign-in prompt.
-The prompt allows the user to navigate to the sign-in screen or registration screen before continuing with the requested action.
+The tab navigator provides access to the home, listings, chats, and account areas.
+Nested routes provide access to listing details, listing creation, listing editing, individual chat conversations, notifications, preferences, privacy information, and account settings.
+The root route provides the application entry point, while separate routes provide registration, sign-in, and not-found screens.
 
-The application shell restores a previously stored session token when the application starts.
-A valid stored session enables account-related functionality without requiring the user to sign in after every application restart.
-When the Back-end API rejects a stored session, the application removes the invalid token, clears protected local state, and returns the user to the sign-in flow.
+The application determines whether an authenticated session is available before loading the authenticated route structure.
+It uses the session token store to restore a previously persisted session token when the application starts.
+The application directs users without a valid session to the registration or sign-in routes.
 
-\subsection{Presentation Screens and Shared Components}
+\subsubsection{Presentation Screens and Shared Components}
+\label{sec:c3-presentation}
+
 Presentation screens render the user-facing routes of the application.
-The application provides login, registration, listing overview, listing detail, create-listing, edit-listing, account, favourites, and notification screens.
+The application provides landing, login, registration, home, listing overview, listing detail, create-listing, edit-listing, chats, chat, account, account-settings, preferences, notifications, and coming-soon screens.
 Route entry files in the \texttt{app} directory connect Expo Router routes to presentation screens.
 
-Shared presentation components provide consistent layout, interaction, and form behaviour across screens.
-The layout container provides a common screen structure with safe-area support and consistent spacing.
-The form-field primitive combines visible labels, input controls, validation messages, and accessibility state.
-Reusable listing cards, buttons, dialogs, loading indicators, empty states, and error states provide consistent feedback throughout the application.
+Shared presentation components provide common layout, navigation, interaction, and form behaviour across screens.
+Container components provide the application header, bottom navigation, page layout, and offline banner.
+Domain components provide feature-specific interface elements, including listing cards, listing-detail sections, category selectors, listing-form fields, deletion dialogs, registration steps, notification controls, quick actions, and chat message bubbles.
 
-The presentation layer uses React Hook Form and Zod-based validation to validate user input before submission.
-Form controls retain user-entered values when validation or network errors occur.
+Primitive components provide reusable low-level controls such as buttons, input fields, text areas, labels, dialogs, popovers, segmented controls, avatars, and image viewers.
+The presentation layer also contains shared style definitions, theme configuration, screen options, and utility functions for class-name composition, distance calculation, timestamp formatting, and icon handling.
+
+The presented text is provided by an internationalisation module and language store.
+These components provide the active-language configuration and translated interface text used by screens and shared components.
+
+Presentation components use React Hook Form and Zod-based schemas to collect and validate form data before invoking an application action.
 Presentation components do not communicate directly with the \tradesq{} Back-end API.
-They use query, mutation, and service hooks that expose application actions and their loading, success, and error states.
+They use query, mutation, and service hooks that expose application data and actions to the user interface.
 
-\subsection{Query and Mutation Hooks}
+\subsubsection{Query, Mutation, and Service Hooks}
+\label{sec:c3-hooks}
 
-Query and mutation hooks provide the boundary between presentation components and application use cases.
-They are implemented with TanStack React Query and are grouped by queries, mutations, and device-service integrations.
-Query hooks retrieve data such as the current user, listings, listing details, favourites, notifications, and account information.
-Mutation hooks execute actions such as signing in, registering, updating profile data, creating listings, editing listings, deleting listings, managing favourites, and managing listing attachments.
+Presentation hooks provide the boundary between screens or components and application use cases.
+They are implemented with TanStack React Query and are grouped into queries, mutations, device-service hooks, and supporting state hooks.
+Query hooks retrieve users, listings, listing details, favourites, messages, conversations, notifications, and current-user data.
+Mutation hooks execute actions such as registration, sign-in, profile updates, listing creation, listing editing, listing deletion, favourite management, message creation, notification updates, avatar uploads, and listing attachment management.
 
-React Query manages asynchronous request state, including loading, successful, and failed states.
-It caches retrieved server data and invalidates affected queries after a successful mutation.
-For example, creating or editing a listing invalidates the relevant listing overview, listing detail, and user-listing queries.
-This ensures that the interface displays current information after an action has completed.
+Service hooks expose device-related functionality to presentation components.
+The image-service hook provides image-selection functionality.
+The sharing-service hook provides access to platform sharing functionality.
+The network-status hook exposes connectivity information, while the listing-draft hook manages access to locally retained listing drafts.
+The user-location synchronisation hook coordinates the application-side update of user location information.
 
+The hooks invoke application use cases and expose their results to presentation components.
+They manage query and mutation state, including cached query data and invalidation of affected queries after relevant mutations.
 Hooks resolve use cases through the custom dependency-injection registry.
 Screens therefore do not construct repositories, API clients, storage adapters, or device services directly.
-This separation makes screens smaller and allows infrastructure implementations to be replaced without changing presentation components.
 
-\subsection{Application Use Cases}
+\subsubsection{Application Use Cases}
+\label{sec:c3-use-cases}
 
-Application use cases coordinate individual actions that the application can perform.
-Each use case represents a focused operation, such as signing in, retrieving listings, retrieving an individual listing, creating a listing, editing a listing, deleting a listing, uploading an attachment, removing an attachment, or managing favourites.
+Application use cases coordinate focused operations that the application can perform.
+The use cases cover authentication, user management, listing retrieval and management, favourites, messages, notifications, listing attachments, and user-avatar uploads.
+Examples include retrieving listings, retrieving a listing by identifier, creating a listing, editing a listing, deleting a listing, creating a favourite, retrieving conversations, sending a message, retrieving notifications, and updating a notification.
 
-Use cases depend on domain repository interfaces instead of directly depending on HTTP clients, storage APIs, or Expo APIs.
+Use cases depend on domain repository and service interfaces instead of directly depending on HTTP clients, database APIs, or Expo APIs.
 This dependency direction separates application behaviour from technical implementation details.
-It allows a repository implementation to be replaced without changing the presentation screens or the use cases that depend on it.
+It allows an infrastructure implementation to be replaced without changing presentation screens or the use cases that depend on it.
 
-The use-case layer coordinates actions and returns results to the presentation hooks.
-It does not render user-interface elements or decide how a loading or error state is displayed.
+The use-case layer coordinates actions and returns results to presentation hooks.
+It does not render user-interface elements or decide how loading, error, or empty states are displayed.
 Those responsibilities remain in the presentation layer.
 
-\subsection{Domain Entities and Contracts}
+\subsubsection{Domain Entities and Contracts}
+\label{sec:c3-domain}
 
 The domain layer defines the core data structures and technical boundaries used by the application.
-Entities model users, listings, favourites, notifications, and attachments.
+Entities model authentication data, users, listings, listing categories, favourites, messages, notifications, and attachments.
 Repository interfaces define the operations that the application layer requires to retrieve or update these concepts.
 
 The domain layer also defines interfaces for device-related services.
 The image-service interface abstracts image selection from the device.
-The sharing-service interface abstracts sharing a listing through the operating system.
+The sharing-service interface abstracts sharing application content through the operating system.
 
-The domain contracts do not depend on React Native, Expo Router, React Query, or a specific API implementation.
+The domain contracts do not depend on React Native, Expo Router, React Query, Drizzle ORM, SQLite, or a specific API implementation.
 This separation reduces coupling between the user interface and technical dependencies.
-It also allows the application to use HTTP-backed repositories when online and locally persisted data when offline.
+It allows the application layer to remain independent from the implementations used for remote API access, local cache persistence, token storage, image selection, and sharing.
 
-\subsection{Infrastructure Adapters}
+\subsubsection{Infrastructure Adapters}
+\label{sec:c3-infrastructure}
 
 Infrastructure adapters provide concrete implementations of domain repository and service interfaces.
 HTTP repository adapters communicate with the \tradesq{} Back-end API through a shared API client.
 The API client centralises the API base URL, request configuration, authentication headers, response handling, and normalised error handling.
 
-The authentication repository performs sign-in and registration operations.
-The session token store persists access tokens using encrypted platform-backed secure storage.
-The token store supplies the stored token to the API client for authenticated requests.
-The application clears secure session data after sign-out or after receiving an unauthorised response from the API.
+The authentication repository implements registration and sign-in operations.
+The token store provides persistent session-token storage for the authentication flow.
+The query client and query persister configure TanStack React Query and its persisted query cache.
 
-The local persistence adapter uses Expo SQLite and Drizzle ORM to persist non-sensitive cached data and form drafts.
-It stores suitable listing data for offline viewing and retains incomplete form input until it is submitted or intentionally discarded.
-The adapter does not store access tokens or other sensitive credentials.
+The local persistence adapters implement access to cached non-sensitive listing data and listing drafts.
+They use Expo SQLite, Drizzle ORM, and the listing-draft store.
+The local persistence implementation is separate from secure session storage and does not store authentication tokens or other sensitive credentials.
 
-The listing and attachment repositories implement listing retrieval, listing changes, and attachment operations.
-The image service uses \texttt{expo-image-picker} to allow users to select images from their device.
-The sharing service uses \texttt{react-native-share} to share a supported listing through another installed application.
+The listing, attachment, favourite, message, notification, and user repositories implement their corresponding data operations.
+The image service uses \texttt{expo-image-picker} to select images from the device.
+The sharing service uses \texttt{react-native-share} to share supported content through another installed application.
 
 The infrastructure layer contains a custom dependency-injection registry.
 The registry acts as the composition root by registering concrete repository and service implementations.
 It resolves the dependencies required by application use cases and presentation hooks.
 This avoids constructing API clients, repositories, storage adapters, and device services separately in every screen.
 
-\subsection{Offline Behaviour}
+\subsection{Code Organisation}
+\label{sec:code-organisation}
 
-The application supports limited offline use by combining local persistence, cached data, and explicit synchronisation state.
-When the device is offline, the application displays cached non-sensitive listings and listing details that were previously retrieved successfully.
-Cached content indicates when it was last updated so that users understand that it may not contain the latest server-side changes.
+The project structure reflects the layered architecture described in \cref{sec:c3}.
+The \texttt{app} directory contains Expo Router route entry points, layouts, tab navigation, and route-specific screen bindings.
+The \texttt{presentation} directory contains screens, reusable components, hooks, styles, internationalisation support, and presentation utilities.
 
-The application stores incomplete listing forms as local drafts.
-A user can continue editing a draft while offline and submit it when connectivity becomes available.
-Create, edit, delete, favourite, and attachment changes are added to a persistent synchronisation queue when the device is offline.
+The \texttt{application} directory contains use cases that coordinate focused application operations.
+The \texttt{domain} directory contains entities and repository or service interfaces that remain independent of the user interface and infrastructure implementations.
+The \texttt{infrastructure} directory contains API communication, query-cache configuration, session-token storage, local persistence, concrete repositories, device services, and dependency injection.
 
-The synchronisation queue retries queued operations when the application regains connectivity.
-Each queued operation has a unique identifier to prevent duplicate submission after a retry.
-The application displays a pending state until the Back-end API confirms that an operation has completed.
-
-If synchronisation fails because of invalid data, expired authorisation, or a server-side conflict, the operation is marked as requiring user attention.
-The application preserves the original local data and provides an understandable explanation and retry option.
-The Back-end API remains the authoritative source for shared data after synchronisation.
-
-\subsection{Accessibility}
-
-Accessibility is implemented as a cross-cutting concern across the application shell, shared components, screens, and feedback mechanisms.
-The application supports system text scaling and avoids fixed text heights for essential information.
-Controls use sufficiently large touch targets and maintain visible spacing to support users with reduced motor precision.
-
-All form controls provide visible labels and programmatic accessibility labels.
-Validation errors are communicated through written error messages and accessible invalid states rather than colour alone.
-Icon-only controls, including favourite, share, navigation, and delete actions, provide meaningful accessibility labels and roles.
-
-The application communicates loading, success, error, and offline state changes to screen-reader users.
-Important dynamic feedback is exposed through accessible status announcements.
-Meaningful listing images provide text alternatives, while decorative images are hidden from screen readers.
-
-The application uses clear language, predictable Stack navigation, and confirmation dialogs for destructive actions.
-Users can cancel a destructive action without losing unrelated form input.
-These measures support the intended older-adult user group and reduce barriers for users who rely on assistive technologies.
+\begin{verbatim}
+src/
+├── app/                         Expo Router routes, root layout, and tab layouts
+├── presentation/
+│   ├── components/              Containers, domain components, and UI primitives
+│   ├── hooks/                  Query, mutation, service, and state hooks
+│   ├── screens/                Route-level screen components
+│   ├── i18n/                   Internationalisation and language state
+│   ├── styles/                 Global styles, themes, and screen options
+│   └── utils/                  Presentation formatting and helper utilities
+├── application/
+│   └── usecases/               Focused application operations
+├── domain/
+│   ├── entities/               Application entities and data structures
+│   ├── repositories/           Repository contracts
+│   └── services/               Device-service contracts
+└── infrastructure/
+    ├── api/                   API client and React Query configuration
+    ├── di/                    Dependency-injection registry
+    ├── persistence/           SQLite, Drizzle, drafts, and repositories
+    └── services/              Image and sharing implementations
+\end{verbatim}
