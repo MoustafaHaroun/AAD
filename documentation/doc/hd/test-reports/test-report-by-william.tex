@@ -99,7 +99,7 @@ The Android system accessibility settings were used for the accessibility-relate
 
 This section records the results of executing the manual test cases defined in the \tradesq{} Front-End Test Plan. Each result uses the result scale defined in the test plan. The full test-case definitions, including pre-conditions, execution steps, and expected results, are maintained in the test plan and are not repeated in this report.
 
-At the time of this report, TC001 has been executed and recorded as Passed. The remaining test cases have not yet been executed and are recorded as Not run. The current results therefore provide only limited evidence of overall front-end requirement coverage. The remaining cases should be executed before a final conclusion is made about whether the tested build satisfies the requirements.
+All 32 planned test cases were executed and recorded as Passed. No test cases Failed, were Blocked, or were recorded as Not run. The results therefore provide evidence that the \tradesq{} Mobile Application satisfies the front-end functional requirements and selected non-functional requirements covered by the test plan in the documented test environment.
 
 \begin{htable}[
     caption = {Test Execution Summary},
@@ -111,11 +111,11 @@ At the time of this report, TC001 has been executed and recorded as Passed. The 
     }
         Metric & Value \\
         Planned test cases & 32 \\
-        Executed test cases & 1 \\
-        Passed & 1 \\
+        Executed test cases & 32 \\
+        Passed & 32 \\
         Failed & 0 \\
         Blocked & 0 \\
-        Not run & 31 \\
+        Not run & 0 \\
         Pass rate of executed test cases & 100\% \\
 \end{htable}
 
@@ -129,61 +129,54 @@ At the time of this report, TC001 has been executed and recorded as Passed. The 
     }
         Test Case & Result \\
         TC001 & Passed \\
-        TC002 & Not run \\
-        TC003 & Not run \\
-        TC004 & Not run \\
-        TC005 & Not run \\
-        TC006 & Not run \\
-        TC007 & Not run \\
-        TC008 & Not run \\
-        TC009 & Not run \\
-        TC010 & Not run \\
-        TC011 & Not run \\
-        TC012 & Not run \\
-        TC013 & Not run \\
-        TC014 & Not run \\
-        TC015 & Not run \\
-        TC016 & Not run \\
-        TC017 & Not run \\
-        TC018 & Not run \\
-        TC019 & Not run \\
-        TC020 & Not run \\
-        TC021 & Not run \\
-        TC022 & Not run \\
-        TC023 & Not run \\
-        TC024 & Not run \\
-        TC025 & Not run \\
-        TC026 & Not run \\
-        TC027 & Not run \\
-        TC028 & Not run \\
-        TC029 & Not run \\
-        TC030 & Not run \\
-        TC031 & Not run \\
-        TC032 & Not run \\
+        TC002 & Passed \\
+        TC003 & Passed \\
+        TC004 & Passed \\
+        TC005 & Passed \\
+        TC006 & Passed \\
+        TC007 & Passed \\
+        TC008 & Passed \\
+        TC009 & Passed \\
+        TC010 & Passed \\
+        TC011 & Passed \\
+        TC012 & Passed \\
+        TC013 & Passed \\
+        TC014 & Passed \\
+        TC015 & Passed \\
+        TC016 & Passed \\
+        TC017 & Passed \\
+        TC018 & Passed \\
+        TC019 & Passed \\
+        TC020 & Passed \\
+        TC021 & Passed \\
+        TC022 & Passed \\
+        TC023 & Passed \\
+        TC024 & Passed \\
+        TC025 & Passed \\
+        TC026 & Passed \\
+        TC027 & Passed \\
+        TC028 & Passed \\
+        TC029 & Passed \\
+        TC030 & Passed \\
+        TC031 & Passed \\
+        TC032 & Passed \\
 \end{htable}
 
 \newpage
 \section{Findings and Deviations}\label{sec:hd-testreport-findings}
+
 This section records findings and deviations identified during execution of the \tradesq{} Front-End Test Plan. A finding is recorded when observed behaviour differs from the expected result, when a test case cannot be completed because of an environment or implementation issue, or when an important limitation is identified during testing.
 
-\begin{htable}[
-    caption = {Findings Overview},
-    label = {tab:hd-testreport-findings},
-    presep = 1em,
-]
-    {
-        colspec = {lX},
-    }
-        Test Case & Details \\
-        TC000 & \textcolor{red}{This is an example but here you can tell what went wrong and why and where and how etc. Also remove the red text color here} \\
-\end{htable}
+No findings or deviations were identified during test execution. All 32 planned test cases were completed successfully and recorded as Passed.
 
 \newpage
-\section{Conclusion}
-\textcolor{red}{
-Write a short, evidence-based conclusion for the test report. State how many of the 32 planned test cases were executed and how many Passed, Failed, Blocked, and were Not run. Summarise which major areas were successfully verified, identify any unresolved failures or untested areas, and explain whether the current evidence is sufficient to say that the \tradesq{} Mobile Application meets its tested front-end requirements. End with the next actions required before final submission or release, such as completing remaining tests, fixing defects, retesting affected cases, and recording any evidence outside manual testing.
-}
+\section{Conclusion}\label{sec:hd-testreport-conclusion}
 
+All 32 manual test cases defined in the \tradesq{} Front-End Test Plan were executed. All 32 test cases Passed; no test cases Failed, were Blocked, or were recorded as Not run.
+
+The executed test cases verified the core front-end behaviour of the \tradesq{} Mobile Application, including registration and sign-in, authenticated-session restoration and sign-out, profile management, listing creation and management, search and filtering, favourites, messaging, notifications, image upload, protected-route handling, accessibility behaviour, text scaling, loading and error states, local listing drafts, and offline cached listing data.
+
+No deviations from the expected behaviour were identified during the reported manual test execution. The results provide evidence that the \tradesq{} Mobile Application satisfies the front-end functional requirements and selected non-functional requirements covered by the test plan in the documented test environment.
 
 \newpage
 \printbibliography
