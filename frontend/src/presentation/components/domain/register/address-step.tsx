@@ -26,12 +26,12 @@ export function AddressStep({ control }: AddressStepProps): React.JSX.Element {
                 label={t("register.address.countryLabel")}
                 name="country"
             >
-                {({ value, onChange }) => (<Input
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        placeholder={t("register.address.countryPlaceholder")}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <Input
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    placeholder={t("register.address.countryPlaceholder")}
+                    value={value}
+                />}
             </FormField>
 
             <FormField
@@ -39,12 +39,12 @@ export function AddressStep({ control }: AddressStepProps): React.JSX.Element {
                 label={t("register.address.regionLabel")}
                 name="region"
             >
-                {({ value, onChange }) => (<Input
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        placeholder={t("register.address.regionPlaceholder")}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <Input
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    placeholder={t("register.address.regionPlaceholder")}
+                    value={value}
+                />}
             </FormField>
 
             <View className="flex-row gap-3">
@@ -54,12 +54,12 @@ export function AddressStep({ control }: AddressStepProps): React.JSX.Element {
                         label={t("register.address.cityLabel")}
                         name="city"
                     >
-                        {({ value, onChange }) => (<Input
-                                className={REGISTER_INPUT_CLASS}
-                                onChangeText={onChange}
-                                placeholder={t("register.address.cityPlaceholder")}
-                                value={value}
-                            />)}
+                        {({ value, onChange }) => <Input
+                            className={REGISTER_INPUT_CLASS}
+                            onChangeText={onChange}
+                            placeholder={t("register.address.cityPlaceholder")}
+                            value={value}
+                        />}
                     </FormField>
                 </View>
 
@@ -69,12 +69,12 @@ export function AddressStep({ control }: AddressStepProps): React.JSX.Element {
                         label={t("register.address.postalCodeLabel")}
                         name="postalCode"
                     >
-                        {({ value, onChange }) => (<Input
-                                className={REGISTER_INPUT_CLASS}
-                                onChangeText={onChange}
-                                placeholder={t("register.address.postalCodePlaceholder")}
-                                value={value}
-                            />)}
+                        {({ value, onChange }) => <Input
+                            className={REGISTER_INPUT_CLASS}
+                            onChangeText={onChange}
+                            placeholder={t("register.address.postalCodePlaceholder")}
+                            value={value}
+                        />}
                     </FormField>
                 </View>
             </View>
@@ -84,12 +84,12 @@ export function AddressStep({ control }: AddressStepProps): React.JSX.Element {
                 label={t("register.address.streetLabel")}
                 name="street"
             >
-                {({ value, onChange }) => (<Input
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        placeholder={t("register.address.streetPlaceholder")}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <Input
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    placeholder={t("register.address.streetPlaceholder")}
+                    value={value}
+                />}
             </FormField>
         </>
     );

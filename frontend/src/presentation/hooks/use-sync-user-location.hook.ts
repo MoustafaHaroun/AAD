@@ -15,12 +15,16 @@ export function useSyncUserLocation(): void {
     const { mutate: updateUser } = useUpdateUser();
 
     useEffect(() => {
-        if (currentUserId == null || user == null) { return; }
+        if (currentUserId == null || user == null) {
+            return;
+        }
 
         void (async () => {
             const { status } = await Location.requestForegroundPermissionsAsync();
 
-            if (status !== Location.PermissionStatus.GRANTED) { return; }
+            if (status !== Location.PermissionStatus.GRANTED) {
+                return;
+            }
 
             const position = await Location.getCurrentPositionAsync({});
 

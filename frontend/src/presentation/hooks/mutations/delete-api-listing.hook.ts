@@ -10,7 +10,7 @@ const deleteApiListing = new DeleteApiListing();
 export function useDeleteApiListing(): UseMutationResult<void, Error, DeleteApiListingParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, DeleteApiListingParams>({
+    return useMutation({
         mutationFn: async params => deleteApiListing.execute(params),
         onSuccess: (_, variables) => {
             void queryClient.invalidateQueries({ queryKey: ["api-listings.get"] });

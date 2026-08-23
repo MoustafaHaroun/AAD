@@ -1,10 +1,11 @@
+/* eslint-disable react/no-multi-comp -- RegisterStepContent is a private helper used only by RegisterScreen below */
 import React, { useMemo, useState } from "react";
 import { Image, View, ScrollView, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, type Control } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
@@ -18,8 +19,90 @@ import {
     REGISTER_STEPS,
     REGISTER_STEP_FIELDS,
     type RegisterFormValues,
+    type RegisterStep,
 } from "@/presentation/components/domain/register/schema";
 import { useCreateUser, useSignIn, useUploadUserAvatar, useImageService } from "@/presentation/hooks";
+
+interface RegisterStepContentProps {
+    readonly step: RegisterStep,
+    readonly control: Control<RegisterFormValues>,
+    readonly avatarUri: string | null,
+    readonly onPickAvatar: () => void,
+}
+
+/**
+ * Render the registration wizard's current step content.
+ * @param props - The props.
+ * @param props.step - The active wizard step.
+ * @param props.control - The react-hook-form control shared across all steps.
+ * @param props.avatarUri - The locally picked avatar image URI, for the "pfp" step.
+ * @param props.onPickAvatar - Called when the avatar circle is pressed, for the "pfp" step.
+ * @returns The rendered step content.
+ */
+function RegisterStepContent({ step, control, avatarUri, onPickAvatar }: RegisterStepContentProps): React.JSX.Element {
+    switch (step) {
+        case "credentials":
+            return <CredentialsStep control={control} />;
+        case "names":
+            return <NamesStep control={control} />;
+        case "address":
+            return <AddressStep control={control} />;
+        default:
+            return <PfpStep
+                avatarUri={avatarUri}
+                onPick={onPickAvatar}
+            />;
+    }
+}
+
+interface RegisterStepActionsProps {
+    readonly isLastStep: boolean,
+    readonly isPending: boolean,
+    readonly onBack: () => void,
+    readonly onNext: () => void,
+    readonly onSubmit: () => void,
+}
+
+/**
+ * Render the registration wizard's back/continue (or back/create-account) button row.
+ * @param props - The props.
+ * @param props.isLastStep - Whether the current step is the final "pfp" step.
+ * @param props.isPending - Whether account creation is in flight.
+ * @param props.onBack - Called when the back button is pressed.
+ * @param props.onNext - Called when the continue button is pressed, on a non-final step.
+ * @param props.onSubmit - Called when the create-account button is pressed, on the final step.
+ * @returns The rendered button row.
+ */
+function RegisterStepActions({ isLastStep, isPending, onBack, onNext, onSubmit }: RegisterStepActionsProps): React.JSX.Element {
+    const { t } = useTranslation();
+
+    return (
+        <View className="mt-6 flex-row gap-3">
+            <SecondaryButton
+                className="flex-1"
+                onPress={onBack}
+            >
+                {t("common.back")}
+            </SecondaryButton>
+
+            {isLastStep
+                ? <GradientButton
+                        className="flex-1"
+                        disabled={isPending}
+                        onPress={onSubmit}
+                    >
+                        {isPending ? t("register.creatingAccount") : t("register.continue")}
+                    </GradientButton>
+
+                : <GradientButton
+                        className="flex-1"
+                        onPress={onNext}
+                    >
+                        {t("register.continue")}
+                    </GradientButton>}
+        </View>
+    );
+}
 
 /**
  * Render the multi-step registration wizard and create the account on the final step.
@@ -144,45 +227,24 @@ export default function RegisterScreen(): React.JSX.Element {
                         </View>
 
                         <View className="mt-10 flex-1">
-                            {step === "credentials" && <CredentialsStep control={control} />}
-
-                            {step === "names" && <NamesStep control={control} />}
-
-                            {step === "address" && <AddressStep control={control} />}
-
-                            {step === "pfp" && <PfpStep
+                            <RegisterStepContent
                                 avatarUri={avatarUri}
-                                onPick={() => { void pickAvatar(); }}
-                            />}
+                                control={control}
+                                onPickAvatar={() => { void pickAvatar(); }}
+                                step={step}
+                            />
 
                             {error != null &&
                                 <Text className="mb-4 text-sm text-destructive">{error.message}</Text>}
                         </View>
 
-                        <View className="mt-6 flex-row gap-3">
-                            <SecondaryButton
-                                className="flex-1"
-                                onPress={goBack}
-                            >
-                                {t("common.back")}
-                            </SecondaryButton>
-
-                            {step === "pfp"
-                                ? <GradientButton
-                                        className="flex-1"
-                                        disabled={isPending}
-                                        onPress={() => { void handleSubmit(onSubmit)(); }}
-                                    >
-                                    {isPending ? t("register.creatingAccount") : t("register.continue")}
-                                  </GradientButton>
-
-                                : <GradientButton
-                                        className="flex-1"
-                                        onPress={() => { void goNext(); }}
-                                    >
-                                    {t("register.continue")}
-                                    </GradientButton>}
-                        </View>
+                        <RegisterStepActions
+                            isLastStep={step === "pfp"}
+                            isPending={isPending}
+                            onBack={goBack}
+                            onNext={() => { void goNext(); }}
+                            onSubmit={() => { void handleSubmit(onSubmit)(); }}
+                        />
 
                         <Text
                             className="mt-6 text-center text-[16px] font-noto-medium text-forehued"

@@ -2,33 +2,27 @@ import { v4 } from "uuid";
 import { drizzle } from "drizzle-orm/expo-sqlite";
 import { openDatabaseSync } from "expo-sqlite";
 
+export const DATABASE_NAME = "db.db";
+
+let instance: ReturnType<typeof drizzle> | null = null;
+
 /**
- * Lazily opens and memoizes the single local SQLite database connection.
+ * Get the shared local SQLite database connection, opening it on first use.
+ * @returns The drizzle-wrapped database connection.
  */
-class Database {
-    public static DATABASE_NAME: string = "db.db";
+function getInstance(): ReturnType<typeof drizzle> {
+    if (instance == null) {
+        const expo = openDatabaseSync(DATABASE_NAME, {
+            enableChangeListener: true,
+        });
 
-    private static instance: ReturnType<typeof drizzle> | null = null;
-
-    /**
-     * Get the shared database connection, opening it on first use.
-     * @returns The drizzle-wrapped database connection.
-     */
-    public static getInstance(): ReturnType<typeof drizzle> {
-        if (!Database.instance) {
-            const expo = openDatabaseSync(Database.DATABASE_NAME, {
-                enableChangeListener: true,
-            });
-
-            Database.instance = drizzle(expo);
-        }
-
-        return Database.instance;
+        instance = drizzle(expo);
     }
+
+    return instance;
 }
 
-export const DATABASE_NAME = Database.DATABASE_NAME;
-export const db = Database.getInstance();
+export const db = getInstance();
 
 /**
  * Generate a random UUID.

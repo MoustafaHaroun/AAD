@@ -15,7 +15,9 @@ export function OfflineBanner(): React.JSX.Element | null {
     const { t } = useTranslation();
     const isOnline = useNetworkStatus();
 
-    if (isOnline) { return null; }
+    if (isOnline) {
+        return null;
+    }
 
     return (
         <View className="flex-row items-center gap-2 bg-destructive px-4 py-2">

@@ -1,20 +1,14 @@
-import { useRouter } from "expo-router";
-import { Stack } from "expo-router";
+import { useRouter, Stack } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Plus } from "lucide-react-native";
-import { View, ScrollView, Platform, Pressable, Image } from "react-native";
+import { View, ScrollView, Platform } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
-import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
-import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
-import { Textarea } from "@/presentation/components/primitives/rnreusables/ui/textarea";
-import { FormField } from "@/presentation/components/primitives/form-field";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
-import { SegmentedControl } from "@/presentation/components/primitives/segmented-control";
-import { CategoryPicker } from "@/presentation/components/domain/listings/category-picker";
+import { ListingBasicFields } from "@/presentation/components/domain/listings/listing-basic-fields";
+import { AddPhotoButton, TapToRemoveThumbnail } from "@/presentation/components/domain/listings/listing-photo-field";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useCreateApiListing, useUploadListingAttachment, useImageService, useNetworkStatus, useListingDraft } from "@/presentation/hooks";
@@ -24,7 +18,6 @@ import {
     type ListingCategory,
     type ListingType,
 } from "@/domain/entities/listing-category.entity";
-import { cn } from "@/presentation/utils/cn.util";
 
 const CATEGORY_VALUES = LISTING_CATEGORIES.map(c => c.value) as [ListingCategory, ...ListingCategory[]];
 const TYPE_VALUES = LISTING_TYPES.map(t => t.value) as [ListingType, ...ListingType[]];
@@ -35,8 +28,6 @@ const createListingSchema = z.object({
     category: z.enum(CATEGORY_VALUES),
     type: z.enum(TYPE_VALUES),
 });
-
-const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
 /**
  * Render the create-listing form, restoring any saved draft and publishing on submit.
@@ -57,6 +48,9 @@ export default function CreateListingScreen(): React.JSX.Element {
 
     const [attachments, setAttachments] = useState<string[]>([]);
     const category = watch("category");
+    // React Hook Form's watch() type doesn't reflect that this field starts undefined.
+    // eslint-disable-next-line typescript/no-unnecessary-condition
+    const hasCategory = category != null;
     const type = watch("type");
     const typeOptions = LISTING_TYPES.map(option => ({ value: option.value, label: t(`listingType.${option.value}`) }));
 
@@ -76,7 +70,9 @@ export default function CreateListingScreen(): React.JSX.Element {
             saveDraft({ title: values.title, description: values.description, category: values.category, type: values.type });
         });
 
-        return () => { subscription.unsubscribe(); };
+        return () => {
+            subscription.unsubscribe();
+        };
     }, [watch]);
 
     /**
@@ -137,82 +133,33 @@ export default function CreateListingScreen(): React.JSX.Element {
                     className="flex-1"
                 >
                     <ScrollView contentContainerStyle={{ padding: 16 }}>
-                        <FormField
+                        <ListingBasicFields
+                            category={category}
                             control={control}
-                            label={t("listingForm.titleLabel")}
-                            name="title"
-                        >
-                            {({ value, onChange }) => (<Input
-className={INPUT_CLASS}
-                                    onChangeText={onChange}
-                                    value={value}
-                                />)}
-                        </FormField>
-
-                        <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.typeLabel")}</Text>
-
-                            <SegmentedControl
-                                onChange={value => { setValue("type", value); }}
-                                options={typeOptions}
-                                value={type}
-                            />
-                        </View>
-
-                        <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.categoryLabel")}</Text>
-
-                            <CategoryPicker
-                                onChange={value => { setValue("category", value); }}
-                                value={category}
-                            />
-                        </View>
-
-                        <FormField
-                            control={control}
-                            label={t("listingForm.descriptionLabel")}
-                            name="description"
-                        >
-                            {({ value, onChange }) => <Textarea
-                                    className={INPUT_CLASS}
-                                    onChangeText={onChange}
-                                    style={{ height: 191, textAlignVertical: "top" }}
-                                    value={value}
-                                />}
-                        </FormField>
+                            descriptionField="description"
+                            onChangeCategory={value => { setValue("category", value); }}
+                            onChangeType={value => { setValue("type", value); }}
+                            titleField="title"
+                            type={type}
+                            typeOptions={typeOptions}
+                        />
 
                         <View className="mb-4 gap-2">
                             <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.photosLabel")}</Text>
 
                             <View className="flex-row gap-2">
-                                <Pressable
-                                    accessibilityLabel={t("common.addPhoto")}
-                                    accessibilityRole="button"
-                                    className={cn("h-20 w-20 items-center justify-center rounded-[10px] bg-surfhued", !isOnline && "opacity-50")}
-                                    disabled={!isOnline}
+                                <AddPhotoButton
+                                    isOnline={isOnline}
                                     onPress={() => { void addAttachment(); }}
-                                >
-                                    <View className="size-12 items-center justify-center rounded-full bg-forehued">
-                                        <Icon
-                                            as={Plus}
-                                            className="size-6 text-white"
-                                        />
-                                    </View>
-                                </Pressable>
+                                />
 
                                 <ScrollView horizontal>
                                     <View className="flex-row gap-2">
-                                        {attachments.map(uri => <Pressable
-accessibilityLabel={t("common.removePhoto")}
-accessibilityRole="button"
-key={uri}
-onPress={() => removeAttachment(uri)}>
-                                                <Image
-                                                    className="h-20 w-20 rounded-[10px]"
-                                                    resizeMode="cover"
-                                                    source={{ uri }}
-                                                />
-                                             </Pressable>,)}
+                                        {attachments.map(uri => <TapToRemoveThumbnail
+                                            key={uri}
+                                            onRemove={() => { removeAttachment(uri); }}
+                                            uri={uri}
+                                        />)}
                                     </View>
                                 </ScrollView>
                             </View>
@@ -224,7 +171,7 @@ onPress={() => removeAttachment(uri)}>
 
                     <View className="border-t border-border bg-background p-4">
                         <GradientButton
-                            disabled={category == null || !isOnline}
+                            disabled={!hasCategory || !isOnline}
                             onPress={() => { void handleSubmit(onSubmit)(); }}
                         >
                             {t("common.save")}

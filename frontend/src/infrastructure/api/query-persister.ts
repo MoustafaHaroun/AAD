@@ -32,7 +32,9 @@ export const queryPersister = {
     restoreClient: async (): Promise<PersistedClient | undefined> => Promise.race([
         asyncStoragePersister.restoreClient(),
         new Promise<undefined>(resolve => {
-            setTimeout(() => { resolve(undefined); }, RESTORE_TIMEOUT_MS);
+            setTimeout(() => {
+                resolve(undefined);
+            }, RESTORE_TIMEOUT_MS);
         }),
     ]),
 };

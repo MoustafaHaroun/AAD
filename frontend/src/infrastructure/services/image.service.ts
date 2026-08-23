@@ -12,31 +12,6 @@ import type { IImageService } from "@/domain/services";
  */
 export class ImageService implements IImageService {
     /**
-     * Request camera and media library permissions, prompting the user to open settings if denied.
-     * @returns Whether both permissions were granted.
-     */
-    private async requestPermissions(): Promise<boolean> {
-        const cameraPerm = await requestCameraPermissionsAsync();
-        const libraryPerm = await requestMediaLibraryPermissionsAsync();
-
-        if (cameraPerm.status !== PermissionStatus.GRANTED || libraryPerm.status !== PermissionStatus.GRANTED) {
-            Alert.alert(
-                i18n.t("permissions.title"),
-                i18n.t("permissions.message"),
-            );
-            if (Platform.OS === "ios") {
-                await Linking.openURL("app-settings:");
-            } else {
-                await Linking.openSettings();
-            }
-
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * Pick an image from the device's photo library.
      * @returns The picked image's local URI, or null if permission was denied or the picker was canceled.
      */
@@ -107,5 +82,30 @@ export class ImageService implements IImageService {
         }
 
         return null;
+    }
+
+    /**
+     * Request camera and media library permissions, prompting the user to open settings if denied.
+     * @returns Whether both permissions were granted.
+     */
+    private async requestPermissions(): Promise<boolean> {
+        const cameraPerm = await requestCameraPermissionsAsync();
+        const libraryPerm = await requestMediaLibraryPermissionsAsync();
+
+        if (cameraPerm.status !== PermissionStatus.GRANTED || libraryPerm.status !== PermissionStatus.GRANTED) {
+            Alert.alert(
+                i18n.t("permissions.title"),
+                i18n.t("permissions.message"),
+            );
+            if (Platform.OS === "ios") {
+                await Linking.openURL("app-settings:");
+            } else {
+                await Linking.openSettings();
+            }
+
+            return false;
+        }
+
+        return true;
     }
 }

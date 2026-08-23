@@ -30,23 +30,23 @@ export function SegmentedControl<T extends string>({
     return (
         <View className="flex-row overflow-hidden rounded-[10px] border-[1.5px] border-forehued">
             {options.map((option, index) => <Pressable
+                className={cn(
+                    "flex-1 items-center py-[13px]",
+                    value === option.value ? "bg-forehued" : "bg-white",
+                    index > 0 && "border-l-[1.5px] border-forehued",
+                )}
+                key={option.value}
+                onPress={() => { onChange(option.value); }}
+            >
+                <Text
                     className={cn(
-                        "flex-1 items-center py-[13px]",
-                        value === option.value ? "bg-forehued" : "bg-white",
-                        index > 0 && "border-l-[1.5px] border-forehued",
+                        "font-noto-semibold text-[16px]",
+                        value === option.value ? "text-white" : "text-forehued",
                     )}
-                    key={option.value}
-                    onPress={() => { onChange(option.value); }}
                 >
-                    <Text
-                        className={cn(
-                            "font-noto-semibold text-[16px]",
-                            value === option.value ? "text-white" : "text-forehued",
-                        )}
-                    >
-                        {option.label}
-                    </Text>
-                 </Pressable>,)}
+                    {option.label}
+                </Text>
+            </Pressable>)}
         </View>
     );
 }

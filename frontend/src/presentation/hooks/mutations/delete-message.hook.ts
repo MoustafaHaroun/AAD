@@ -10,7 +10,7 @@ const deleteMessage = new DeleteMessage();
 export function useDeleteMessage(): UseMutationResult<void, Error, DeleteMessageParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, DeleteMessageParams>({
+    return useMutation({
         mutationFn: async params => deleteMessage.execute(params),
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({ queryKey: ["messages.get"] });

@@ -29,22 +29,22 @@ export function CategoryPicker({ value, onChange }: CategoryPickerProps): React.
             showsHorizontalScrollIndicator={false}
         >
             {LISTING_CATEGORIES.map(category => <Pressable
+                className={cn(
+                    "rounded-full px-4 py-2",
+                    value === category.value ? "bg-forehued" : "bg-surfhued",
+                )}
+                key={category.value}
+                onPress={() => { onChange(category.value); }}
+            >
+                <Text
                     className={cn(
-                        "rounded-full px-4 py-2",
-                        value === category.value ? "bg-forehued" : "bg-surfhued",
+                        "text-sm font-noto-semibold",
+                        value === category.value ? "text-white" : "text-forehued",
                     )}
-                    key={category.value}
-                    onPress={() => { onChange(category.value); }}
                 >
-                    <Text
-                        className={cn(
-                            "text-sm font-noto-semibold",
-                            value === category.value ? "text-white" : "text-forehued",
-                        )}
-                    >
-                        {t(`listingCategory.${category.value}`)}
-                    </Text>
-                 </Pressable>,)}
+                    {t(`listingCategory.${category.value}`)}
+                </Text>
+            </Pressable>)}
         </ScrollView>
     );
 }

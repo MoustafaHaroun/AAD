@@ -13,6 +13,6 @@ export function useGetUser(id: string): UseQueryResult<User> {
     return useQuery<User>({
         queryKey: ["users.get", id],
         queryFn: async () => getUser.execute({ id }),
-        enabled: id != null,
+        enabled: id.length > 0,
     });
 }

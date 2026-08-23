@@ -13,6 +13,6 @@ export function useGetListingsByUser(userId: string): ReturnType<typeof useQuery
     return useQuery({
         queryKey: ["listings.get.by_user", userId],
         queryFn: async () => getListingsByUser.execute(userId),
-        enabled: userId != null,
+        enabled: userId.length > 0,
     });
 }

@@ -31,7 +31,7 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps): React
     const [currentIndex, setCurrentIndex] = useState(0);
     const [fullscreenOpen, setFullscreenOpen] = useState(false);
 
-    const validUris = uris?.filter(uri => uri != null) ?? [];
+    const validUris = uris;
 
     if (validUris.length === 0) {
         return null;
@@ -75,23 +75,23 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps): React
                 showsHorizontalScrollIndicator={false}
             >
                 {validUris.map((uri, index) => <Pressable
-                        accessibilityLabel={t("common.viewPhoto", { index: index + 1, total: validUris.length })}
-                        accessibilityRole="imagebutton"
-                        key={`${uri}-${index}`}
-                        onPress={() => { setFullscreenOpen(true); }}
-                        style={{ width: SCREEN_WIDTH }}
-                    >
-                        <Image
-                            className="aspect-video w-full"
-                            resizeMode="cover"
-                            source={{ uri }}
-                        />
-                     </Pressable>,)}
+                    accessibilityLabel={t("common.viewPhoto", { index: index + 1, total: validUris.length })}
+                    accessibilityRole="imagebutton"
+                    key={uri}
+                    onPress={() => { setFullscreenOpen(true); }}
+                    style={{ width: SCREEN_WIDTH }} // eslint-disable-line react/forbid-component-props -- screen width is dynamic, can't be a static NativeWind class
+                >
+                    <Image
+                        className="aspect-video w-full"
+                        resizeMode="cover"
+                        source={{ uri }}
+                    />
+                </Pressable>)}
             </ScrollView>
 
             <View className="absolute bg-foreground px-3 py-1.5 bottom-2 self-center rounded-2xl opacity-80">
                 <Text className="text-background text-xs font-semibold">
-                    {currentIndex + 1} / {validUris.length}
+                    {`${currentIndex + 1} / ${validUris.length}`}
                 </Text>
             </View>
 

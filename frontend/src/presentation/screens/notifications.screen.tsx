@@ -44,7 +44,7 @@ export default function NotificationsScreen(): React.JSX.Element {
                 refreshControl={
                     <RefreshControl
                         onRefresh={() => { void refetch(); }}
-                        refreshing={isFetching && !isLoading}
+                        refreshing={isFetching ? !isLoading : false}
                     />
                 }
             >
@@ -63,53 +63,53 @@ export default function NotificationsScreen(): React.JSX.Element {
                     </Text>}
 
                 {notifications?.map(notification => <Pressable
-                        className={cn(
-                            "flex-row items-center gap-3 rounded-[10px] bg-surfhued p-3",
-                            !notification.read && "border-l-4 border-prim",
-                        )}
-                        key={notification.id}
-                        onPress={() => { onPressNotification(notification); }}
-                    >
-                        <View className="flex-1">
-                            <View className="flex-row items-center justify-between gap-2">
-                                <Text
-                                    className={cn(
-                                        "flex-1 text-[16px] text-black",
-                                        notification.read ? "font-noto-medium" : "font-noto-bold",
-                                    )}
-                                    ellipsizeMode="tail"
-                                    numberOfLines={1}
-                                >
-                                    {notification.title}
-                                </Text>
-
-                                <Text className="text-[13px] font-noto-medium text-forehued">
-                                    {formatConversationTimestamp(notification.createdAt, t)}
-                                </Text>
-                            </View>
-
+                    className={cn(
+                        "flex-row items-center gap-3 rounded-[10px] bg-surfhued p-3",
+                        !notification.read && "border-l-4 border-prim",
+                    )}
+                    key={notification.id}
+                    onPress={() => { onPressNotification(notification); }}
+                >
+                    <View className="flex-1">
+                        <View className="flex-row items-center justify-between gap-2">
                             <Text
-                                className="text-[14px] font-noto-medium text-forehued"
+                                className={cn(
+                                    "flex-1 text-[16px] text-black",
+                                    notification.read ? "font-noto-medium" : "font-noto-bold",
+                                )}
                                 ellipsizeMode="tail"
-                                numberOfLines={2}
+                                numberOfLines={1}
                             >
-                                {notification.message}
+                                {notification.title}
+                            </Text>
+
+                            <Text className="text-[13px] font-noto-medium text-forehued">
+                                {formatConversationTimestamp(notification.createdAt, t)}
                             </Text>
                         </View>
 
-                        <Pressable
-                            accessibilityLabel={t("common.delete")}
-                            accessibilityRole="button"
-                            className="p-2"
-                            hitSlop={8}
-                            onPress={() => { deleteNotification({ id: notification.id }); }}
+                        <Text
+                            className="text-[14px] font-noto-medium text-forehued"
+                            ellipsizeMode="tail"
+                            numberOfLines={2}
                         >
-                            <Icon
-                                as={Trash2}
-                                className="size-5 text-destructive"
-                            />
-                        </Pressable>
-                     </Pressable>,)}
+                            {notification.message}
+                        </Text>
+                    </View>
+
+                    <Pressable
+                        accessibilityLabel={t("common.delete")}
+                        accessibilityRole="button"
+                        className="p-2"
+                        hitSlop={8}
+                        onPress={() => { deleteNotification({ id: notification.id }); }}
+                    >
+                        <Icon
+                            as={Trash2}
+                            className="size-5 text-destructive"
+                        />
+                    </Pressable>
+                </Pressable>)}
             </ScrollView>
         </View>
     );

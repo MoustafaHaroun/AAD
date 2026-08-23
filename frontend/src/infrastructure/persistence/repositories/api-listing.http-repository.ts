@@ -31,7 +31,7 @@ export class ApiListingHttpRepository implements IApiListingRepository {
 
         const response = await apiClient.get<{ listings: ApiListing[] }>(path);
 
-        return response.listings ?? [];
+        return response.listings;
     }
 
     /**

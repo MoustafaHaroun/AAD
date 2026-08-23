@@ -20,7 +20,9 @@ export function useConversations(): Omit<UseQueryResult<Message[]>, "data"> & { 
     const { data: messages, ...rest } = useGetMessages();
 
     const conversations = useMemo<Conversation[] | undefined>(() => {
-        if (messages == null || currentUserId == null) { return undefined; }
+        if (messages == null || currentUserId == null) {
+            return undefined;
+        }
 
         const byCounterpart = new Map<string, Conversation>();
 

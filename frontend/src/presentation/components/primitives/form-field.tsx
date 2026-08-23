@@ -34,24 +34,24 @@ export function FormField<T extends FieldValues>({
             control={control}
             name={name}
             render={({ field: { onChange, value }, fieldState: { error } }) => <View className="mb-4">
-                    {label != null
-? <Label className={`text-base mb-1 ${error != null ? "text-destructive" : ""}`}>
-                        {label}
-                    </Label>
-: null}
+                {label == null
+                    ? null
+                    : <Label className={`text-base mb-1 ${error == null ? "" : "text-destructive"}`}>
+                            {label}
+                        </Label>}
 
-                    {children?.({
-                        value,
-                        onChange,
-                        error: error?.message,
-                    })}
+                {children({
+                    value,
+                    onChange,
+                    error: error?.message,
+                })}
 
-                    {error
-? <Text className="text-destructive text-sm ml-1 mt-1">
-                        {error.message}
-                    </Text>
-: null}
-                </View>}
+                {error
+                    ? <Text className="text-destructive text-sm ml-1 mt-1">
+                            {error.message}
+                        </Text>
+                    : null}
+            </View>}
         />
     );
 }

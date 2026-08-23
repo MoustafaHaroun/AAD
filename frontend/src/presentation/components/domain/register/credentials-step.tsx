@@ -26,15 +26,15 @@ export function CredentialsStep({ control }: CredentialsStepProps): React.JSX.El
                 label={t("register.credentials.emailLabel")}
                 name="email"
             >
-                {({ value, onChange }) => (<Input
-                        autoCapitalize="none"
-                        autoComplete="email"
-                        className={REGISTER_INPUT_CLASS}
-                        keyboardType="email-address"
-                        onChangeText={onChange}
-                        placeholder={t("register.credentials.emailPlaceholder")}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <Input
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    className={REGISTER_INPUT_CLASS}
+                    keyboardType="email-address"
+                    onChangeText={onChange}
+                    placeholder={t("register.credentials.emailPlaceholder")}
+                    value={value}
+                />}
             </FormField>
 
             <FormField
@@ -42,12 +42,12 @@ export function CredentialsStep({ control }: CredentialsStepProps): React.JSX.El
                 label={t("register.credentials.passwordLabel")}
                 name="password"
             >
-                {({ value, onChange }) => (<PasswordInput
-                        autoComplete="new-password"
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <PasswordInput
+                    autoComplete="new-password"
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    value={value}
+                />}
             </FormField>
 
             <FormField
@@ -55,12 +55,12 @@ export function CredentialsStep({ control }: CredentialsStepProps): React.JSX.El
                 label={t("register.credentials.confirmPasswordLabel")}
                 name="confirmPassword"
             >
-                {({ value, onChange }) => (<PasswordInput
-                        autoComplete="new-password"
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <PasswordInput
+                    autoComplete="new-password"
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    value={value}
+                />}
             </FormField>
         </>
     );

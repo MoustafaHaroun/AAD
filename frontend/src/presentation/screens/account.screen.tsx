@@ -69,28 +69,30 @@ export default function AccountScreen(): React.JSX.Element {
                             />
 
                             <Text className="text-[24px] font-noto-bold text-black">
-                                {user.firstname} {user.surname}
+                                {`${user.firstname} ${user.surname}`}
                             </Text>
                         </View>}
 
                     <View className="mt-6 rounded-[10px] bg-surfhued p-4">
                         <Text className="mb-2 text-[20px] font-noto-bold text-forehued">{t("account.sectionTitle")}</Text>
 
-                        {MENU_ITEMS.map((item, index) => (<Pressable
-                                className={index > 0 ? "flex-row items-center gap-3 border-t border-forehued/20 py-3" : "flex-row items-center gap-3 py-3"}
-                                key={item.labelKey}
-                                onPress={() => { router.push(item.href); }}
-                            >
-                                <Icon as={item.icon}
-className="size-5 text-forehued" />
+                        {MENU_ITEMS.map((item, index) => <Pressable
+                            className={index > 0 ? "flex-row items-center gap-3 border-t border-forehued/20 py-3" : "flex-row items-center gap-3 py-3"}
+                            key={item.labelKey}
+                            onPress={() => { router.push(item.href); }}
+                        >
+                            <Icon
+                                as={item.icon}
+                                className="size-5 text-forehued" />
 
-                                <Text className="flex-1 font-noto-medium text-[16px] text-forehued">
-                                    {t(item.labelKey)}
-                                </Text>
+                            <Text className="flex-1 font-noto-medium text-[16px] text-forehued">
+                                {t(item.labelKey)}
+                            </Text>
 
-                                <Icon as={ChevronRight}
-className="size-4 text-forehued" />
-                             </Pressable>),)}
+                            <Icon
+                                as={ChevronRight}
+                                className="size-4 text-forehued" />
+                        </Pressable>)}
                     </View>
 
                     <View className="flex-1" />

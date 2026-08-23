@@ -13,6 +13,6 @@ export function useGetMessage(id: string): UseQueryResult<Message> {
     return useQuery<Message>({
         queryKey: ["messages.get", id],
         queryFn: async () => getMessage.execute({ id }),
-        enabled: id != null,
+        enabled: id.length > 0,
     });
 }

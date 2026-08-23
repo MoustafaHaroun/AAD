@@ -27,7 +27,7 @@ export function GradientButton({
         <Pressable
             className={cn("overflow-hidden rounded-[10px]", disabled === true && "opacity-50", className)}
             disabled={disabled}
-            {...props}
+            {...props /* eslint-disable-line react/jsx-props-no-spreading -- forwards arbitrary Pressable props */}
         >
             <LinearGradient
                 colors={["#FCC010", "#F28D1B"]}

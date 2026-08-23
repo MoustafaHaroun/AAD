@@ -25,13 +25,13 @@ export function NamesStep({ control }: NamesStepProps): React.JSX.Element {
                 label={t("register.names.firstnameLabel")}
                 name="firstname"
             >
-                {({ value, onChange }) => (<Input
-                        autoComplete="given-name"
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        placeholder={t("register.names.firstnamePlaceholder")}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <Input
+                    autoComplete="given-name"
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    placeholder={t("register.names.firstnamePlaceholder")}
+                    value={value}
+                />}
             </FormField>
 
             <FormField
@@ -39,13 +39,13 @@ export function NamesStep({ control }: NamesStepProps): React.JSX.Element {
                 label={t("register.names.surnameLabel")}
                 name="surname"
             >
-                {({ value, onChange }) => (<Input
-                        autoComplete="family-name"
-                        className={REGISTER_INPUT_CLASS}
-                        onChangeText={onChange}
-                        placeholder={t("register.names.surnamePlaceholder")}
-                        value={value}
-                    />)}
+                {({ value, onChange }) => <Input
+                    autoComplete="family-name"
+                    className={REGISTER_INPUT_CLASS}
+                    onChangeText={onChange}
+                    placeholder={t("register.names.surnamePlaceholder")}
+                    value={value}
+                />}
             </FormField>
         </>
     );

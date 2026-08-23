@@ -7,18 +7,18 @@ import type { TFunction } from "i18next";
  * @param t - The translation function used for validation error messages.
  * @returns The registration form schema.
  */
+// eslint-disable-next-line typescript/explicit-function-return-type, typescript/explicit-module-boundary-types -- the zod chain's inferred type is self-referential and impractical to spell out
 export function createRegisterSchema(t: TFunction) {
     return z
         .object({
-            email: z.string().min(1).max(256)
-                .email(),
+            email: z.email().min(1).max(256),
             password: z
                 .string()
                 .min(8, { message: t("register.errors.passwordTooShort") })
-                .regex(/[a-z]/, { message: t("register.errors.passwordLowercase") })
-                .regex(/[A-Z]/, { message: t("register.errors.passwordUppercase") })
-                .regex(/[0-9]/, { message: t("register.errors.passwordNumber") })
-                .regex(/[^A-Za-z0-9]/, { message: t("register.errors.passwordSpecial") }),
+                .regex(/[a-z]/u, { message: t("register.errors.passwordLowercase") })
+                .regex(/[A-Z]/u, { message: t("register.errors.passwordUppercase") })
+                .regex(/[0-9]/u, { message: t("register.errors.passwordNumber") })
+                .regex(/[^A-Za-z0-9]/u, { message: t("register.errors.passwordSpecial") }),
             confirmPassword: z.string().min(1),
             firstname: z.string().min(1).max(128),
             surname: z.string().min(1).max(128),

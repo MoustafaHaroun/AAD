@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp -- ChatsPreview is a private helper used only by HomeScreen below */
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { useState } from "react";
@@ -26,6 +27,59 @@ const CHATS_PREVIEW_LIMIT = 5;
 
 const NEW_LISTINGS_LIMIT = 4;
 
+interface ChatsPreviewProps {
+    readonly conversations: ReturnType<typeof useConversations>["conversations"],
+}
+
+/**
+ * Render the Home screen's "Chats" card: a horizontal strip of recent conversation avatars.
+ * @param props - The props.
+ * @param props.conversations - The user's conversations, most recent first.
+ * @returns The rendered chats preview card.
+ */
+function ChatsPreview({ conversations }: ChatsPreviewProps): React.JSX.Element {
+    const router = useRouter();
+    const { t } = useTranslation();
+    const recentConversations = conversations?.slice(0, CHATS_PREVIEW_LIMIT) ?? [];
+
+    return (
+        <View className="rounded-[10px] bg-accent p-4">
+            <View className="flex-row items-center justify-between">
+                <Text className="text-[20px] font-noto-bold text-black">{t("home.chats")}</Text>
+
+                <Pressable onPress={() => { router.push("/chats"); }}>
+                    <Text className="font-noto-semibold text-[16px] text-forehued">{t("home.allChats")}</Text>
+                </Pressable>
+            </View>
+
+            {recentConversations.length === 0
+                ? <Text className="mt-3 font-noto text-sm text-muted-foreground">
+                        {t("home.noConversations")}
+                    </Text>
+
+                : <ScrollView
+                        className="mt-3"
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                    >
+                        <View className="flex-row gap-3">
+                            {recentConversations.map(({ counterpart }) => <Pressable
+                                key={counterpart.id}
+                                onPress={() => { router.push(`/chats/${counterpart.id}`); }}
+                            >
+                                <UserAvatar
+                                    avatar={counterpart.avatar}
+                                    firstname={counterpart.firstname}
+                                    id={counterpart.id}
+                                    surname={counterpart.surname}
+                                />
+                            </Pressable>)}
+                        </View>
+                    </ScrollView>}
+        </View>
+    );
+}
+
 /**
  * Render the home screen with search, quick actions, chat previews, and new listings.
  * @returns The rendered home screen.
@@ -39,7 +93,6 @@ export default function HomeScreen(): React.JSX.Element {
     const { data: listings, isFetching: isFetchingListings, refetch: refetchListings } = useGetApiListings();
     const { conversations, isFetching: isFetchingConversations, refetch: refetchConversations } = useConversations();
     const newListings = listings?.slice(0, NEW_LISTINGS_LIMIT) ?? [];
-    const recentConversations = conversations?.slice(0, CHATS_PREVIEW_LIMIT) ?? [];
 
     /**
      * Navigate to the listings screen, carrying the search query if one was entered.
@@ -91,7 +144,10 @@ export default function HomeScreen(): React.JSX.Element {
                     contentContainerStyle={{ padding: 16, gap: 16 }}
                     refreshControl={
                         <RefreshControl
-                            onRefresh={() => { void refetchListings(); void refetchConversations(); }}
+                            onRefresh={() => {
+                                void refetchListings();
+                                void refetchConversations();
+                            }}
                             refreshing={isFetchingListings || isFetchingConversations}
                         />
                     }
@@ -123,40 +179,7 @@ export default function HomeScreen(): React.JSX.Element {
                         />
                     </View>
 
-                    <View className="rounded-[10px] bg-accent p-4">
-                        <View className="flex-row items-center justify-between">
-                            <Text className="text-[20px] font-noto-bold text-black">{t("home.chats")}</Text>
-
-                            <Pressable onPress={() => { router.push("/chats"); }}>
-                                <Text className="font-noto-semibold text-[16px] text-forehued">{t("home.allChats")}</Text>
-                            </Pressable>
-                        </View>
-
-                        {recentConversations.length === 0
-                            ? <Text className="mt-3 font-noto text-sm text-muted-foreground">
-                                {t("home.noConversations")}
-                                </Text>
-
-                            : <ScrollView
-                                    className="mt-3"
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                >
-                                <View className="flex-row gap-3">
-                                        {recentConversations.map(({ counterpart }) => <Pressable
-                                                key={counterpart.id}
-                                                onPress={() => { router.push(`/chats/${counterpart.id}`); }}
-                                            >
-                                                <UserAvatar
-                                                    avatar={counterpart.avatar}
-                                                    firstname={counterpart.firstname}
-                                                    id={counterpart.id}
-                                                    surname={counterpart.surname}
-                                                />
-                                             </Pressable>,)}
-                                    </View>
-                              </ScrollView>}
-                    </View>
+                    <ChatsPreview conversations={conversations} />
 
                     <View>
                         <View className="flex-row items-center justify-between">
@@ -168,14 +191,15 @@ export default function HomeScreen(): React.JSX.Element {
                         </View>
 
                         <View className="mt-2 flex-row flex-wrap">
-                            {newListings.map(listing => <View className="w-1/2 p-1"
-key={listing.id}>
-                                    <ListingItem
-                                        distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
-                                        listing={listing}
-                                        onPress={() => { router.push(`/listings/${listing.id}`); }}
-                                    />
-                                 </View>,)}
+                            {newListings.map(listing => <View
+                                className="w-1/2 p-1"
+                                key={listing.id}>
+                                <ListingItem
+                                    distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
+                                    listing={listing}
+                                    onPress={() => { router.push(`/listings/${listing.id}`); }}
+                                />
+                            </View>)}
 
                             {newListings.length === 0 &&
                                 <Text className="p-2 font-noto text-sm text-muted-foreground">

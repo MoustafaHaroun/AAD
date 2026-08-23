@@ -66,15 +66,17 @@ export function FullscreenImageViewer({
                     pagingEnabled
                     showsHorizontalScrollIndicator={false}
                 >
-                    {uris.map((uri, i) => <View className="items-center justify-center"
-key={`${uri}-${i}`}
-style={{ width: SCREEN_WIDTH }}>
-                            <Image
-                                resizeMode="contain"
-                                source={{ uri }}
-                                style={{ height: "100%", width: SCREEN_WIDTH }}
-                            />
-                         </View>,)}
+                    {uris.map(uri => <View
+                        className="items-center justify-center"
+                        key={uri}
+                        style={{ width: SCREEN_WIDTH }} // eslint-disable-line react/forbid-component-props -- screen width is dynamic, can't be a static NativeWind class
+                    >
+                        <Image
+                            resizeMode="contain"
+                            source={{ uri }}
+                            style={{ height: "100%", width: SCREEN_WIDTH }} // eslint-disable-line react/forbid-component-props -- screen width is dynamic, can't be a static NativeWind class
+                        />
+                    </View>)}
                 </ScrollView>
 
                 <SafeAreaView
@@ -98,7 +100,7 @@ style={{ width: SCREEN_WIDTH }}>
                         {uris.length > 1 &&
                             <View className="rounded-full bg-black/50 px-3 py-1.5">
                                 <Text className="text-xs font-semibold text-white">
-                                    {index + 1} / {uris.length}
+                                    {`${index + 1} / ${uris.length}`}
                                 </Text>
                             </View>}
                     </View>

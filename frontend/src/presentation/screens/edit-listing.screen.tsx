@@ -1,30 +1,19 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { Plus, Trash, X } from "lucide-react-native";
-import { View, ScrollView, Platform, Pressable, Image, ActivityIndicator } from "react-native";
+import { View, ScrollView, Platform } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
-import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
-import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
-import { Textarea } from "@/presentation/components/primitives/rnreusables/ui/textarea";
-import {
-    AlertDialog,
-    AlertDialogTrigger,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-} from "@/presentation/components/primitives/rnreusables";
-import { FormField } from "@/presentation/components/primitives/form-field";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
-import { SegmentedControl } from "@/presentation/components/primitives/segmented-control";
-import { CategoryPicker } from "@/presentation/components/domain/listings/category-picker";
+import { ListingBasicFields } from "@/presentation/components/domain/listings/listing-basic-fields";
+import {
+    AddPhotoButton,
+    AttachmentThumbnail,
+    TapToRemoveThumbnail,
+} from "@/presentation/components/domain/listings/listing-photo-field";
+import { DeleteListingDialog } from "@/presentation/components/domain/listings/delete-listing-dialog";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import {
@@ -43,7 +32,8 @@ import {
     type ListingCategory,
     type ListingType,
 } from "@/domain/entities/listing-category.entity";
-import { cn } from "@/presentation/utils/cn.util";
+import type { ApiListing } from "@/domain/entities";
+import type { ListingDraft } from "@/infrastructure/persistence/drafts/listing-draft-store";
 
 const CATEGORY_VALUES = LISTING_CATEGORIES.map(c => c.value) as [ListingCategory, ...ListingCategory[]];
 const TYPE_VALUES = LISTING_TYPES.map(t => t.value) as [ListingType, ...ListingType[]];
@@ -55,13 +45,46 @@ const editListingSchema = z.object({
     type: z.enum(TYPE_VALUES),
 });
 
-const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
+/**
+ * Build the edit form's reset values, preferring a locally-saved draft field over the listing's own.
+ * @param draft - The locally-saved draft, if one was found.
+ * @param listing - The loaded listing.
+ * @returns The form's reset values.
+ */
+function buildResetValues(draft: ListingDraft | null, listing: ApiListing): Partial<z.infer<typeof editListingSchema>> {
+    return {
+        title: draft?.title ?? listing.title,
+        description: draft?.description ?? listing.description ?? "",
+        category: (draft?.category as ListingCategory | undefined) ?? listing.category,
+        type: (draft?.type as ListingType | undefined) ?? listing.type,
+    };
+}
 
 /**
- * Render the edit-listing form, restoring any saved draft, and save or delete the listing.
- * @returns The rendered edit-listing screen.
+ * Load an edit-in-progress listing and assemble the derived state its form needs.
+ * @returns The edit-listing screen's view state.
  */
-export default function EditListingScreen(): React.JSX.Element {
+function useEditListingState(): {
+    id: string,
+    router: ReturnType<typeof useRouter>,
+    t: ReturnType<typeof useTranslation>["t"],
+    listing: ReturnType<typeof useGetApiListing>["data"],
+    error: Error | null,
+    isOnline: boolean,
+    isDeleting: boolean,
+    control: ReturnType<typeof useForm<z.infer<typeof editListingSchema>>>["control"],
+    handleSubmit: ReturnType<typeof useForm<z.infer<typeof editListingSchema>>>["handleSubmit"],
+    setValue: ReturnType<typeof useForm<z.infer<typeof editListingSchema>>>["setValue"],
+    category: ListingCategory | undefined,
+    type: ListingType | undefined,
+    typeOptions: Array<{ value: ListingType, label: string }>,
+    newAttachments: string[],
+    addAttachment: () => void,
+    removeNewAttachment: (uri: string) => void,
+    removeExistingAttachment: (attachmentId: string) => void,
+    onDelete: () => void,
+    onSave: (data: z.infer<typeof editListingSchema>) => Promise<void>,
+} {
     const router = useRouter();
     const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -83,14 +106,11 @@ export default function EditListingScreen(): React.JSX.Element {
     const typeOptions = LISTING_TYPES.map(option => ({ value: option.value, label: t(`listingType.${option.value}`) }));
 
     useEffect(() => {
-        if (listing == null || !draftLoaded) { return; }
+        if (listing == null || !draftLoaded) {
+            return;
+        }
 
-        reset({
-            title: draft?.title ?? listing.title,
-            description: draft?.description ?? listing.description ?? "",
-            category: (draft?.category as ListingCategory | undefined) ?? listing.category,
-            type: (draft?.type as ListingType | undefined) ?? listing.type,
-        });
+        reset(buildResetValues(draft, listing));
     }, [listing, draftLoaded]);
 
     useEffect(() => {
@@ -98,18 +118,20 @@ export default function EditListingScreen(): React.JSX.Element {
             saveDraft({ title: values.title, description: values.description, category: values.category, type: values.type });
         });
 
-        return () => { subscription.unsubscribe(); };
+        return () => {
+            subscription.unsubscribe();
+        };
     }, [watch]);
 
     /**
      * Pick or capture a photo and add it to the attachments to upload on save.
      */
-    async function addAttachment(): Promise<void> {
-        const uri = await imageService.pickImage();
-
-        if (uri != null) {
-            setNewAttachments(prev => [...prev, uri]);
-        }
+    function addAttachment(): void {
+        void imageService.pickImage().then(uri => {
+            if (uri != null) {
+                setNewAttachments(prev => [...prev, uri]);
+            }
+        });
     }
 
     /**
@@ -118,6 +140,14 @@ export default function EditListingScreen(): React.JSX.Element {
      */
     function removeNewAttachment(uri: string): void {
         setNewAttachments(prev => prev.filter(u => u !== uri));
+    }
+
+    /**
+     * Remove an already-uploaded photo from the listing.
+     * @param attachmentId - The id of the attachment to remove.
+     */
+    function removeExistingAttachment(attachmentId: string): void {
+        void removeAttachment({ id, attachmentId });
     }
 
     /**
@@ -160,6 +190,41 @@ export default function EditListingScreen(): React.JSX.Element {
         router.back();
     }
 
+    return {
+        id,
+        router,
+        t,
+        listing,
+        error,
+        isOnline,
+        isDeleting,
+        control,
+        handleSubmit,
+        setValue,
+        category,
+        type,
+        typeOptions,
+        newAttachments,
+        addAttachment,
+        removeNewAttachment,
+        removeExistingAttachment,
+        onDelete,
+        onSave,
+    };
+}
+
+/**
+ * Render the edit-listing form, restoring any saved draft, and save or delete the listing.
+ * @returns The rendered edit-listing screen.
+ */
+export default function EditListingScreen(): React.JSX.Element {
+    const {
+        t, listing, error, isOnline, isDeleting,
+        control, handleSubmit, setValue, category, type, typeOptions,
+        newAttachments, addAttachment, removeNewAttachment, removeExistingAttachment,
+        onDelete, onSave,
+    } = useEditListingState();
+
     return (
         <>
             <Stack.Screen options={{ headerShown: false }} />
@@ -172,103 +237,39 @@ export default function EditListingScreen(): React.JSX.Element {
                     className="flex-1"
                 >
                     <ScrollView contentContainerStyle={{ padding: 16 }}>
-                        <FormField
+                        <ListingBasicFields
+                            category={category}
                             control={control}
-                            label={t("listingForm.titleLabel")}
-                            name="title"
-                        >
-                            {({ value, onChange }) => <Input
-className={INPUT_CLASS}
-                                    onChangeText={onChange}
-                                    value={value}
-                                />}
-                        </FormField>
-
-                        <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.typeLabel")}</Text>
-
-                            {type != null &&
-                                <SegmentedControl
-                                    onChange={value => { setValue("type", value); }}
-                                    options={typeOptions}
-                                    value={type}
-                                />}
-                        </View>
-
-                        <View className="mb-4 gap-2">
-                            <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.categoryLabel")}</Text>
-
-                            <CategoryPicker
-                                onChange={value => { setValue("category", value); }}
-                                value={category}
-                            />
-                        </View>
-
-                        <FormField
-                            control={control}
-                            label={t("listingForm.descriptionLabel")}
-                            name="description"
-                        >
-                            {({ value, onChange }) => (<Textarea
-                                    className={INPUT_CLASS}
-                                    onChangeText={onChange}
-                                    style={{ height: 191, textAlignVertical: "top" }}
-                                    value={value}
-                                />)}
-                        </FormField>
+                            descriptionField="description"
+                            onChangeCategory={value => { setValue("category", value); }}
+                            onChangeType={value => { setValue("type", value); }}
+                            titleField="title"
+                            type={type}
+                            typeOptions={typeOptions}
+                        />
 
                         <View className="mb-4 gap-2">
                             <Text className="text-[16px] font-noto-semibold text-black">{t("listingForm.photosLabel")}</Text>
 
                             <ScrollView horizontal>
                                 <View className="flex-row gap-2">
-                                    <Pressable
-                                        accessibilityLabel={t("common.addPhoto")}
-                                        accessibilityRole="button"
-                                        className={cn("h-20 w-20 items-center justify-center rounded-[10px] bg-surfhued", !isOnline && "opacity-50")}
-                                        disabled={!isOnline}
-                                        onPress={() => { void addAttachment(); }}
-                                    >
-                                        <View className="size-12 items-center justify-center rounded-full bg-forehued">
-                                            <Icon
-                                                as={Plus}
-                                                className="size-6 text-white"
-                                            />
-                                        </View>
-                                    </Pressable>
+                                    <AddPhotoButton
+                                        isOnline={isOnline}
+                                        onPress={addAttachment}
+                                    />
 
-                                    {listing?.attachments?.map(attachment => (<View className="relative"
-key={attachment.id}>
-                                            <Image
-                                                className="h-20 w-20 rounded-[10px]"
-                                                resizeMode="cover"
-                                                source={{ uri: attachment.path }}
-                                            />
+                                    {listing?.attachments?.map(attachment => <AttachmentThumbnail
+                                        key={attachment.id}
+                                        onRemove={() => { removeExistingAttachment(attachment.id); }}
+                                        removeDisabled={!isOnline}
+                                        uri={attachment.path}
+                                    />)}
 
-                                            <Pressable
-                                                accessibilityLabel={t("common.removePhoto")}
-                                                accessibilityRole="button"
-                                                className={cn("absolute -right-1 -top-1 size-5 items-center justify-center rounded-full bg-forehued", !isOnline && "opacity-50")}
-                                                disabled={!isOnline}
-                                                hitSlop={8}
-                                                onPress={() => { void removeAttachment({ id, attachmentId: attachment.id }); }}
-                                            >
-                                                <Icon as={X}
-className="size-3 text-white" />
-                                            </Pressable>
-                                         </View>),)}
-
-                                    {newAttachments.map(uri => (<Pressable
-accessibilityLabel={t("common.removePhoto")}
-accessibilityRole="button"
-key={uri}
-onPress={() => removeNewAttachment(uri)}>
-                                            <Image
-                                                className="h-20 w-20 rounded-[10px]"
-                                                resizeMode="cover"
-                                                source={{ uri }}
-                                            />
-                                         </Pressable>),)}
+                                    {newAttachments.map(uri => <TapToRemoveThumbnail
+                                        key={uri}
+                                        onRemove={() => { removeNewAttachment(uri); }}
+                                        uri={uri}
+                                    />)}
                                 </View>
                             </ScrollView>
                         </View>
@@ -286,49 +287,11 @@ onPress={() => removeNewAttachment(uri)}>
                             {t("common.save")}
                         </GradientButton>
 
-                        <AlertDialog style={{ height: 56, width: 64 }}>
-                            <AlertDialogTrigger asChild>
-                                <Pressable
-                                    accessibilityLabel={t("common.delete")}
-                                    accessibilityRole="button"
-                                    className={cn("items-center justify-center rounded-[10px] bg-destructive", !isOnline && "opacity-50")}
-                                    disabled={listing == null || isDeleting || !isOnline}
-                                    style={{ height: "100%", width: "100%" }}
-                                >
-                                    {isDeleting
-                                        ? <ActivityIndicator color="white" />
-                                        : <Icon
-                                                as={Trash}
-                                                className="size-6 text-white"
-                                          />}
-                                </Pressable>
-                            </AlertDialogTrigger>
-
-                            <AlertDialogContent className="gap-4 rounded-[20px] p-6">
-                                <AlertDialogHeader className="gap-2">
-                                    <AlertDialogTitle className="text-left text-[22px] font-noto-bold text-black">
-                                        {t("listing.deleteTitle")}
-                                    </AlertDialogTitle>
-
-                                    <AlertDialogDescription className="text-left text-[14px] font-noto-medium text-black">
-                                        {t("listing.deleteDescription")}
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-
-                                <AlertDialogFooter className="flex-row gap-3">
-                                    <AlertDialogCancel className="flex-1 rounded-[10px] border-0 bg-primdesat">
-                                        <Text className="font-noto-semibold text-black">{t("common.cancel")}</Text>
-                                    </AlertDialogCancel>
-
-                                    <AlertDialogAction
-                                        className="flex-1 rounded-[10px] bg-destructive"
-                                        onPress={onDelete}
-                                    >
-                                        <Text className="font-noto-bold text-white">{t("common.delete")}</Text>
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
+                        <DeleteListingDialog
+                            disabled={listing == null || !isOnline}
+                            isDeleting={isDeleting}
+                            onConfirm={onDelete}
+                        />
                     </View>
                 </KeyboardAvoidingView>
             </View>

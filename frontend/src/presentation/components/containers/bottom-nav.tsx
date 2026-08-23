@@ -22,8 +22,6 @@ const TABS = [
 
 /**
  * Render the persistent bottom tab bar (Home / Listings / Chats / Account).
- * Custom-built rather than expo-router's `<Tabs>` to match the Figma
- * mockup's exact visual spec.
  * @returns The rendered tab bar.
  */
 export function BottomNav(): React.JSX.Element {
@@ -39,6 +37,7 @@ export function BottomNav(): React.JSX.Element {
             <View className="flex-row pt-2">
                 {TABS.map(tab => {
                     const active = pathname.startsWith(tab.href);
+                    // eslint-disable-next-line typescript/naming-convention -- must be PascalCase for JSX to treat it as a component
                     const IconComponent = tab.icon;
 
                     return (

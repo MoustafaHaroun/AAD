@@ -1,6 +1,6 @@
 import { StyleSheet, type StyleProp, type TextStyle } from "react-native";
 
-export interface FigmaIconProps {
+export interface IconProps {
     readonly size?: number,
     readonly color?: string,
     readonly style?: StyleProp<TextStyle>,
@@ -13,5 +13,5 @@ export interface FigmaIconProps {
  * @returns The resolved color, falling back to the design system's default.
  */
 export function resolveIconColor(color: string | undefined, style: StyleProp<TextStyle> | undefined): string {
-    return color ?? StyleSheet.flatten(style)?.color?.toString() ?? "#1B1B1B";
+    return color ?? StyleSheet.flatten(style).color?.toString() ?? "#1B1B1B";
 }

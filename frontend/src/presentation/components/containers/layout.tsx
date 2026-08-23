@@ -1,6 +1,6 @@
 import "react-native-get-random-values";
 import "@/presentation/styles/global.css";
-import { NAV_THEME } from "@/presentation/styles/theme";
+import { NAV_THEME, BRAND_COLORS } from "@/presentation/styles/theme";
 import { ThemeProvider } from "@react-navigation/native";
 import { PortalHost } from "@rn-primitives/portal";
 import { Stack } from "expo-router";
@@ -19,6 +19,7 @@ import { SQLiteProvider } from "expo-sqlite";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import * as z from "zod";
 import { en } from "zod/locales";
+/* eslint-disable camelcase -- font names are fixed exports from @expo-google-fonts/noto-sans */
 import {
     NotoSans_400Regular,
     NotoSans_500Medium,
@@ -27,8 +28,8 @@ import {
     NotoSans_900Black,
     useFonts,
 } from "@expo-google-fonts/noto-sans";
+/* eslint-enable camelcase */
 import { tokenStore, queryClient, queryPersister } from "@/infrastructure/api";
-import { BRAND_COLORS } from "@/presentation/styles/theme";
 import { initLanguage } from "@/presentation/i18n";
 
 const PERSIST_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
@@ -40,7 +41,9 @@ const PERSIST_MAX_AGE_MS = 1000 * 60 * 60 * 24 * 7;
  */
 export default function Layout(): React.JSX.Element {
     const { success, error } = useMigrations(db, migrations);
-    const { colorScheme, setColorScheme } = useColorScheme();
+    const nativewindColorScheme = useColorScheme();
+    const { colorScheme } = nativewindColorScheme;
+    /* eslint-disable camelcase, typescript/naming-convention -- font names are fixed exports from @expo-google-fonts/noto-sans */
     const [fontsLoaded] = useFonts({
         NotoSans_400Regular,
         NotoSans_500Medium,
@@ -48,16 +51,21 @@ export default function Layout(): React.JSX.Element {
         NotoSans_700Bold,
         NotoSans_900Black,
     });
+    /* eslint-enable camelcase, typescript/naming-convention */
     const [tokenHydrated, setTokenHydrated] = useState(false);
     const [languageReady, setLanguageReady] = useState(false);
 
-    setColorScheme("light"); // Forcefully set to light theme.
+    nativewindColorScheme.setColorScheme("light"); // Forcefully set to light theme.
 
     z.config(en());
 
     useEffect(() => {
-        void tokenStore.hydrate().then(() => { setTokenHydrated(true); });
-        void initLanguage().then(() => { setLanguageReady(true); });
+        void tokenStore.hydrate().then(() => {
+            setTokenHydrated(true);
+        });
+        void initLanguage().then(() => {
+            setLanguageReady(true);
+        });
 
         // Restored/saved entirely in the background — queries must never
         // Wait on this. A restored entry only fills in for a query that
@@ -96,7 +104,7 @@ export default function Layout(): React.JSX.Element {
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
                             <StatusBar
                                 backgroundColor={BRAND_COLORS.primary}
-                                style="dark"
+                                style="dark" // eslint-disable-line react/forbid-component-props, react/style-prop-object -- StatusBar's `style` is an appearance enum, not a React Native style object
                             />
 
                             <Stack>

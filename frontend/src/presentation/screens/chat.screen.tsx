@@ -1,9 +1,8 @@
 import { Stack, useLocalSearchParams } from "expo-router";
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { Pressable, RefreshControl, ScrollView, View } from "react-native";
+import { Platform, Pressable, RefreshControl, ScrollView, View } from "react-native";
 import { KeyboardAvoidingView } from "react-native-keyboard-controller";
-import { Platform } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Send } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
@@ -44,7 +43,9 @@ export default function ChatScreen(): React.JSX.Element {
     function onSend(): void {
         const content = draft.trim();
 
-        if (content.length === 0 || isPending || !isOnline) { return; }
+        if (content.length === 0 || isPending || !isOnline) {
+            return;
+        }
 
         sendMessage(
             { content, recipientId: userId },
@@ -71,7 +72,7 @@ export default function ChatScreen(): React.JSX.Element {
                         />
 
                         <Text className="text-[20px] font-noto-bold text-black">
-                            {counterpart.firstname} {counterpart.surname}
+                            {`${counterpart.firstname} ${counterpart.surname}`}
                         </Text>
                     </View>}
 

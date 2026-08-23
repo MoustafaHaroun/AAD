@@ -30,7 +30,7 @@ export function SecondaryButton({
                 className,
             )}
             disabled={disabled}
-            {...props}
+            {...props /* eslint-disable-line react/jsx-props-no-spreading -- forwards arbitrary Pressable props */}
         >
             <Text className="text-[20px] font-noto-bold text-forehued">{children}</Text>
         </Pressable>

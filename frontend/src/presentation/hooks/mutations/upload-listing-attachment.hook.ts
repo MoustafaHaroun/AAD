@@ -10,7 +10,7 @@ const uploadListingAttachment = new UploadListingAttachment();
 export function useUploadListingAttachment(): UseMutationResult<void, Error, UploadListingAttachmentParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, UploadListingAttachmentParams>({
+    return useMutation({
         mutationFn: async params => uploadListingAttachment.execute(params),
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({ queryKey: ["api-listings.get", variables.id] });

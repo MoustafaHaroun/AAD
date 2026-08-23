@@ -10,7 +10,7 @@ const deleteUser = new DeleteUser();
 export function useDeleteUser(): UseMutationResult<void, Error, DeleteUserParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, DeleteUserParams>({
+    return useMutation({
         mutationFn: async params => deleteUser.execute(params),
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({ queryKey: ["users.get.all"] });

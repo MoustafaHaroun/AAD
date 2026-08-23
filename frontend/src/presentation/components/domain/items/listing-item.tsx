@@ -1,3 +1,4 @@
+/* eslint-disable react/no-multi-comp -- ListingCover is a private helper used only by ListingItem below */
 import * as React from "react";
 import { Image, Pressable, View } from "react-native";
 import { useTranslation } from "react-i18next";
@@ -12,6 +13,33 @@ export interface ListingItemProps {
     readonly listing: ApiListing,
     readonly onPress?: () => void,
     readonly distanceLabel?: string,
+}
+
+/**
+ * Render a listing's cover photo, or a placeholder icon when it has none.
+ * @param props - The props.
+ * @param props.uri - The cover attachment's URI, if the listing has one.
+ * @returns The rendered cover.
+ */
+function ListingCover({ uri }: { readonly uri?: string }): React.JSX.Element {
+    if (uri == null) {
+        return (
+            <View className="aspect-[6/5] w-full items-center justify-center bg-muted">
+                <Icon
+                    as={ImageOff}
+                    className="size-8 text-muted-foreground"
+                />
+            </View>
+        );
+    }
+
+    return (
+        <Image
+            className="aspect-[6/5] w-full"
+            resizeMode="cover"
+            source={{ uri }}
+        />
+    );
 }
 
 /**
@@ -38,12 +66,14 @@ export default function ListingItem({ listing, onPress, distanceLabel }: Listing
      * Create or delete the favorite for this listing, based on its current state.
      */
     function toggleFavorite(): void {
-        if (isFavoriting || isUnfavoriting || !isOnline) { return; }
+        if (isFavoriting || isUnfavoriting || !isOnline) {
+            return;
+        }
 
-        if (favorite != null) {
-            deleteFavorite({ id: favorite.id });
-        } else {
+        if (favorite == null) {
             createFavorite({ listingId: listing.id });
+        } else {
+            deleteFavorite({ id: favorite.id });
         }
     }
 
@@ -58,19 +88,7 @@ export default function ListingItem({ listing, onPress, distanceLabel }: Listing
                     accessibilityRole="button"
                     onPress={onPress}
                 >
-                    {coverUri != null
-                        ? <Image
-                                className="aspect-[6/5] w-full"
-                                resizeMode="cover"
-                                source={{ uri: coverUri }}
-                          />
-
-                        : <View className="aspect-[6/5] w-full items-center justify-center bg-muted">
-                                <Icon
-                                as={ImageOff}
-                                className="size-8 text-muted-foreground"
-                            />
-                            </View>}
+                    <ListingCover uri={coverUri} />
                 </Pressable>
 
                 <Pressable

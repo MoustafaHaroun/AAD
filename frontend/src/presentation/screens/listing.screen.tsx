@@ -1,11 +1,8 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { ActivityIndicator, Pressable, RefreshControl, ScrollView, Share, View } from "react-native";
+import { RefreshControl, ScrollView, Share, View } from "react-native";
 import * as Linking from "expo-linking";
-import { LinearGradient } from "expo-linear-gradient";
 import { AppHeader } from "@/presentation/components/containers/app-header";
-import { Text, Icon, Separator } from "@/presentation/components/primitives/rnreusables";
-import { MapPin, Pencil, Heart, ImageOff, Share2 } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 import {
     useGetApiListing,
@@ -19,16 +16,106 @@ import {
     useGetUser,
     useNetworkStatus,
 } from "@/presentation/hooks";
-import { SwipableImageGallery } from "@/presentation/components/primitives/custom";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
-import { cn } from "@/presentation/utils/cn.util";
+import {
+    ListingHeaderActions,
+    ListingStatus,
+    ListingCover,
+    ListingDetails,
+} from "@/presentation/components/domain/listing/listing-detail-parts";
+import type { ApiListing } from "@/domain/entities";
 
 /**
- * Render a listing's detail page with favoriting, sharing, and starting a trade chat.
- * @returns The rendered listing screen.
+ * Determine whether a viewer may edit a listing: its owner, or an admin.
+ * @param listing - The loaded listing, if any.
+ * @param currentUserId - The viewer's user id, if signed in.
+ * @param currentUserRole - The viewer's role, if signed in.
+ * @returns Whether the viewer may edit the listing.
  */
-export default function ListingScreen(): React.JSX.Element {
+function canManageListing(listing: ApiListing | undefined, currentUserId: string | null, currentUserRole: string | undefined): boolean {
+    if (listing == null) {
+        return false;
+    }
+
+    return listing.user?.id === currentUserId || currentUserRole === "admin";
+}
+
+/**
+ * Format the distance from the viewer to a listing's owner, when both locations are known.
+ * @param t - The translation function.
+ * @param viewer - The viewer's own coordinates, if their location is known.
+ * @param listing - The loaded listing, if any.
+ * @returns The formatted distance label, or undefined.
+ */
+function getListingDistanceLabel(
+    t: ReturnType<typeof useTranslation>["t"],
+    viewer: Parameters<typeof formatDistanceLabel>[1] | undefined,
+    listing: ApiListing | undefined,
+): string | undefined {
+    if (viewer == null) {
+        return undefined;
+    }
+
+    return formatDistanceLabel(t, viewer, listing?.user ?? {});
+}
+
+/**
+ * Get a listing's attachment paths, in order.
+ * @param listing - The loaded listing, if any.
+ * @returns The attachment paths, or an empty array if the listing has none loaded yet.
+ */
+function getAttachmentPaths(listing: ApiListing | undefined): string[] {
+    if (listing?.attachments == null) {
+        return [];
+    }
+
+    return listing.attachments.map(a => a.path);
+}
+
+/**
+ * Determine whether the viewer is the listing's own poster.
+ * @param listing - The loaded listing, if any.
+ * @param currentUserId - The viewer's user id, if signed in.
+ * @returns Whether the viewer posted this listing.
+ */
+function computeIsOwnListing(listing: ApiListing | undefined, currentUserId: string | null): boolean {
+    if (listing?.user == null) {
+        return false;
+    }
+
+    return listing.user.id === currentUserId;
+}
+
+interface ListingScreenState {
+    id: string,
+    router: ReturnType<typeof useRouter>,
+    t: ReturnType<typeof useTranslation>["t"],
+    listing: ReturnType<typeof useGetApiListing>["data"],
+    isLoading: boolean,
+    isFetching: boolean,
+    error: Error | null,
+    refetch: () => unknown,
+    isOnline: boolean,
+    isFavorited: boolean,
+    canManage: boolean,
+    isOwnListing: boolean,
+    distanceLabel: string | undefined,
+    attachmentPaths: string[],
+    favorite: { id: string } | undefined,
+    isFavoriting: boolean,
+    isUnfavoriting: boolean,
+    createFavorite: ReturnType<typeof useCreateFavorite>["mutate"],
+    deleteFavoriteItem: ReturnType<typeof useDeleteFavorite>["mutate"],
+    sendMessage: ReturnType<typeof useCreateMessage>["mutate"],
+    conversations: ReturnType<typeof useConversations>["conversations"],
+}
+
+/**
+ * Load a listing and assemble the derived state its detail page needs.
+ * @returns The listing screen's view state.
+ */
+function useListingScreenState(): ListingScreenState {
     const router = useRouter();
     const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
@@ -45,20 +132,60 @@ export default function ListingScreen(): React.JSX.Element {
 
     const favorite = favorites?.find(f => f.listingId === id);
     const isFavorited = favorite != null;
-    const canManage = listing != null &&
-        (listing.user?.id === currentUserId || currentUser?.role === "admin");
-    const distanceLabel = viewer == null ? undefined : formatDistanceLabel(t, viewer, listing?.user ?? {});
+    const canManage = canManageListing(listing, currentUserId, currentUser?.role);
+    const isOwnListing = computeIsOwnListing(listing, currentUserId);
+    const distanceLabel = getListingDistanceLabel(t, viewer, listing);
+    const attachmentPaths = getAttachmentPaths(listing);
+
+    return {
+        id,
+        router,
+        t,
+        listing,
+        isLoading,
+        isFetching,
+        error,
+        refetch,
+        isOnline,
+        isFavorited,
+        canManage,
+        isOwnListing,
+        distanceLabel,
+        attachmentPaths,
+        favorite,
+        isFavoriting,
+        isUnfavoriting,
+        createFavorite,
+        deleteFavoriteItem,
+        sendMessage,
+        conversations,
+    };
+}
+
+/**
+ * Build the listing detail page's favorite/share/trade-request handlers.
+ * @param state - The listing screen's loaded state, from {@link useListingScreenState}.
+ * @returns The handlers used by the listing detail page.
+ */
+function useListingActions(state: ReturnType<typeof useListingScreenState>): {
+    toggleFavorite: () => void,
+    onShare: () => void,
+    onSendMessage: () => void,
+} {
+    const { router, t, listing, isOnline, favorite, isFavoriting, isUnfavoriting, createFavorite, deleteFavoriteItem, sendMessage, conversations } = state;
 
     /**
      * Favorite or unfavorite the listing.
      */
     function toggleFavorite(): void {
-        if (isFavoriting || isUnfavoriting || listing == null || !isOnline) { return; }
+        if (isFavoriting || isUnfavoriting || listing == null || !isOnline) {
+            return;
+        }
 
-        if (favorite != null) {
-            deleteFavoriteItem({ id: favorite.id });
-        } else {
+        if (favorite == null) {
             createFavorite({ listingId: listing.id });
+        } else {
+            deleteFavoriteItem({ id: favorite.id });
         }
     }
 
@@ -66,7 +193,9 @@ export default function ListingScreen(): React.JSX.Element {
      * Open the native share sheet with a link to this listing.
      */
     function onShare(): void {
-        if (listing == null) { return; }
+        if (listing == null) {
+            return;
+        }
 
         const url = Linking.createURL(`/listings/${listing.id}`);
 
@@ -78,7 +207,10 @@ export default function ListingScreen(): React.JSX.Element {
      * message only the first time a conversation with them is started.
      */
     function onSendMessage(): void {
-        if (listing?.user == null) { return; }
+        if (listing?.user == null) {
+            return;
+        }
+
         const posterId = listing.user.id;
         const hasExistingConversation = conversations?.some(c => c.counterpart.id === posterId) ?? false;
 
@@ -93,40 +225,29 @@ export default function ListingScreen(): React.JSX.Element {
         );
     }
 
-    const attachmentPaths = listing?.attachments?.map(a => a.path) ?? [];
+    return { toggleFavorite, onShare, onSendMessage };
+}
+
+/**
+ * Render a listing's detail page with favoriting, sharing, and starting a trade chat.
+ * @returns The rendered listing screen.
+ */
+export default function ListingScreen(): React.JSX.Element {
+    const state = useListingScreenState();
+    const {
+        id, router, listing, isLoading, isFetching, error, refetch, isOnline,
+        isFavorited, canManage, isOwnListing, distanceLabel, attachmentPaths, t,
+    } = state;
+    const { toggleFavorite, onShare, onSendMessage } = useListingActions(state);
 
     return (
         <View className="flex-1 bg-background">
             <AppHeader
-                right={<>
-                    <Pressable
-                        accessibilityLabel={t("common.share")}
-                        accessibilityRole="button"
-                        className="flex items-center justify-center w-8 aspect-square"
-                        hitSlop={8}
-                        onPress={onShare}
-                    >
-                        <Icon
-                            as={Share2}
-                            className="size-5"
-                        />
-                    </Pressable>
-
-                    {canManage
-                        ? <Pressable
-                                accessibilityLabel={t("common.edit")}
-                                accessibilityRole="button"
-                                className="flex items-center justify-center w-8 aspect-square"
-                                hitSlop={8}
-                                onPress={() => { router.push(`/listings/${id}/edit`); }}
-                            >
-                                <Icon
-                                as={Pencil}
-                                className="size-5"
-                            />
-                            </Pressable>
-                        : null}
-                       </>}
+                right={<ListingHeaderActions
+                    canManage={canManage}
+                    onEdit={() => { router.push(`/listings/${id}/edit`); }}
+                    onShare={onShare}
+                />}
             />
 
             <View className="flex-1 bg-background">
@@ -136,115 +257,42 @@ export default function ListingScreen(): React.JSX.Element {
                     refreshControl={
                         <RefreshControl
                             onRefresh={() => { void refetch(); }}
-                            refreshing={isFetching && !isLoading}
+                            refreshing={isFetching ? !isLoading : false}
                         />
                     }
                 >
 
-                    {isLoading
-                        ? <View className="items-center justify-center p-8">
-                                <ActivityIndicator />
-                            </View>
-                        : null}
-
-                    {error != null && listing == null &&
-                        <View className="items-center justify-center p-8">
-                            <Text className="text-center text-sm text-destructive">
-                                {isOnline ? t("common.loadError") : t("common.notAvailableOffline")}
-                            </Text>
-                        </View>}
+                    <ListingStatus
+                        hasError={error != null && listing == null}
+                        isLoading={isLoading}
+                        isOnline={isOnline}
+                    />
 
                     {/* Gallery */}
-                    {attachmentPaths.length > 0
-                        ? <SwipableImageGallery uris={attachmentPaths} />
-                        : listing != null &&
-                            <View className="w-full aspect-video items-center justify-center bg-muted">
-                                <Icon
-                                    as={ImageOff}
-                                    className="size-12 text-muted-foreground"
-                                />
-                            </View>}
+                    {listing == null ? null : <ListingCover attachmentPaths={attachmentPaths} />}
 
-                    {listing != null &&
-                        <View className="flex flex-col gap-4 p-4">
-
-                            {/* User info */}
-                            <View className="flex flex-col gap-1">
-                                <Text className="text-[28px] font-noto-bold text-black">
-                                    {listing.user?.firstname} {listing.user?.surname}
-                                </Text>
-
-                                {listing.user?.location != null &&
-                                    <View className="flex flex-row items-center gap-1">
-                                        <Icon
-                                            as={MapPin}
-                                            className="size-4 text-forehued"
-                                        />
-
-                                        <Text className="font-noto-semibold text-[16px] text-forehued">
-                                            {listing.user.location}
-                                        </Text>
-                                    </View>}
-
-                                {distanceLabel != null &&
-                                    <Text className="font-noto-medium text-[14px] text-forehued">
-                                        {distanceLabel}
-                                    </Text>}
-                            </View>
-
-                            <Separator />
-
-                            {/* Title + Favorite */}
-                            <View className="flex flex-row items-start justify-between gap-4">
-                                <Text className="flex-1 text-[24px] font-noto-bold text-black">{listing.title}</Text>
-
-                                <Pressable
-                                    accessibilityLabel={isFavorited ? t("common.unfavorite") : t("common.favorite")}
-                                    accessibilityRole="button"
-                                    className={cn("size-12 shrink-0 items-center justify-center overflow-hidden rounded-[10px]", !isOnline && "opacity-50")}
-                                    disabled={!isOnline}
-                                    onPress={toggleFavorite}
-                                >
-                                    {isFavorited
-                                        ? <LinearGradient
-                                                colors={["#FCC010", "#F28D1B"]}
-                                                end={{ x: 1, y: 1 }}
-                                                start={{ x: 0, y: 0 }}
-                                                style={{ alignItems: "center", height: "100%", justifyContent: "center", width: "100%" }}
-                                            >
-                                            <Icon
-                                                    as={Heart}
-                                                    className="size-5 fill-black text-black"
-                                                />
-                                          </LinearGradient>
-
-                                        : <View className="size-full items-center justify-center bg-surfhued">
-                                            <Icon
-                                                    as={Heart}
-                                                    className="size-5 text-forehued"
-                                                />
-                                          </View>}
-                                </Pressable>
-                            </View>
-
-                            {/* Description */}
-                            {listing.description != null &&
-                                <Text className="font-noto text-[16px] leading-relaxed text-black">
-                                    {listing.description}
-                                </Text>}
-                        </View>}
+                    {listing == null
+                        ? null
+                        : <ListingDetails
+                                distanceLabel={distanceLabel}
+                                isFavorited={isFavorited}
+                                isOnline={isOnline}
+                                listing={listing}
+                                onToggleFavorite={toggleFavorite}
+                            />}
                 </ScrollView>
 
                 {/* Fixed bottom CTA */}
-                {listing != null && listing.user?.id !== currentUserId &&
-                    <View className="border-t border-border bg-background px-4 pb-4 pt-3">
-                        <GradientButton
-                            disabled={!isOnline}
-                            onPress={onSendMessage}
-                        >
-                            {t("listing.sendMessage")}
-                        </GradientButton>
-                    </View>}
+                {listing != null && !isOwnListing
+                    ? <View className="border-t border-border bg-background px-4 pb-4 pt-3">
+                            <GradientButton
+                                disabled={!isOnline}
+                                onPress={onSendMessage}
+                            >
+                                {t("listing.sendMessage")}
+                            </GradientButton>
+                        </View>
+                    : null}
             </View>
         </View>
     );

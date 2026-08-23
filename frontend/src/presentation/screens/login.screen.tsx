@@ -15,7 +15,7 @@ import { PasswordInput } from "@/presentation/components/primitives/password-inp
 import { useSignIn } from "@/presentation/hooks";
 
 const loginSchema = z.object({
-    email: z.string().email(),
+    email: z.email(),
     password: z.string().min(1),
 });
 
@@ -77,15 +77,15 @@ export default function LoginScreen(): React.JSX.Element {
                                 label={t("login.emailLabel")}
                                 name="email"
                             >
-                                {({ value, onChange }) => (<Input
-                                        autoCapitalize="none"
-                                        autoComplete="email"
-                                        className={INPUT_CLASS}
-                                        keyboardType="email-address"
-                                        onChangeText={onChange}
-                                        placeholder={t("login.emailPlaceholder")}
-                                        value={value}
-                                    />)}
+                                {({ value, onChange }) => <Input
+                                    autoCapitalize="none"
+                                    autoComplete="email"
+                                    className={INPUT_CLASS}
+                                    keyboardType="email-address"
+                                    onChangeText={onChange}
+                                    placeholder={t("login.emailPlaceholder")}
+                                    value={value}
+                                />}
                             </FormField>
 
                             <FormField
@@ -93,12 +93,12 @@ export default function LoginScreen(): React.JSX.Element {
                                 label={t("login.passwordLabel")}
                                 name="password"
                             >
-                                {({ value, onChange }) => (<PasswordInput
-                                        autoComplete="password"
-                                        className={INPUT_CLASS}
-                                        onChangeText={onChange}
-                                        value={value}
-                                    />)}
+                                {({ value, onChange }) => <PasswordInput
+                                    autoComplete="password"
+                                    className={INPUT_CLASS}
+                                    onChangeText={onChange}
+                                    value={value}
+                                />}
                             </FormField>
                         </View>
 

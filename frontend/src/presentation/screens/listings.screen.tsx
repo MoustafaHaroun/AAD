@@ -1,28 +1,23 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
 import { useMemo, useState } from "react";
-import { View, Pressable, ScrollView, RefreshControl, ActivityIndicator } from "react-native";
+import { View, ScrollView, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Plus, Search } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
-import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
-import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import ListingItem from "@/presentation/components/domain/items/listing-item";
-import { CategoryFilterChips } from "@/presentation/components/domain/listings/category-filter-chips";
+import {
+    type TabKey,
+    filterListings,
+    ListingsFiltersBar,
+    ListingsStatusOverlay,
+    ListingsEmptyState,
+    NewListingFab,
+} from "@/presentation/components/domain/listings/listings-screen-parts";
 import { useCurrentUserId, useGetApiListings, useGetFavorites, useGetUser, useNetworkStatus } from "@/presentation/hooks";
 import { OfflineBanner } from "@/presentation/components/containers/offline-banner";
 import type { ListingCategory } from "@/domain/entities/listing-category.entity";
-import { cn } from "@/presentation/utils/cn.util";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
-
-const TABS = [
-    { key: "near" },
-    { key: "liked" },
-    { key: "my" },
-] as const;
-
-type TabKey = (typeof TABS)[number]["key"];
 
 /**
  * Render the browsable listings grid with tabs, search, and category filtering.
@@ -38,38 +33,18 @@ export default function ListingsScreen(): React.JSX.Element {
     const [category, setCategory] = useState<ListingCategory | undefined>(undefined);
 
     // Always fetch the same unfiltered list — a single stable cache entry —
-    // and filter client-side below. Server-side filtering would mean every
-    // distinct search/category combination is its own network-only query
-    // with nothing to fall back on offline.
+    // And filter client-side below. Server-side filtering would mean every
+    // Distinct search/category combination is its own network-only query
+    // With nothing to fall back on offline.
     const { data, isFetching, isLoading, error, refetch } = useGetApiListings();
     const { data: favorites } = useGetFavorites();
     const { data: currentUser } = useGetUser(currentUserId ?? "");
     const isOnline = useNetworkStatus();
 
-    const listings = useMemo(() => {
-        if (data == null) { return undefined; }
-
-        if (tab === "liked") {
-            const favoriteListingIds = new Set(favorites?.map(f => f.listingId));
-
-            return data.filter(listing => favoriteListingIds.has(listing.id));
-        }
-
-        if (tab === "my") {
-            return data.filter(listing => listing.user?.id === currentUserId);
-        }
-
-        const normalizedQuery = query.trim().toLowerCase();
-
-        return data.filter(listing => {
-            const matchesQuery = normalizedQuery.length === 0
-                || listing.title.toLowerCase().includes(normalizedQuery)
-                || (listing.description?.toLowerCase().includes(normalizedQuery) ?? false);
-            const matchesCategory = category == null || listing.category === category;
-
-            return matchesQuery && matchesCategory;
-        });
-    }, [data, favorites, tab, currentUserId, query, category]);
+    const listings = useMemo(
+        () => filterListings(data, tab, { favorites, currentUserId }, query, category),
+        [data, favorites, tab, currentUserId, query, category],
+    );
 
     return (
         <>
@@ -87,50 +62,14 @@ export default function ListingsScreen(): React.JSX.Element {
 
                 <OfflineBanner />
 
-                <View className="gap-3 p-4">
-                    <View className="flex-row items-center gap-[10px] rounded-[10px] border-[1.5px] border-forehued bg-white px-[16px] py-[13px]">
-                        <Icon
-                            as={Search}
-                            className="size-6 text-forehued"
-                        />
-
-                        <Input
-                            className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
-                            onChangeText={setQuery}
-                            placeholder={t("common.search")}
-                            returnKeyType="search"
-                            value={query}
-                        />
-                    </View>
-
-                    <ScrollView
-                        className="border-b border-border"
-                        contentContainerStyle={{ gap: 16 }}
-                        horizontal
-                        showsHorizontalScrollIndicator={false}
-                    >
-                        {TABS.map(tabItem => (<Pressable
-                                className={cn("pb-2", tab === tabItem.key && "border-b-2 border-black")}
-                                key={tabItem.key}
-                                onPress={() => { setTab(tabItem.key); }}
-                            >
-                                <Text
-                                    className={cn(
-                                        "text-[15px]",
-                                        tab === tabItem.key ? "font-noto-bold text-black" : "font-noto-medium text-forehued",
-                                    )}
-                                    numberOfLines={1}
-                                >
-                                    {t(`listings.tabs.${tabItem.key}`)}
-                                </Text>
-                             </Pressable>),)}
-                    </ScrollView>
-
-                    {tab === "near" && <CategoryFilterChips
-                        onChange={setCategory}
-                        value={category}
-                    />}
-                </View>
+                <ListingsFiltersBar
+                    category={category}
+                    onChangeCategory={setCategory}
+                    onChangeQuery={setQuery}
+                    onChangeTab={setTab}
+                    query={query}
+                    tab={tab}
+                />
 
                 <ScrollView
                     className="flex-1"
@@ -138,61 +77,38 @@ export default function ListingsScreen(): React.JSX.Element {
                     refreshControl={
                         <RefreshControl
                             onRefresh={() => { void refetch(); }}
-                            refreshing={isFetching && !isLoading}
+                            refreshing={isFetching ? !isLoading : false}
                         />
                     }
                 >
-                    {isLoading
-                        ? <View className="flex-1 items-center justify-center">
-                                <ActivityIndicator />
-                            </View>
-                        : null}
+                    <ListingsStatusOverlay
+                        hasError={error != null && data == null}
+                        isLoading={isLoading}
+                        isOnline={isOnline}
+                    />
 
-                    {error != null && data == null &&
-                        <View className="flex-1 items-center justify-center">
-                            <Text className="text-center text-sm text-destructive">
-                                {isOnline ? t("common.loadError") : t("common.notAvailableOffline")}
-                            </Text>
-                        </View>}
-
-                    {listings?.length === 0 &&
-                        <View className="flex-1 items-center justify-center py-8">
-                            <Text className="text-muted-foreground">
-                                {tab === "liked" && t("listings.emptyLiked")}
-
-                                {tab === "my" && t("listings.emptyMy")}
-
-                                {tab === "near" && t("listings.emptyNear")}
-                            </Text>
-                        </View>}
+                    <ListingsEmptyState
+                        show={listings?.length === 0}
+                        tab={tab}
+                    />
 
                     <View className="-m-1 flex flex-row flex-wrap">
-                        {listings?.map(listing => (
-                            <View className="w-1/2 p-1" key={listing.id}>
-                                <ListingItem
-                                    distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
-                                    listing={listing}
-                                    onPress={() => { router.push(`/listings/${listing.id}`); }}
-                                />
-                            </View>
-                        ))}
+                        {listings?.map(listing => <View
+                            className="w-1/2 p-1"
+                            key={listing.id}>
+                            <ListingItem
+                                distanceLabel={currentUser == null ? undefined : formatDistanceLabel(t, currentUser, listing.user ?? {})}
+                                listing={listing}
+                                onPress={() => { router.push(`/listings/${listing.id}`); }}
+                            />
+                        </View>)}
                     </View>
                 </ScrollView>
 
-                <View className="absolute bottom-0 right-0 p-4">
-                    <Pressable
-                        accessibilityLabel={t("home.newListing")}
-                        accessibilityRole="button"
-                        className={cn("h-14 w-14 items-center justify-center rounded-full bg-prim shadow-lg shadow-black", !isOnline && "opacity-50")}
-                        disabled={!isOnline}
-                        onPress={() => { router.push("/listings/new"); }}
-                    >
-                        <Icon
-                            as={Plus}
-                            className="size-6 text-black"
-                        />
-                    </Pressable>
-                </View>
+                <NewListingFab
+                    isOnline={isOnline}
+                    onPress={() => { router.push("/listings/new"); }}
+                />
             </View>
         </>
     );

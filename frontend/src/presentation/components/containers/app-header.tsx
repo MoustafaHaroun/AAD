@@ -41,19 +41,19 @@ export function AppHeader({ showBack = true, right }: AppHeaderProps): React.JSX
                                 className="absolute left-4 top-1/2 -translate-y-1/2 p-2"
                                 hitSlop={8}
                                 onPress={() => { router.back(); }}
-                          >
-                            <Icon
+                            >
+                                <Icon
                                     as={ArrowLeft}
                                     className="size-6 text-black"
                                 />
-                          </Pressable>
+                            </Pressable>
                         : null}
 
-                    {right != null
-                        ? <View className="absolute right-4 top-1/2 flex-row items-center gap-1 -translate-y-1/2">
-                            {right}
-                          </View>
-                        : null}
+                    {right == null
+                        ? null
+                        : <View className="absolute right-4 top-1/2 flex-row items-center gap-1 -translate-y-1/2">
+                                {right}
+                            </View>}
                 </View>
             </SafeAreaView>
 

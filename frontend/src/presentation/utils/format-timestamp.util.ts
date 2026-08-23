@@ -18,12 +18,19 @@ export function formatConversationTimestamp(iso: string, t: TFunction): string {
 
     const days = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
 
-    if (days < 1) { return t("time.yesterday"); }
-    if (days < 7) { return t("time.daysAgo", { count: days }); }
+    if (days < 1) {
+        return t("time.yesterday");
+    }
+
+    if (days < 7) {
+        return t("time.daysAgo", { count: days });
+    }
 
     const weeks = Math.floor(days / 7);
 
-    if (weeks < 5) { return t("time.weeksAgo", { count: weeks }); }
+    if (weeks < 5) {
+        return t("time.weeksAgo", { count: weeks });
+    }
 
     return date.toLocaleDateString();
 }

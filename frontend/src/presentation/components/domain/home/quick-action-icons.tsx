@@ -1,18 +1,17 @@
+/* eslint-disable react/no-multi-comp -- co-located icon set */
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
-import { resolveIconColor, type FigmaIconProps } from "@/presentation/utils/figma-icon.util";
+import { resolveIconColor, type IconProps } from "@/presentation/utils/icon.util";
 
 /**
- * Render the "New listing" Home-screen quick-action icon, exported directly
- * from the Figma file (node id 57:1040) rather than substituted with a
- * generic icon set.
+ * Render the "New listing" home-screen quick-action icon.
  * @param props - The props.
  * @param props.size - The icon size in pixels. Defaults to 24.
  * @param props.color - The fill color. Falls back to `style.color`, then a default.
  * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
  * @returns The rendered icon.
  */
-export function NewListingIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
+export function NewListingIcon({ size = 24, color, style }: IconProps): React.JSX.Element {
     return (
         <Svg
             fill="none"
@@ -29,16 +28,14 @@ export function NewListingIcon({ size = 24, color, style }: FigmaIconProps): Rea
 }
 
 /**
- * Render the "My listings" Home-screen quick-action icon, exported directly
- * from the Figma file (node id 57:1011) rather than substituted with a
- * generic icon set.
+ * Render the "My listings" home-screen quick-action icon.
  * @param props - The props.
  * @param props.size - The icon size in pixels. Defaults to 24.
  * @param props.color - The fill color. Falls back to `style.color`, then a default.
  * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
  * @returns The rendered icon.
  */
-export function MyListingsIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
+export function MyListingsIcon({ size = 24, color, style }: IconProps): React.JSX.Element {
     const fill = resolveIconColor(color, style);
 
     return (
@@ -64,16 +61,14 @@ export function MyListingsIcon({ size = 24, color, style }: FigmaIconProps): Rea
 }
 
 /**
- * Render the "Chats" Home-screen quick-action icon, exported directly from
- * the Figma file (node id 57:1027) rather than substituted with a generic
- * icon set.
+ * Render the "Chats" home-screen quick-action icon.
  * @param props - The props.
  * @param props.size - The icon size in pixels. Defaults to 24.
  * @param props.color - The fill color. Falls back to `style.color`, then a default.
  * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
  * @returns The rendered icon.
  */
-export function ChatsIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
+export function ChatsIcon({ size = 24, color, style }: IconProps): React.JSX.Element {
     return (
         <Svg
             fill="none"
@@ -90,16 +85,14 @@ export function ChatsIcon({ size = 24, color, style }: FigmaIconProps): React.JS
 }
 
 /**
- * Render the "Account" Home-screen quick-action icon, exported directly
- * from the Figma file (node id 57:1032) rather than substituted with a
- * generic icon set.
+ * Render the "Account" home-screen quick-action icon.
  * @param props - The props.
  * @param props.size - The icon size in pixels. Defaults to 24.
  * @param props.color - The fill color. Falls back to `style.color`, then a default.
  * @param props.style - A style prop whose `color` is used when `color` isn't given directly.
  * @returns The rendered icon.
  */
-export function AccountIcon({ size = 24, color, style }: FigmaIconProps): React.JSX.Element {
+export function AccountIcon({ size = 24, color, style }: IconProps): React.JSX.Element {
     return (
         <Svg
             fill="none"

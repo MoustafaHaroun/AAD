@@ -10,7 +10,7 @@ const removeListingAttachment = new RemoveListingAttachment();
 export function useRemoveListingAttachment(): UseMutationResult<void, Error, RemoveListingAttachmentParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, RemoveListingAttachmentParams>({
+    return useMutation({
         mutationFn: async params => removeListingAttachment.execute(params),
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({ queryKey: ["api-listings.get", variables.id] });

@@ -29,14 +29,14 @@ export function PfpStep({ avatarUri, onPick }: PfpStepProps): React.JSX.Element 
                 onPress={onPick}
             >
                 <View className="size-[100px] items-center justify-center overflow-hidden rounded-full bg-muted">
-                    {avatarUri != null
-                        ? <Image
-                                className="size-full"
-                                source={{ uri: avatarUri }}
-                            />
-                        : <Icon
+                    {avatarUri == null
+                        ? <Icon
                                 as={UserIcon}
                                 className="size-14 text-muted-foreground"
+                            />
+                        : <Image
+                                className="size-full"
+                                source={{ uri: avatarUri }}
                             />}
                 </View>
 

@@ -10,7 +10,7 @@ const deleteFavorite = new DeleteFavorite();
 export function useDeleteFavorite(): UseMutationResult<void, Error, DeleteFavoriteParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, DeleteFavoriteParams>({
+    return useMutation({
         mutationFn: async params => deleteFavorite.execute(params),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["favorites.get"] });

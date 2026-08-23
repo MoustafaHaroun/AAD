@@ -40,7 +40,7 @@ export const THEME = {
         chart3: "hsl(197 37% 24%)",
         chart4: "hsl(43 74% 66%)",
         chart5: "hsl(27 87% 67%)",
-        // Trade² brand tokens (from Figma design system)
+        // Trade² brand tokens
         prim: "hsl(44.7 97.5% 52.5%)",
         sec: "hsl(31.8 89.2% 52.7%)",
         primdesat: "hsl(49.4 60.8% 80.0%)",

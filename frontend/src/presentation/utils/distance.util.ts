@@ -23,8 +23,8 @@ export function haversineDistanceKm(fromLat: number, fromLon: number, toLat: num
     const dLat = toRadians(toLat - fromLat);
     const dLon = toRadians(toLon - fromLon);
 
-    const a = Math.sin(dLat / 2) ** 2 +
-        Math.cos(toRadians(fromLat)) * Math.cos(toRadians(toLat)) * Math.sin(dLon / 2) ** 2;
+    const a = (Math.sin(dLat / 2) ** 2) +
+        (Math.cos(toRadians(fromLat)) * Math.cos(toRadians(toLat)) * (Math.sin(dLon / 2) ** 2));
 
     return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
 }
@@ -44,9 +44,13 @@ interface Coordinates {
  * @returns The formatted distance label, or undefined if the current user's location is unknown.
  */
 export function formatDistanceLabel(t: TFunction, from: Coordinates, to: Coordinates): string | undefined {
-    if (from.latitude == null || from.longitude == null) { return undefined; }
+    if (from.latitude == null || from.longitude == null) {
+        return undefined;
+    }
 
-    if (to.latitude == null || to.longitude == null) { return t("listings.distanceUnknown"); }
+    if (to.latitude == null || to.longitude == null) {
+        return t("listings.distanceUnknown");
+    }
 
     const distance = haversineDistanceKm(from.latitude, from.longitude, to.latitude, to.longitude);
 

@@ -15,10 +15,10 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
     const headers: Record<string, string> = {
         ...init.body != null && !(init.body instanceof FormData)
-            ? { "Content-Type": "application/json" }
+            ? { "Content-Type": "application/json" } // eslint-disable-line typescript/naming-convention -- HTTP header name
             : {},
-        ...token != null ? { Authorization: `Bearer ${token}` } : {},
-        ...init.headers as Record<string, string> ?? {},
+        ...token == null ? {} : { Authorization: `Bearer ${token}` }, // eslint-disable-line typescript/naming-convention -- HTTP header name
+        ...init.headers as Record<string, string>,
     };
 
     const response = await fetch(`${BASE_URL}${path}`, { ...init, headers });
@@ -61,7 +61,7 @@ export const apiClient = {
      */
     post: async <T>(path: string, body?: unknown): Promise<T> => request<T>(path, {
         method: "POST",
-        body: body != null ? JSON.stringify(body) : undefined,
+        body: body == null ? undefined : JSON.stringify(body),
     }),
 
     /**
@@ -72,7 +72,7 @@ export const apiClient = {
      */
     patch: async <T>(path: string, body?: unknown): Promise<T> => request<T>(path, {
         method: "PATCH",
-        body: body != null ? JSON.stringify(body) : undefined,
+        body: body == null ? undefined : JSON.stringify(body),
     }),
 
     /**

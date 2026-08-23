@@ -63,7 +63,7 @@ export default function ChatsScreen(): React.JSX.Element {
                     refreshControl={
                         <RefreshControl
                             onRefresh={() => { void refetch(); }}
-                            refreshing={isFetching && !isLoading}
+                            refreshing={isFetching ? !isLoading : false}
                         />
                     }
                 >
@@ -75,41 +75,41 @@ export default function ChatsScreen(): React.JSX.Element {
                         </Text>}
 
                     {filtered?.map(({ counterpart, lastMessage }) => <Pressable
-                            className="flex-row items-center gap-3 rounded-[10px] bg-surfhued p-3"
-                            key={counterpart.id}
-                            onPress={() => { router.push(`/chats/${counterpart.id}`); }}
-                        >
-                            <UserAvatar
-                                avatar={counterpart.avatar}
-                                firstname={counterpart.firstname}
-                                id={counterpart.id}
-                                surname={counterpart.surname}
-                            />
+                        className="flex-row items-center gap-3 rounded-[10px] bg-surfhued p-3"
+                        key={counterpart.id}
+                        onPress={() => { router.push(`/chats/${counterpart.id}`); }}
+                    >
+                        <UserAvatar
+                            avatar={counterpart.avatar}
+                            firstname={counterpart.firstname}
+                            id={counterpart.id}
+                            surname={counterpart.surname}
+                        />
 
-                            <View className="flex-1">
-                                <View className="flex-row items-center justify-between">
-                                    <Text
-                                        className="text-[16px] font-noto-semibold text-black"
-                                        ellipsizeMode="tail"
-                                        numberOfLines={1}
-                                    >
-                                        {counterpart.firstname} {counterpart.surname}
-                                    </Text>
-
-                                    <Text className="text-[14px] font-noto-medium text-forehued">
-                                        {formatConversationTimestamp(lastMessage.createdAt, t)}
-                                    </Text>
-                                </View>
-
+                        <View className="flex-1">
+                            <View className="flex-row items-center justify-between">
                                 <Text
-                                    className="text-[14px] font-noto-medium text-forehued"
+                                    className="text-[16px] font-noto-semibold text-black"
                                     ellipsizeMode="tail"
                                     numberOfLines={1}
                                 >
-                                    {lastMessage.content}
+                                    {`${counterpart.firstname} ${counterpart.surname}`}
+                                </Text>
+
+                                <Text className="text-[14px] font-noto-medium text-forehued">
+                                    {formatConversationTimestamp(lastMessage.createdAt, t)}
                                 </Text>
                             </View>
-                         </Pressable>,)}
+
+                            <Text
+                                className="text-[14px] font-noto-medium text-forehued"
+                                ellipsizeMode="tail"
+                                numberOfLines={1}
+                            >
+                                {lastMessage.content}
+                            </Text>
+                        </View>
+                    </Pressable>)}
                 </ScrollView>
             </View>
         </>

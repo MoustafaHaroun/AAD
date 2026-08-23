@@ -16,7 +16,13 @@ export function useUpdateNotification(): UseMutationResult<Notification, Error, 
         onSuccess: updated => {
             queryClient.setQueryData<Notification[]>(
                 ["notifications.get.all"],
-                prev => prev?.map(n => n.id === updated.id ? updated : n),
+                prev => prev?.map(n => {
+                    if (n.id === updated.id) {
+                        return updated;
+                    }
+
+                    return n;
+                }),
             );
         },
     });

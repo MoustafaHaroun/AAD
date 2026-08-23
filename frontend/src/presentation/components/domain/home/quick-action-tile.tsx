@@ -36,7 +36,9 @@ export function QuickActionTile({
 
     const content =
         <View className="items-center justify-center gap-1 px-1 py-3">
-            <IconComponent color={color} size={28} />
+            <IconComponent
+                color={color}
+                size={28} />
 
             <Text
                 className={
@@ -48,8 +50,7 @@ export function QuickActionTile({
             >
                 {label}
             </Text>
-        </View>
-    ;
+        </View>;
 
     if (variant === "primary") {
         return (

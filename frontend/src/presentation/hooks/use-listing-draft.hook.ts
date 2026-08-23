@@ -31,7 +31,9 @@ export function useListingDraft(id: string): {
             }
         });
 
-        return () => { cancelled = true; };
+        return () => {
+            cancelled = true;
+        };
     }, [id]);
 
     /**
@@ -39,7 +41,9 @@ export function useListingDraft(id: string): {
      * @param nextDraft - The draft state to persist.
      */
     function saveDraft(nextDraft: ListingDraft): void {
-        if (timeoutRef.current != null) { clearTimeout(timeoutRef.current); }
+        if (timeoutRef.current != null) {
+            clearTimeout(timeoutRef.current);
+        }
 
         timeoutRef.current = setTimeout(() => {
             void listingDraftStore.set(id, nextDraft);
@@ -50,7 +54,9 @@ export function useListingDraft(id: string): {
      * Discard the persisted draft, canceling any pending debounced save.
      */
     function clearDraft(): void {
-        if (timeoutRef.current != null) { clearTimeout(timeoutRef.current); }
+        if (timeoutRef.current != null) {
+            clearTimeout(timeoutRef.current);
+        }
 
         void listingDraftStore.clear(id);
     }

@@ -13,6 +13,6 @@ export function useGetNotification(id: string): UseQueryResult<Notification> {
     return useQuery<Notification>({
         queryKey: ["notifications.get", id],
         queryFn: async () => getNotification.execute({ id }),
-        enabled: id != null,
+        enabled: id.length > 0,
     });
 }

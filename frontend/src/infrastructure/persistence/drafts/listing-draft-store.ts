@@ -21,9 +21,12 @@ export const listingDraftStore = {
     // Must never crash or block the actual create/edit listing flow.
     async get(id: string): Promise<ListingDraft | null> {
         try {
-            const [row] = await db.select().from(listingDraftSchema).where(eq(listingDraftSchema.id, id));
+            const rows = await db.select().from(listingDraftSchema).where(eq(listingDraftSchema.id, id));
+            const row = rows.at(0);
 
-            if (row == null) { return null; }
+            if (row == null) {
+                return null;
+            }
 
             return {
                 title: row.title ?? undefined,
