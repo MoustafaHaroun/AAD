@@ -1,0 +1,77 @@
+\documentclass[fleqn,12pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel} % 'dutch' will use Saxion Hogeschool logo, any other language uses Saxion University of Applied Sciences logo.
+\usepackage[backend=biber]{biblatex}
+\usepackage[normalem]{ulem}
+\usepackage{microtype}
+\usepackage{amsmath}
+\usepackage{import}
+
+\usepackage{puml}
+\usepackage{longlisting}
+\usepackage{stylabletables}
+\usepackage{saxion}
+
+\makeatletter
+\newcommand{\setrootdepth}[1]{
+    \def\rootpath{}
+    \count0=0
+    \loop
+        \ifnum\count0<#1
+            \edef\rootpath{\rootpath../}
+            \advance\count0 by 1
+    \repeat
+
+    \graphicspath{{\rootpath fig/}{\rootpath uml/}} % Change this to be a relative path to your figures.
+    \addbibresource{\rootpath bib/references.bib} % Change this to be a relative path to your references.bib file.
+    \def\input@path{{\rootpath inc/}} % Change this to be a relative path to your included tex files.
+}
+\makeatother
+
+\setrootdepth{2} % Set this to correct nesting from the doc/ directory.
+
+\title{Hybrid Development}
+\subtitle{A Test Report for the Front-End of Trade2}
+\author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\section{Changelog}\label{sec:changelog}
+
+\begin{htable}[
+        caption = {Changelog},
+        label = {tab:changelog},
+    ]{
+        colspec={llX},
+    }
+    Version & Date & Description \\
+    1.0 & \today & Initial draft. \\
+\end{htable}
+
+\newpage
+\tableofcontents
+
+\newpage
+\input{hd/test-report/introduction.tex}
+
+\newpage
+\input{hd/test-report/approach.tex}
+
+\newpage
+\input{hd/test-report/test-cases.tex}
+
+\newpage
+\input{hd/test-report/test-report.tex}
+
+\newpage
+\input{hd/test-report/test-matrix.tex}
+
+\newpage
+\printbibliography
+
+\end{document}

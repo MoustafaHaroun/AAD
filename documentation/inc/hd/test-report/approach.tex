@@ -1,0 +1,38 @@
+\section{Approach}\label{sec:hd-testreport-approach}
+
+\subsection{Test environment}\label{sec:hd-testreport-environment}
+
+The test cases are executed against the Expo app running on a Xiaomi Redmi Note 14 Pro, connected to an instance of the backend API self-hosted at \texttt{https://api.mufasadev.nl}. Two accounts are needed:
+
+\begin{htable}[
+    caption = {Test Accounts},
+    label = {tab:hd-testreport-accounts},
+    presep = 1em,
+]
+    {
+        colspec={lXl},
+    }
+        Account & Description & Credentials \\
+        Regular test account & Registered through the app's own registration flow (TC001). & n/a (registered by the tester) \\
+        Admin account & Used only for the admin-gated cases in \cref{sec:hd-testreport-test-cases}. An admin account has been created ahead of time for testers to log in with. & \texttt{admin@trade2.com} / \texttt{Admin123!} \\
+\end{htable}
+
+Some test cases require a second, independent regular account (to act as a listing owner, message counterpart, or the target of a permission check) in addition to the primary test account.
+
+\subsection{Result scale}\label{sec:hd-testreport-result-scale}
+
+Each test case is recorded in \cref{sec:hd-testreport-test-report} with one of the following results once executed:
+
+\begin{htable}[
+    caption = {Result Scale},
+    label = {tab:hd-testreport-result-scale},
+    presep = 1em,
+]
+    {
+        colspec={lX},
+    }
+        Result & Meaning \\
+        Passed & The app behaved as described in the case's expected result. \\
+        Failed & The app did not behave as described. \\
+        Blocked & The case could not be executed (for example, because a prerequisite case failed). \\
+\end{htable}

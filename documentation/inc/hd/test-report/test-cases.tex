@@ -1,0 +1,315 @@
+\section{Test Cases}\label{sec:hd-testreport-test-cases}
+
+Each test case below states the requirement(s) it verifies, its pre-condition, the steps to execute it, and its expected result.
+
+\begin{htable}[caption = {TC001}, label = {tc:001}, presep = 1em, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC001 \\
+    Name & Register a new account with valid data \\
+    Description & A new user successfully creates an account through the registration wizard. \\
+    Requirements & FR1 \\
+    Pre-condition & The app is installed and the user is on the Landing screen; the email address used is not already registered. \\
+    Steps & 1) Tap Register. 2) Enter a unique email and a password meeting the policy (min. 8 characters, incl. lowercase, uppercase, digit, and special character), and confirm it. 3) Continue and enter first/last name. 4) Continue and enter address fields. 5) Continue and optionally skip the profile photo step. 6) Tap Create account. \\
+    End condition & The account exists and the user is signed in. \\
+    Expected result & The app signs the new user in automatically and navigates to the Home screen. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC002}, label = {tc:002}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC002 \\
+    Name & Register with an email already in use \\
+    Description & Registration is rejected when the email address is already registered. \\
+    Requirements & FR1 \\
+    Pre-condition & An account already exists with the email address used in this test (see TC001). \\
+    Steps & 1) Start registration. 2) Enter the same email used in TC001. 3) Complete the remaining steps and submit. \\
+    End condition & No new account is created. \\
+    Expected result & The app shows an error and the user remains on the registration flow (the backend returns 409 Conflict). \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC003}, label = {tc:003}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC003 \\
+    Name & Log in with valid credentials \\
+    Description & A registered user can sign in with the correct email and password. \\
+    Requirements & FR1 \\
+    Pre-condition & An account exists (TC001). \\
+    Steps & 1) On the Login screen, enter the account's email and password. 2) Tap Log in. \\
+    End condition & The user is signed in. \\
+    Expected result & The app navigates to the Home screen and the session token is stored. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC004}, label = {tc:004}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC004 \\
+    Name & Log in with an incorrect password \\
+    Description & Login is rejected when the password does not match. \\
+    Requirements & FR1 \\
+    Pre-condition & An account exists. \\
+    Steps & 1) On the Login screen, enter the account's email and an incorrect password. 2) Tap Log in. \\
+    End condition & The user is not signed in. \\
+    Expected result & An error message is shown and the app remains on the Login screen. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC005}, label = {tc:005}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC005 \\
+    Name & Session survives an app restart \\
+    Description & A signed-in session is not lost when the app is fully closed and reopened. \\
+    Requirements & FR1 \\
+    Pre-condition & The user is signed in (TC003). \\
+    Steps & 1) Force-quit the app. 2) Reopen the app. \\
+    End condition & n/a \\
+    Expected result & The app opens directly to the Home screen without requiring the user to log in again. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC006}, label = {tc:006}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC006 \\
+    Name & Log out clears the session \\
+    Description & Logging out ends the session and clears cached data. \\
+    Requirements & FR1 \\
+    Pre-condition & The user is signed in. \\
+    Steps & 1) Open the Account tab. 2) Tap Logout. \\
+    End condition & The user is signed out. \\
+    Expected result & The app returns to the Landing screen; reopening the app does not restore the previous session. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC007}, label = {tc:007}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC007 \\
+    Name & View and edit own profile \\
+    Description & A signed-in user can view and update their own profile fields. \\
+    Requirements & FR2 \\
+    Pre-condition & The user is signed in. \\
+    Steps & 1) Open Account > Personal Information. 2) Change the first name, surname, email, and/or location. 3) Save. \\
+    End condition & n/a \\
+    Expected result & The updated values are saved and displayed the next time the screen is opened. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC008}, label = {tc:008}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC008 \\
+    Name & Create a new offer listing \\
+    Description & A user can publish a new listing offering a skill. \\
+    Requirements & FR3 \\
+    Pre-condition & The user is signed in. \\
+    Steps & 1) Tap New listing. 2) Enter a title (3--64 characters) and description (up to 255 characters). 3) Select type Offer and a category. 4) Save. \\
+    End condition & n/a \\
+    Expected result & The listing is created and appears in the Listings screen and in My Listings. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC009}, label = {tc:009}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC009 \\
+    Name & Create a new request listing \\
+    Description & A user can publish a new listing requesting a skill. \\
+    Requirements & FR3 \\
+    Pre-condition & The user is signed in. \\
+    Steps & Same as TC008, selecting type Request instead of Offer. \\
+    End condition & n/a \\
+    Expected result & The listing is created with type Request and appears in Listings and My Listings. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC010}, label = {tc:010}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC010 \\
+    Name & Create a listing with a too-short title \\
+    Description & Listing creation is blocked client-side when the title does not meet the length requirement. \\
+    Requirements & FR3 \\
+    Pre-condition & The user is signed in and on the Create Listing screen. \\
+    Steps & 1) Enter a title shorter than 3 characters. 2) Leave the rest of the form valid. 3) Attempt to save. \\
+    End condition & n/a \\
+    Expected result & A validation error is shown and the listing is not submitted. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC011}, label = {tc:011}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC011 \\
+    Name & Edit an existing own listing \\
+    Description & The owner of a listing can change its fields. \\
+    Requirements & FR4 \\
+    Pre-condition & The user owns at least one listing (TC008/TC009). \\
+    Steps & 1) Open the listing's detail screen. 2) Tap Edit. 3) Change the title, description, category, or type. 4) Save. \\
+    End condition & n/a \\
+    Expected result & The changes are saved and reflected on the listing's detail screen and in the listings grid. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC012}, label = {tc:012}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC012 \\
+    Name & Delete an existing own listing \\
+    Description & The owner of a listing can permanently remove it. \\
+    Requirements & FR4 \\
+    Pre-condition & The user owns at least one listing. \\
+    Steps & 1) Open the listing's Edit screen. 2) Tap Delete and confirm in the dialog. \\
+    End condition & n/a \\
+    Expected result & The listing no longer appears in Listings, My Listings, or anyone's favorites. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC013}, label = {tc:013}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC013 \\
+    Name & Admin edits another user's listing \\
+    Description & An admin account can edit a listing it does not own. \\
+    Requirements & FR4 \\
+    Pre-condition & The signed-in account has the admin role; another user owns a listing. \\
+    Steps & 1) As the admin, open a listing owned by another user. 2) Confirm the Edit control is shown. 3) Tap Edit, change a field, and save. \\
+    End condition & n/a \\
+    Expected result & Unlike for a regular, non-owning user, the Edit control is shown; the change is saved and reflected on the listing's detail screen. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC014}, label = {tc:014}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC014 \\
+    Name & Admin deletes another user's listing \\
+    Description & An admin account can delete a listing it does not own. \\
+    Requirements & FR4 \\
+    Pre-condition & The signed-in account has the admin role; another user owns a listing. \\
+    Steps & 1) As the admin, open a listing owned by another user. 2) Tap Edit, then Delete, and confirm in the dialog. \\
+    End condition & n/a \\
+    Expected result & The listing is deleted and no longer appears in Listings for any user. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC015}, label = {tc:015}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC015 \\
+    Name & Listing shows distance from the viewer \\
+    Description & A listing detail screen shows how far the poster is from the viewer, when both locations are known. \\
+    Requirements & FR5 \\
+    Pre-condition & Both the viewer's account and the listing owner's account have a saved location. \\
+    Steps & 1) Open a listing posted by another user whose location is set. \\
+    End condition & n/a \\
+    Expected result & A distance label (e.g. "N km away") is shown; if the viewer's own location is not yet known, no distance label is shown instead of an incorrect one. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC016}, label = {tc:016}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC016 \\
+    Name & Start a chat from a listing \\
+    Description & A user can express interest in a listing, which starts a conversation with its poster. \\
+    Requirements & FR6 \\
+    Pre-condition & The user has not previously messaged the listing's poster. \\
+    Steps & 1) Open a listing posted by another user. 2) Tap the send-message / trade-request action. \\
+    End condition & n/a \\
+    Expected result & A new conversation with the poster is created containing a canned trade-request message referencing the listing, and the app navigates to that conversation. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC017}, label = {tc:017}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC017 \\
+    Name & Search listings by keyword \\
+    Description & The listings grid can be filtered by a free-text search query. \\
+    Requirements & FR7 \\
+    Pre-condition & At least two listings exist with clearly different titles. \\
+    Steps & 1) Open the Listings screen. 2) Type a keyword that matches only one listing's title or description into the search box. \\
+    End condition & n/a \\
+    Expected result & Only listings whose title or description contains the keyword are shown. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC018}, label = {tc:018}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC018 \\
+    Name & Favorite a listing \\
+    Description & A user can mark a listing as a favorite. \\
+    Requirements & FR8 \\
+    Pre-condition & The user is signed in and viewing a listing they have not favorited. \\
+    Steps & 1) Open a listing. 2) Tap the favorite toggle. \\
+    End condition & n/a \\
+    Expected result & The listing appears under the favorites view. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC019}, label = {tc:019}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC019 \\
+    Name & Remove a listing from favorites \\
+    Description & A user can remove a previously favorited listing. \\
+    Requirements & FR8 \\
+    Pre-condition & The listing from TC018 is favorited. \\
+    Steps & 1) Open the same listing. 2) Tap the favorite toggle again. \\
+    End condition & n/a \\
+    Expected result & The listing no longer appears under the favorites view. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC020}, label = {tc:020}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC020 \\
+    Name & Send and receive messages in a conversation \\
+    Description & Two users can exchange messages and see them in chronological order. \\
+    Requirements & FR9 \\
+    Pre-condition & A conversation exists between two accounts (e.g. from TC016). \\
+    Steps & 1) As account A, open the conversation and send a message. 2) As account B, open the same conversation. \\
+    End condition & n/a \\
+    Expected result & Both messages are visible to both accounts, ordered oldest to newest, grouped under date dividers. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC021}, label = {tc:021}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC021 \\
+    Name & Sending a message notifies the recipient \\
+    Description & Sending a message creates a notification for the recipient. \\
+    Requirements & FR9, FR12 \\
+    Pre-condition & Account A can message account B. \\
+    Steps & 1) As account A, send a message to account B. 2) As account B, open the Notifications screen. \\
+    End condition & n/a \\
+    Expected result & A new, unread notification referencing the sender appears for account B. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC022}, label = {tc:022}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC022 \\
+    Name & Filter listings by category and type \\
+    Description & The listings grid can be narrowed down by category and by offer/request type. \\
+    Requirements & FR10 \\
+    Pre-condition & Listings exist across at least two categories and both types. \\
+    Steps & 1) Open the Listings screen. 2) Select a category filter chip. 3) Switch between the available tabs (e.g. near/liked/my). \\
+    End condition & n/a \\
+    Expected result & Only listings matching the selected category and tab are shown. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC023}, label = {tc:023}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC023 \\
+    Name & Upload a photo when creating a listing \\
+    Description & A user can attach a photo to a new listing. \\
+    Requirements & FR11 \\
+    Pre-condition & The user is on the Create Listing screen. \\
+    Steps & 1) Fill in the required fields. 2) Tap the photo picker and choose an image from the camera or gallery. 3) Save the listing. \\
+    End condition & n/a \\
+    Expected result & The photo is uploaded and displayed in the listing's image gallery on its detail screen. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC024}, label = {tc:024}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC024 \\
+    Name & Upload, replace, and remove a profile avatar \\
+    Description & A user can set, change, and remove their profile picture. \\
+    Requirements & FR11 \\
+    Pre-condition & The user is signed in. \\
+    Steps & 1) Open Account Settings. 2) Tap the avatar and choose a photo. 3) Confirm it is displayed. 4) Repeat to replace it with a different photo. 5) Remove the avatar. \\
+    End condition & n/a \\
+    Expected result & The avatar updates immediately after each change and reverts to the initials placeholder after removal. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC025}, label = {tc:025}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC025 \\
+    Name & View notifications and mark one as read \\
+    Description & Notifications can be viewed and are marked read on interaction. \\
+    Requirements & FR12 \\
+    Pre-condition & At least one unread notification exists (e.g. from TC021). \\
+    Steps & 1) Open the Notifications screen. 2) Tap the unread notification. \\
+    End condition & n/a \\
+    Expected result & The notification's unread indicator is cleared, and the notification bell's unread count on Home decreases accordingly. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC026}, label = {tc:026}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC026 \\
+    Name & Delete a notification \\
+    Description & A user can remove a notification from their list. \\
+    Requirements & FR12 \\
+    Pre-condition & At least one notification exists. \\
+    Steps & 1) Open the Notifications screen. 2) Delete a notification. \\
+    End condition & n/a \\
+    Expected result & The notification no longer appears in the list. \\
+    Result & Not run \\
+\end{htable}
