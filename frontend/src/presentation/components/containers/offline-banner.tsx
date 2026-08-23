@@ -20,10 +20,16 @@ export function OfflineBanner(): React.JSX.Element | null {
     }
 
     return (
-        <View className="flex-row items-center gap-2 bg-destructive px-4 py-2">
+        <View
+            accessibilityLabel={t("offline.banner")}
+            accessibilityLiveRegion="polite"
+            accessibilityRole="alert"
+            className="flex-row items-center gap-2 bg-destructive px-4 py-2"
+        >
             <Icon
                 as={WifiOff}
                 className="size-4 text-white"
+                importantForAccessibility="no-hide-descendants"
             />
 
             <Text className="flex-1 font-noto-medium text-[13px] text-white">
