@@ -17,6 +17,7 @@ export { useGetAllUsers } from "@/presentation/hooks/queries/get-all-users.hook"
 export { useGetUser } from "@/presentation/hooks/queries/get-user.hook";
 export { useCreateUser } from "@/presentation/hooks/mutations/create-user.hook";
 export { useUploadUserAvatar } from "@/presentation/hooks/mutations/upload-user-avatar.hook";
+export { useRemoveUserAvatar } from "@/presentation/hooks/mutations/remove-user-avatar.hook";
 export { useUpdateUser } from "@/presentation/hooks/mutations/update-user.hook";
 export { useDeleteUser } from "@/presentation/hooks/mutations/delete-user.hook";
 

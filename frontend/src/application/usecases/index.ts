@@ -8,6 +8,7 @@ export * from "@/application/usecases/get-all-users.usecase";
 export * from "@/application/usecases/get-user.usecase";
 export * from "@/application/usecases/create-user.usecase";
 export * from "@/application/usecases/upload-user-avatar.usecase";
+export * from "@/application/usecases/remove-user-avatar.usecase";
 export * from "@/application/usecases/update-user.usecase";
 export * from "@/application/usecases/delete-user.usecase";
 export * from "@/application/usecases/get-favorites.usecase";

@@ -73,4 +73,12 @@ export class UserHttpRepository implements IUserRepository {
 
         return user;
     }
+
+    /**
+     * Remove a user's avatar image.
+     * @param id - The id of the user.
+     */
+    public async removeAvatar(id: string): Promise<void> {
+        await apiClient.delete(`/users/${id}/avatar`);
+    }
 }

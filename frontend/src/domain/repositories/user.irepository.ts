@@ -9,4 +9,5 @@ export interface IUserRepository {
     updateUser: (id: string, body: UpdateUserBody) => Promise<User>,
     deleteUser: (id: string) => Promise<void>,
     uploadAvatar: (id: string, file: RNFile) => Promise<User>,
+    removeAvatar: (id: string) => Promise<void>,
 }
