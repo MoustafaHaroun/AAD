@@ -37,7 +37,7 @@ export function BottomNav(): React.JSX.Element {
             <View className="flex-row pt-2">
                 {TABS.map(tab => {
                     const active = pathname.startsWith(tab.href);
-                    // eslint-disable-next-line typescript/naming-convention -- must be PascalCase for JSX to treat it as a component
+                    // eslint-disable-next-line typescript/naming-convention
                     const IconComponent = tab.icon;
 
                     return (

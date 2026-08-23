@@ -15,9 +15,9 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
 
     const headers: Record<string, string> = {
         ...init.body != null && !(init.body instanceof FormData)
-            ? { "Content-Type": "application/json" } // eslint-disable-line typescript/naming-convention -- HTTP header name
+            ? { "Content-Type": "application/json" } // eslint-disable-line typescript/naming-convention
             : {},
-        ...token == null ? {} : { Authorization: `Bearer ${token}` }, // eslint-disable-line typescript/naming-convention -- HTTP header name
+        ...token == null ? {} : { Authorization: `Bearer ${token}` }, // eslint-disable-line typescript/naming-convention
         ...init.headers as Record<string, string>,
     };
 

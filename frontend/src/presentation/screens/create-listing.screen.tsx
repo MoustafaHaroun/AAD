@@ -48,7 +48,6 @@ export default function CreateListingScreen(): React.JSX.Element {
 
     const [attachments, setAttachments] = useState<string[]>([]);
     const category = watch("category");
-    // React Hook Form's watch() type doesn't reflect that this field starts undefined.
     // eslint-disable-next-line typescript/no-unnecessary-condition
     const hasCategory = category != null;
     const type = watch("type");

@@ -7,7 +7,7 @@ import type { TFunction } from "i18next";
  * @param t - The translation function used for validation error messages.
  * @returns The registration form schema.
  */
-// eslint-disable-next-line typescript/explicit-function-return-type, typescript/explicit-module-boundary-types -- the zod chain's inferred type is self-referential and impractical to spell out
+// eslint-disable-next-line typescript/explicit-function-return-type, typescript/explicit-module-boundary-types
 export function createRegisterSchema(t: TFunction) {
     return z
         .object({

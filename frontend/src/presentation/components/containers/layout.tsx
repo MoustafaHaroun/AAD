@@ -19,7 +19,7 @@ import { SQLiteProvider } from "expo-sqlite";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import * as z from "zod";
 import { en } from "zod/locales";
-/* eslint-disable camelcase -- font names are fixed exports from @expo-google-fonts/noto-sans */
+/* eslint-disable camelcase */
 import {
     NotoSans_400Regular,
     NotoSans_500Medium,
@@ -43,7 +43,7 @@ export default function Layout(): React.JSX.Element {
     const { success, error } = useMigrations(db, migrations);
     const nativewindColorScheme = useColorScheme();
     const { colorScheme } = nativewindColorScheme;
-    /* eslint-disable camelcase, typescript/naming-convention -- font names are fixed exports from @expo-google-fonts/noto-sans */
+    /* eslint-disable camelcase, typescript/naming-convention */
     const [fontsLoaded] = useFonts({
         NotoSans_400Regular,
         NotoSans_500Medium,
@@ -104,7 +104,7 @@ export default function Layout(): React.JSX.Element {
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
                             <StatusBar
                                 backgroundColor={BRAND_COLORS.primary}
-                                style="dark" // eslint-disable-line react/style-prop-object -- StatusBar's `style` is an appearance enum, not a React Native style object
+                                style="dark" // eslint-disable-line react/style-prop-object
                             />
 
                             <Stack>
