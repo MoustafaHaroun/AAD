@@ -3,7 +3,7 @@ import { userSchema } from '@/application/schemas';
 
 export const signInSchema = z.object({
   email: userSchema.email,
-  password: userSchema.password,
+  password: z.string().min(1),
 });
 
 export const signInApi = {

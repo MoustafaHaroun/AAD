@@ -14,7 +14,7 @@ export class AuthService {
     const user = await this.userRepository.findByEmail(email);
 
     if (user == null || !(await bcrypt.compare(password, user.password))) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid email or password');
     }
 
     const payload = { sub: user.id, email: user.email, role: user.role };
