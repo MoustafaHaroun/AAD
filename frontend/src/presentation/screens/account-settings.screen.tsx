@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- AvatarPicker is a private helper used only by AccountSettingsScreen below */
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { useEffect } from "react";

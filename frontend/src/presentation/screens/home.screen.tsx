@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- ChatsPreview is a private helper used only by HomeScreen below */
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { useState } from "react";

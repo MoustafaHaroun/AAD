@@ -35,7 +35,6 @@ export function DeleteListingDialog({ disabled, isDeleting, onConfirm }: DeleteL
     const { t } = useTranslation();
 
     return (
-        // eslint-disable-next-line react/forbid-component-props -- fixed size beyond what a NativeWind class expresses on this primitive
         <AlertDialog style={{ height: 56, width: 64 }}>
             <AlertDialogTrigger asChild>
                 <Pressable
@@ -43,7 +42,7 @@ export function DeleteListingDialog({ disabled, isDeleting, onConfirm }: DeleteL
                     accessibilityRole="button"
                     className={cn("items-center justify-center rounded-[10px] bg-destructive", disabled && "opacity-50")}
                     disabled={disabled || isDeleting}
-                    style={{ height: "100%", width: "100%" }} // eslint-disable-line react/forbid-component-props -- fills the fixed-size dialog trigger above
+                    style={{ height: "100%", width: "100%" }}
                 >
                     {isDeleting
                         ? <ActivityIndicator color="white" />

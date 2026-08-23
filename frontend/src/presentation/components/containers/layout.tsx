@@ -104,7 +104,7 @@ export default function Layout(): React.JSX.Element {
                         <ThemeProvider value={NAV_THEME[colorScheme ?? "light"]}>
                             <StatusBar
                                 backgroundColor={BRAND_COLORS.primary}
-                                style="dark" // eslint-disable-line react/forbid-component-props, react/style-prop-object -- StatusBar's `style` is an appearance enum, not a React Native style object
+                                style="dark" // eslint-disable-line react/style-prop-object -- StatusBar's `style` is an appearance enum, not a React Native style object
                             />
 
                             <Stack>

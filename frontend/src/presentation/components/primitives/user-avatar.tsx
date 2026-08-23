@@ -42,8 +42,6 @@ export function UserAvatar({ id, firstname, surname, avatar, size = 48 }: UserAv
         return (
             <Image
                 source={{ uri: avatar }}
-                // Size is a per-instance numeric prop; can't be a static NativeWind class.
-                // eslint-disable-next-line react/forbid-component-props
                 style={{ borderRadius: size / 2, height: size, width: size }}
             />
         );
@@ -54,13 +52,10 @@ export function UserAvatar({ id, firstname, surname, avatar, size = 48 }: UserAv
     return (
         <View
             className="items-center justify-center"
-            // Size is a per-instance numeric prop; can't be a static NativeWind class.
-            // eslint-disable-next-line react/forbid-component-props
             style={{ backgroundColor: colorFor(id), borderRadius: size / 2, height: size, width: size }}
         >
             <Text
                 className="font-noto-bold text-white"
-                // eslint-disable-next-line react/forbid-component-props
                 style={{ fontSize: size * 0.4 }}
             >
                 {initials}

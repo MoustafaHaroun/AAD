@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- co-located private view fragments for the create/edit listing photo picker */
 import * as React from "react";
 import { Image, Pressable, View } from "react-native";
 import { Plus, X } from "lucide-react-native";

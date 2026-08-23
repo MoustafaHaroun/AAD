@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- co-located icon set */
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 import { resolveIconColor, type IconProps } from "@/presentation/utils/icon.util";

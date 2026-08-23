@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- co-located private view fragments for the listing detail screen */
 import * as React from "react";
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";

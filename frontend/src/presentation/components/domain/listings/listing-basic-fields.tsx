@@ -84,7 +84,6 @@ export function ListingBasicFields<T extends FieldValues>({
                 {({ value, onChange }) => <Textarea
                     className={INPUT_CLASS}
                     onChangeText={onChange as (text: string) => void}
-                    // eslint-disable-next-line react/forbid-component-props -- fixed height beyond what the shared className expresses
                     style={{ height: 191, textAlignVertical: "top" }}
                     value={value}
                 />}

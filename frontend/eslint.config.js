@@ -365,7 +365,7 @@ function getRules() {
             "react/default-props-match-prop-types": "error",
             "react/destructuring-assignment": "warn",
             "react/display-name": "off",
-            "react/forbid-component-props": ["warn", { forbid: [{ propName: "style", allowedFor: ["LinearGradient"] }] }],
+            "react/forbid-component-props": "off", // NativeWind classNames are static; the style prop is the only way to apply runtime-computed values (dynamic sizes, screen width, etc).
             "react/forbid-dom-props": "warn",
             "react/forbid-elements": "warn",
             "react/forbid-foreign-prop-types": "warn",
@@ -401,7 +401,7 @@ function getRules() {
             "react/jsx-pascal-case": "warn",
             "react/jsx-props-no-multi-spaces": "warn",
             "react/jsx-props-no-spread-multi": "warn",
-            "react/jsx-props-no-spreading": "warn",
+            "react/jsx-props-no-spreading": "off", // Wrapper primitives (buttons, inputs) forward arbitrary native props by design.
             "react/sort-default-props": "warn",
             "react/jsx-sort-props": "warn",
             "react/jsx-uses-react": "warn",
@@ -421,7 +421,7 @@ function getRules() {
             "react/no-find-dom-node": "error",
             "react/no-invalid-html-attribute": "error",
             "react/no-is-mounted": "error",
-            "react/no-multi-comp": "warn",
+            "react/no-multi-comp": "off", // Small private view fragments are routinely co-located with the screen/component that uses them.
             "react/no-namespace": "warn",
             "react/no-object-type-as-default-prop": "warn",
             "react/no-redundant-should-component-update": "warn",

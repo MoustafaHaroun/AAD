@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- RegisterStepContent is a private helper used only by RegisterScreen below */
 import React, { useMemo, useState } from "react";
 import { Image, View, ScrollView, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";

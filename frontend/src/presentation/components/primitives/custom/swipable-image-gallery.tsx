@@ -79,7 +79,7 @@ export function SwipableImageGallery({ uris }: SwipableImageGalleryProps): React
                     accessibilityRole="imagebutton"
                     key={uri}
                     onPress={() => { setFullscreenOpen(true); }}
-                    style={{ width: SCREEN_WIDTH }} // eslint-disable-line react/forbid-component-props -- screen width is dynamic, can't be a static NativeWind class
+                    style={{ width: SCREEN_WIDTH }}
                 >
                     <Image
                         className="aspect-video w-full"

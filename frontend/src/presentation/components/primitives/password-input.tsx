@@ -23,7 +23,7 @@ export function PasswordInput({
             <Input
                 className={cn("pr-12", className)}
                 secureTextEntry={!visible}
-                {...props /* eslint-disable-line react/jsx-props-no-spreading -- forwards arbitrary Input props */}
+                {...props}
             />
 
             <Pressable

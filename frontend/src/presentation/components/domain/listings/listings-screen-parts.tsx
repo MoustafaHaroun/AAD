@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- co-located private view fragments for the listings screen */
 import * as React from "react";
 import { View, Pressable, ScrollView, ActivityIndicator } from "react-native";
 import { Plus, Search } from "lucide-react-native";

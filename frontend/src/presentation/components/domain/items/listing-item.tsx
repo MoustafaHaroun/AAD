@@ -1,4 +1,3 @@
-/* eslint-disable react/no-multi-comp -- ListingCover is a private helper used only by ListingItem below */
 import * as React from "react";
 import { Image, Pressable, View } from "react-native";
 import { useTranslation } from "react-i18next";

@@ -69,12 +69,12 @@ export function FullscreenImageViewer({
                     {uris.map(uri => <View
                         className="items-center justify-center"
                         key={uri}
-                        style={{ width: SCREEN_WIDTH }} // eslint-disable-line react/forbid-component-props -- screen width is dynamic, can't be a static NativeWind class
+                        style={{ width: SCREEN_WIDTH }}
                     >
                         <Image
                             resizeMode="contain"
                             source={{ uri }}
-                            style={{ height: "100%", width: SCREEN_WIDTH }} // eslint-disable-line react/forbid-component-props -- screen width is dynamic, can't be a static NativeWind class
+                            style={{ height: "100%", width: SCREEN_WIDTH }}
                         />
                     </View>)}
                 </ScrollView>
