@@ -31,14 +31,10 @@
 
 \setrootdepth{2} % Set this to correct nesting from the doc/ directory.
 
-\setcounter{tocdepth}{2}
-
 \title{Hybrid Development}
-\subtitle{A Technical Specification of the Front-End for Trade2}
+\subtitle{A research paper on hybrid frameworks for mobile applications.}
 \author{Moustafa Haroun\\William Rothman} % Separate authors by '\\'.
 \date{\today}
-
-\newcommand{\tradesq}{Trade\textsuperscript{2}}
 
 \begin{document}
 
@@ -48,39 +44,31 @@
 \section{Changelog}\label{sec:changelog}
 
 \begin{htable}[
-        caption = {Changelog},
-        label = {tab:changelog},
-    ]{
-        colspec={llX},
-    }
-    Version & Date & Description \\
-    1.0 & \today & Initial draft. \\
+		caption = {Changelog},
+		label = {tab:changelog},
+	]{
+		colspec={llX},
+	}
+	Versie & Datum & Omschrijving \\
+	1.0 & \today & Initial draft. \\
 \end{htable}
 
 \newpage
 \tableofcontents
 
 \newpage
-\input{hd/technical-specification/introduction.tex}
+\input{hd/research/introduction.tex}
 
-\newpage
-\input{hd/technical-specification/requirements.tex}
+\input{hd/research/theory.tex}
 
-\newpage
-\input{hd/technical-specification/system-context.tex}
-\input{hd/technical-specification/container-architecture.tex}
-\input{hd/technical-specification/component-architecture.tex}
+\input{hd/research/methodology.tex}
 
-\newpage
-\input{hd/technical-specification/cross-cutting-concerns.tex}
+\input{hd/research/results.tex}
 
-\newpage
-\input{hd/technical-specification/technical-decisions.tex}
-
-\newpage
-\input{hd/technical-specification/limitations.tex}
+\input{hd/research/conclusion.tex}
 
 \newpage
 \printbibliography
 
 \end{document}
+
