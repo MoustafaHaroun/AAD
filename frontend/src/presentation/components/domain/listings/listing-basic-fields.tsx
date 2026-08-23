@@ -11,6 +11,7 @@ import { CategoryPicker } from "@/presentation/components/domain/listings/catego
 import type { ListingCategory, ListingType } from "@/domain/entities/listing-category.entity";
 
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
+const DESCRIPTION_INPUT_CLASS = "min-h-[191px] rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
 interface ListingBasicFieldsProps<T extends FieldValues> {
     readonly control: Control<T>,
@@ -82,9 +83,9 @@ export function ListingBasicFields<T extends FieldValues>({
                 name={descriptionField}
             >
                 {({ value, onChange }) => <Textarea
-                    className={INPUT_CLASS}
+                    className={DESCRIPTION_INPUT_CLASS}
                     onChangeText={onChange as (text: string) => void}
-                    style={{ minHeight: 191, textAlignVertical: "top" }}
+                    style={{ textAlignVertical: "top" }}
                     value={value}
                 />}
             </FormField>
