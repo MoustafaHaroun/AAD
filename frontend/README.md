@@ -16,6 +16,7 @@ npm run ios
 ## Testing against the hosted backend
 - Server URL: `https://api.mufasadev.nl`
 - Regular account: register your own through the app's registration flow.
+- Test user account: test@trade2.com` / `Test123!`
 - Admin account: `admin@trade2.com` / `Admin123!`
 
 ## Quality
@@ -23,6 +24,3 @@ npm run ios
 npm run lint:check   # static analysis
 npm test             # automated tests
 ```
-
-## Deployment
-The application can be built and deployed using [Expo Application Services (EAS)](https://expo.dev/eas).
