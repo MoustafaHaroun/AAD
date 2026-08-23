@@ -114,7 +114,7 @@ export default function ListingItem({ listing, onPress, distanceLabel }: Listing
                 className="flex flex-col gap-1 rounded-b-[10px] bg-surfhued p-2"
                 onPress={onPress}
             >
-                <View className="h-10 justify-center">
+                <View className="min-h-10 justify-center">
                     <Text
                         className="font-noto-semibold text-[16px] text-black"
                         ellipsizeMode="tail"

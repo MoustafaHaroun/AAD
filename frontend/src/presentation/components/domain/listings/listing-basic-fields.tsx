@@ -84,7 +84,7 @@ export function ListingBasicFields<T extends FieldValues>({
                 {({ value, onChange }) => <Textarea
                     className={INPUT_CLASS}
                     onChangeText={onChange as (text: string) => void}
-                    style={{ height: 191, textAlignVertical: "top" }}
+                    style={{ minHeight: 191, textAlignVertical: "top" }}
                     value={value}
                 />}
             </FormField>

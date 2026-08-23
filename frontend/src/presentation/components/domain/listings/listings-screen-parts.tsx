@@ -107,7 +107,7 @@ export function ListingsFiltersBar({ query, onChangeQuery, tab, onChangeTab, cat
                 />
 
                 <Input
-                    className="h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
+                    className="min-h-6 flex-1 border-0 bg-transparent p-0 font-noto-medium text-[16px] text-forehued"
                     onChangeText={onChangeQuery}
                     placeholder={t("common.search")}
                     returnKeyType="search"
