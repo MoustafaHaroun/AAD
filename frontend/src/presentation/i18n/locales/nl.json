@@ -23,7 +23,11 @@
     "changeAvatar": "Profielfoto wijzigen",
     "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm",
     "notAvailableOffline": "Niet beschikbaar zonder internet. Maak verbinding om dit te laden.",
-    "loadError": "Er ging iets mis bij het laden. Trek naar beneden om het opnieuw te proberen."
+    "loadError": "Er ging iets mis bij het laden. Trek naar beneden om het opnieuw te proberen.",
+    "errors": {
+      "required": "Dit veld is verplicht",
+      "invalidEmail": "Voer een geldig e-mailadres in"
+    }
   },
   "offline": {
     "banner": "Je bent offline"
@@ -128,7 +132,12 @@
     "descriptionLabel": "Beschrijving",
     "typeLabel": "Type",
     "categoryLabel": "Categorie",
-    "photosLabel": "Foto's"
+    "photosLabel": "Foto's",
+    "errors": {
+      "titleTooShort": "Titel moet minimaal 3 tekens lang zijn",
+      "titleTooLong": "Titel moet maximaal 64 tekens lang zijn",
+      "descriptionTooLong": "Beschrijving moet maximaal 255 tekens lang zijn"
+    }
   },
   "listingCategory": {
     "moving": "Verhuizen",

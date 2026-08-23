@@ -1,6 +1,6 @@
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { Platform, Pressable, View } from "react-native";
 import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { z } from "zod";
@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { Plus } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
@@ -25,12 +26,22 @@ import {
 } from "@/presentation/hooks";
 import { cn } from "@/presentation/utils/cn.util";
 
-const accountSettingsSchema = z.object({
-    firstname: z.string().min(1).max(128),
-    surname: z.string().min(1).max(128),
-    email: z.email().min(1).max(256),
-    location: z.string().min(1).max(256),
-});
+/**
+ * Build the zod schema for the account settings form, with translated error messages.
+ * @param t - The translation function used for validation error messages.
+ * @returns The account settings form schema.
+ */
+// eslint-disable-next-line typescript/explicit-function-return-type
+function accountSettingsSchema(t: TFunction) {
+    return z.object({
+        firstname: z.string().min(1, { message: t("common.errors.required") }).max(128),
+        surname: z.string().min(1, { message: t("common.errors.required") }).max(128),
+        email: z.email({ message: t("common.errors.invalidEmail") }).min(1, { message: t("common.errors.required") }).max(256),
+        location: z.string().min(1, { message: t("common.errors.required") }).max(256),
+    });
+}
+
+type AccountSettingsFormValues = z.infer<ReturnType<typeof accountSettingsSchema>>;
 
 const INPUT_CLASS = "h-14 rounded-[10px] border-[1.5px] border-forehued px-[25px] font-noto-medium text-[16px] text-forehued";
 
@@ -102,8 +113,9 @@ export default function AccountSettingsScreen(): React.JSX.Element {
     const { mutateAsync: updateUser, isPending: isSaving, error } = useUpdateUser();
     const { mutateAsync: uploadAvatar, isPending: isUploadingAvatar } = useUploadUserAvatar();
     const isOnline = useNetworkStatus();
-    const { control, handleSubmit, reset } = useForm<z.infer<typeof accountSettingsSchema>>({
-        resolver: zodResolver(accountSettingsSchema),
+    const schema = useMemo(() => accountSettingsSchema(t), [t]);
+    const { control, handleSubmit, reset } = useForm<AccountSettingsFormValues>({
+        resolver: zodResolver(schema),
     });
 
     useEffect(() => {
@@ -136,7 +148,7 @@ export default function AccountSettingsScreen(): React.JSX.Element {
      * Save the profile changes and return to the previous screen.
      * @param data - The validated profile field values.
      */
-    async function onSave(data: z.infer<typeof accountSettingsSchema>): Promise<void> {
+    async function onSave(data: AccountSettingsFormValues): Promise<void> {
         if (currentUserId == null) {
             return;
         }

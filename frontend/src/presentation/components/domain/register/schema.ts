@@ -11,7 +11,7 @@ import type { TFunction } from "i18next";
 export function createRegisterSchema(t: TFunction) {
     return z
         .object({
-            email: z.email().min(1).max(256),
+            email: z.email({ message: t("common.errors.invalidEmail") }).min(1, { message: t("common.errors.required") }).max(256),
             password: z
                 .string()
                 .min(8, { message: t("register.errors.passwordTooShort") })
@@ -19,14 +19,14 @@ export function createRegisterSchema(t: TFunction) {
                 .regex(/[A-Z]/u, { message: t("register.errors.passwordUppercase") })
                 .regex(/[0-9]/u, { message: t("register.errors.passwordNumber") })
                 .regex(/[^A-Za-z0-9]/u, { message: t("register.errors.passwordSpecial") }),
-            confirmPassword: z.string().min(1),
-            firstname: z.string().min(1).max(128),
-            surname: z.string().min(1).max(128),
-            country: z.string().min(1),
-            region: z.string().min(1),
-            city: z.string().min(1),
-            postalCode: z.string().min(1),
-            street: z.string().min(1),
+            confirmPassword: z.string().min(1, { message: t("common.errors.required") }),
+            firstname: z.string().min(1, { message: t("common.errors.required") }).max(128),
+            surname: z.string().min(1, { message: t("common.errors.required") }).max(128),
+            country: z.string().min(1, { message: t("common.errors.required") }),
+            region: z.string().min(1, { message: t("common.errors.required") }),
+            city: z.string().min(1, { message: t("common.errors.required") }),
+            postalCode: z.string().min(1, { message: t("common.errors.required") }),
+            street: z.string().min(1, { message: t("common.errors.required") }),
         })
         .refine(data => data.password === data.confirmPassword, {
             message: t("register.errors.passwordMismatch"),

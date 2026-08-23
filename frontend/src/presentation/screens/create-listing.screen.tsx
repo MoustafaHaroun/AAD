@@ -1,9 +1,10 @@
 import { useRouter, Stack } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { View, ScrollView, Platform } from "react-native";
 import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import type { TFunction } from "i18next";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
@@ -22,12 +23,25 @@ import {
 const CATEGORY_VALUES = LISTING_CATEGORIES.map(c => c.value) as [ListingCategory, ...ListingCategory[]];
 const TYPE_VALUES = LISTING_TYPES.map(t => t.value) as [ListingType, ...ListingType[]];
 
-const createListingSchema = z.object({
-    title: z.string().min(3).max(64),
-    description: z.string().max(255).optional(),
-    category: z.enum(CATEGORY_VALUES),
-    type: z.enum(TYPE_VALUES),
-});
+/**
+ * Build the zod schema for the create-listing form, with translated error messages.
+ * @param t - The translation function used for validation error messages.
+ * @returns The create-listing form schema.
+ */
+// eslint-disable-next-line typescript/explicit-function-return-type
+function createListingSchema(t: TFunction) {
+    return z.object({
+        title: z
+            .string()
+            .min(3, { message: t("listingForm.errors.titleTooShort") })
+            .max(64, { message: t("listingForm.errors.titleTooLong") }),
+        description: z.string().max(255, { message: t("listingForm.errors.descriptionTooLong") }).optional(),
+        category: z.enum(CATEGORY_VALUES),
+        type: z.enum(TYPE_VALUES),
+    });
+}
+
+type CreateListingFormValues = z.infer<ReturnType<typeof createListingSchema>>;
 
 /**
  * Render the create-listing form, restoring any saved draft and publishing on submit.
@@ -41,8 +55,9 @@ export default function CreateListingScreen(): React.JSX.Element {
     const { mutateAsync: uploadAttachment } = useUploadListingAttachment();
     const isOnline = useNetworkStatus();
     const { draft, draftLoaded, saveDraft, clearDraft } = useListingDraft("new");
-    const { control, handleSubmit, watch, setValue, reset } = useForm<z.infer<typeof createListingSchema>>({
-        resolver: zodResolver(createListingSchema),
+    const schema = useMemo(() => createListingSchema(t), [t]);
+    const { control, handleSubmit, watch, setValue, reset } = useForm<CreateListingFormValues>({
+        resolver: zodResolver(schema),
         defaultValues: { title: "", description: "", type: "offer", category: undefined },
     });
 
@@ -94,10 +109,10 @@ export default function CreateListingScreen(): React.JSX.Element {
     }
 
     /**
-     * Create the listing, upload any attached photos, clear the draft, and go back.
+     * Create the listing, upload any attached photos, clear the draft, and open the new listing.
      * @param data - The validated listing field values.
      */
-    async function onSubmit(data: z.infer<typeof createListingSchema>): Promise<void> {
+    async function onSubmit(data: CreateListingFormValues): Promise<void> {
         const listing = await createListing({
             title: data.title,
             description: data.description,
@@ -117,7 +132,7 @@ export default function CreateListingScreen(): React.JSX.Element {
         }
 
         clearDraft();
-        router.back();
+        router.replace(`/listings/${listing.id}`);
     }
 
     return (

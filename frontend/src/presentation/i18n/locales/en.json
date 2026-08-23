@@ -23,7 +23,11 @@
     "changeAvatar": "Change profile picture",
     "viewPhoto": "View photo {{index}} of {{total}}, fullscreen",
     "notAvailableOffline": "Not available offline. Connect to the internet to load it.",
-    "loadError": "Something went wrong loading this. Pull down to try again."
+    "loadError": "Something went wrong loading this. Pull down to try again.",
+    "errors": {
+      "required": "This field is required",
+      "invalidEmail": "Enter a valid email address"
+    }
   },
   "offline": {
     "banner": "You're offline"
@@ -128,7 +132,12 @@
     "descriptionLabel": "Description",
     "typeLabel": "Type",
     "categoryLabel": "Category",
-    "photosLabel": "Photos"
+    "photosLabel": "Photos",
+    "errors": {
+      "titleTooShort": "Title must be at least 3 characters long",
+      "titleTooLong": "Title must be at most 64 characters long",
+      "descriptionTooLong": "Description must be at most 255 characters long"
+    }
   },
   "listingCategory": {
     "moving": "Moving",
