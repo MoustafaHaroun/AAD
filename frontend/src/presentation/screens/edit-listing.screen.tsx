@@ -2,9 +2,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useMemo, useState } from "react";
 import { View, ScrollView, Platform } from "react-native";
 import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { TFunction } from "i18next";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
@@ -28,36 +26,13 @@ import {
     useListingDraft,
 } from "@/presentation/hooks";
 import {
-    LISTING_CATEGORIES,
     LISTING_TYPES,
     type ListingCategory,
     type ListingType,
 } from "@/domain/entities/listing-category.entity";
 import type { ApiListing } from "@/domain/entities";
 import type { ListingDraft } from "@/infrastructure/persistence/drafts/listing-draft-store";
-
-const CATEGORY_VALUES = LISTING_CATEGORIES.map(c => c.value) as [ListingCategory, ...ListingCategory[]];
-const TYPE_VALUES = LISTING_TYPES.map(t => t.value) as [ListingType, ...ListingType[]];
-
-/**
- * Build the zod schema for the edit-listing form, with translated error messages.
- * @param t - The translation function used for validation error messages.
- * @returns The edit-listing form schema.
- */
-// eslint-disable-next-line typescript/explicit-function-return-type
-function editListingSchema(t: TFunction) {
-    return z.object({
-        title: z
-            .string()
-            .min(3, { message: t("listingForm.errors.titleTooShort") })
-            .max(64, { message: t("listingForm.errors.titleTooLong") }),
-        description: z.string().max(255, { message: t("listingForm.errors.descriptionTooLong") }).optional(),
-        category: z.enum(CATEGORY_VALUES),
-        type: z.enum(TYPE_VALUES),
-    });
-}
-
-type EditListingFormValues = z.infer<ReturnType<typeof editListingSchema>>;
+import { createListingFormSchema, type ListingFormValues } from "@/presentation/schemas/listing-form.schema";
 
 /**
  * Build the edit form's reset values, preferring a locally-saved draft field over the listing's own.
@@ -65,7 +40,7 @@ type EditListingFormValues = z.infer<ReturnType<typeof editListingSchema>>;
  * @param listing - The loaded listing.
  * @returns The form's reset values.
  */
-function buildResetValues(draft: ListingDraft | null, listing: ApiListing): Partial<EditListingFormValues> {
+function buildResetValues(draft: ListingDraft | null, listing: ApiListing): Partial<ListingFormValues> {
     return {
         title: draft?.title ?? listing.title,
         description: draft?.description ?? listing.description ?? "",
@@ -86,9 +61,9 @@ function useEditListingState(): {
     error: Error | null,
     isOnline: boolean,
     isDeleting: boolean,
-    control: ReturnType<typeof useForm<EditListingFormValues>>["control"],
-    handleSubmit: ReturnType<typeof useForm<EditListingFormValues>>["handleSubmit"],
-    setValue: ReturnType<typeof useForm<EditListingFormValues>>["setValue"],
+    control: ReturnType<typeof useForm<ListingFormValues>>["control"],
+    handleSubmit: ReturnType<typeof useForm<ListingFormValues>>["handleSubmit"],
+    setValue: ReturnType<typeof useForm<ListingFormValues>>["setValue"],
     category: ListingCategory | undefined,
     type: ListingType | undefined,
     typeOptions: Array<{ value: ListingType, label: string }>,
@@ -97,7 +72,7 @@ function useEditListingState(): {
     removeNewAttachment: (uri: string) => void,
     removeExistingAttachment: (attachmentId: string) => void,
     onDelete: () => void,
-    onSave: (data: EditListingFormValues) => Promise<void>,
+    onSave: (data: ListingFormValues) => Promise<void>,
 } {
     const router = useRouter();
     const { t } = useTranslation();
@@ -110,8 +85,8 @@ function useEditListingState(): {
     const { data: listing } = useGetApiListing(id);
     const isOnline = useNetworkStatus();
     const { draft, draftLoaded, saveDraft, clearDraft } = useListingDraft(id);
-    const schema = useMemo(() => editListingSchema(t), [t]);
-    const { control, handleSubmit, reset, watch, setValue } = useForm<EditListingFormValues>({
+    const schema = useMemo(() => createListingFormSchema(t), [t]);
+    const { control, handleSubmit, reset, watch, setValue } = useForm<ListingFormValues>({
         resolver: zodResolver(schema),
     });
 
@@ -179,7 +154,7 @@ function useEditListingState(): {
      * Save the listing changes, upload any new photos, clear the draft, and go back.
      * @param data - The validated listing field values.
      */
-    async function onSave(data: EditListingFormValues): Promise<void> {
+    async function onSave(data: ListingFormValues): Promise<void> {
         await updateListing({
             id,
             body: {

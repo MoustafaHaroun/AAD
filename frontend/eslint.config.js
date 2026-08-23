@@ -90,6 +90,14 @@ export default [
         plugins: { jsdoc, stylistic, typescript },
         rules: getFlattenedRules("eslint", "jsdoc", "stylistic", "typescript"),
     },
+    {
+        files: [`${SOURCE_DIR}/**/*.test.{ts,tsx}`],
+        languageOptions: {
+            globals: {
+                ...globals.jest,
+            },
+        },
+    },
 ];
 
 /**

@@ -18,6 +18,7 @@ import {
 } from "@/presentation/hooks";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
+import { canManageListing } from "@/presentation/utils/listing-permissions.util";
 import {
     ListingHeaderActions,
     ListingStatus,
@@ -25,21 +26,6 @@ import {
     ListingDetails,
 } from "@/presentation/components/domain/listing/listing-detail-parts";
 import type { ApiListing } from "@/domain/entities";
-
-/**
- * Determine whether a viewer may edit a listing: its owner, or an admin.
- * @param listing - The loaded listing, if any.
- * @param currentUserId - The viewer's user id, if signed in.
- * @param currentUserRole - The viewer's role, if signed in.
- * @returns Whether the viewer may edit the listing.
- */
-function canManageListing(listing: ApiListing | undefined, currentUserId: string | null, currentUserRole: string | undefined): boolean {
-    if (listing == null) {
-        return false;
-    }
-
-    return listing.user?.id === currentUserId || currentUserRole === "admin";
-}
 
 /**
  * Format the distance from the viewer to a listing's owner, when both locations are known.
