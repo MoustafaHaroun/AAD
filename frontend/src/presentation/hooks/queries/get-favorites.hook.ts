@@ -1,12 +1,16 @@
 import { GetFavorites } from "@/application/usecases";
 import type { Favorite } from "@/domain/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 const getFavorites = new GetFavorites();
 
-export function useGetFavorites() {
-    return useQuery<Favorite[], Error>({
+/**
+ * Fetch the current user's favorited listings.
+ * @returns The query for the current user's favorites.
+ */
+export function useGetFavorites(): UseQueryResult<Favorite[]> {
+    return useQuery<Favorite[]>({
         queryKey: ["favorites.get"],
-        queryFn: () => getFavorites.execute(),
+        queryFn: async () => getFavorites.execute(),
     });
 }

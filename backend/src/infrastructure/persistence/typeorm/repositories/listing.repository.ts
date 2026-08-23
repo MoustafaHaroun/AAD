@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, Repository } from 'typeorm';
 import { ListingModel } from '@/infrastructure/persistence/typeorm/models';
+import { ListingCategory } from '@/domain/enums/listing-category.enum';
+import { ListingType } from '@/domain/enums/listing-type.enum';
 
 @Injectable()
 export class ListingRepository {
@@ -28,20 +30,38 @@ export class ListingRepository {
     });
   }
 
-  async findAll(query?: string): Promise<ListingModel[]> {
-    if (!query) {
+  async findAll(
+    query?: string,
+    category?: ListingCategory,
+    type?: ListingType,
+  ): Promise<ListingModel[]> {
+    if (!query && !category && !type) {
       return await this.repository.find({
         relations: ['attachments', 'user'],
       });
     }
 
-    return await this.repository
+    const builder = this.repository
       .createQueryBuilder('listing')
       .leftJoinAndSelect('listing.attachments', 'attachments')
-      .leftJoinAndSelect('listing.user', 'user')
-      .where('listing.title ILIKE :query', { query: `%${query}%` })
-      .orWhere('listing.description ILIKE :query', { query: `%${query}%` })
-      .getMany();
+      .leftJoinAndSelect('listing.user', 'user');
+
+    if (query) {
+      builder.andWhere(
+        '(listing.title ILIKE :query OR listing.description ILIKE :query)',
+        { query: `%${query}%` },
+      );
+    }
+
+    if (category) {
+      builder.andWhere('listing.category = :category', { category });
+    }
+
+    if (type) {
+      builder.andWhere('listing.type = :type', { type });
+    }
+
+    return await builder.getMany();
   }
 
   async findRandom(limit: number): Promise<ListingModel[]> {

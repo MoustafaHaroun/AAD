@@ -1,4 +1,4 @@
 export interface Favorite {
-    id: string;
-    listingId: string;
+    id: string,
+    listingId: string,
 }

@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   UpdateNotificationRequest,
   UpdateNotificationResponse,
@@ -13,7 +17,7 @@ export class UpdateNotificationUseCase {
   ) {}
 
   async execute(
-    dto: UpdateNotificationRequest & { id: string },
+    dto: UpdateNotificationRequest & { id: string; requesterId?: string },
   ): Promise<UpdateNotificationResponse> {
     const notification: NotificationModel | null =
       await this.NotificationRepository.findById(dto.id);
@@ -24,8 +28,15 @@ export class UpdateNotificationUseCase {
       );
     }
 
+    if (dto.requesterId && notification.user?.id !== dto.requesterId) {
+      throw new ForbiddenException(
+        'You do not have permission to update this notification.',
+      );
+    }
+
     if (dto.title != null) notification.title = dto.title;
     if (dto.message != null) notification.message = dto.message;
+    if (dto.read != null) notification.read = dto.read;
 
     return {
       notification: (

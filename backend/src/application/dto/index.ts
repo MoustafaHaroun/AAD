@@ -14,3 +14,4 @@ export * from '@/application/dto/listings/remove-attachment-from-listing.dto';
 export * from '@/application/dto/auth/sign-in-dto';
 export * from '@/application/dto/users/update-listing.dto';
 export * from '@/application/dto/users/update-user.dto';
+export * from '@/application/dto/users/add-avatar-to-user.dto';

@@ -15,6 +15,6 @@ export function useGetListingById(
     return useQuery({
         queryKey: ["listing.get.byid", listingId],
         queryFn: async () => getListingById.execute(listingId),
-        enabled: listingId != null,
+        enabled: listingId.length > 0,
     });
 }

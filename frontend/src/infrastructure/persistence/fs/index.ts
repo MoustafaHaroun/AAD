@@ -32,7 +32,7 @@ export function copyFileToDocument(uri: string): string | null {
         return null;
     }
 
-    return copyFile(uri, new File(Paths.document, fileName))
+    return copyFile(uri, new File(Paths.document, fileName));
 }
 
 /**
@@ -47,7 +47,7 @@ export function copyFileToCache(uri: string): string | null {
         return null;
     }
 
-    return copyFile(uri, new File(Paths.cache, fileName))
+    return copyFile(uri, new File(Paths.cache, fileName));
 }
 
 /**

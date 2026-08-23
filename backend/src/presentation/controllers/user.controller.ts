@@ -9,16 +9,22 @@ import {
   Patch,
   Post,
   Req,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import {
+  AddAvatarToUserUseCase,
   CreateUserUseCase,
   DeleteUserUseCase,
   GetAllUsersUseCase,
   GetUserByIdUseCase,
+  RemoveAvatarFromUserUseCase,
   UpdateUserUseCase,
 } from '@/application/usecases';
 import {
+  addAvatarToUserApi,
+  type AddAvatarToUserResponse,
   createUserApi,
   createUserSchema,
   type CreateUserRequest,
@@ -31,12 +37,14 @@ import {
   updateUserApi,
   updateUserSchema,
 } from '@/application/dto';
-import { ApiBearerAuth, ApiBody } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiConsumes } from '@nestjs/swagger';
 import { ZodValidationPipe } from '@/infrastructure/validation/zod.pipe';
 import * as authGuard from '@/presentation/guards/auth.guard';
 import { RolesGuard } from '@/presentation/guards/roles.guard';
 import { Roles } from '@/presentation/decorators/roles.decorator';
 import { Role } from '@/domain/enums/role.enum';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { imageSchema } from '@/application/schemas/image.schema';
 
 @Controller('users')
 export class UserController {
@@ -46,6 +54,8 @@ export class UserController {
     private readonly getUserByIdUseCase: GetUserByIdUseCase,
     private readonly updateUserUseCase: UpdateUserUseCase,
     private readonly deleteUserUseCase: DeleteUserUseCase,
+    private readonly addAvatarToUserUseCase: AddAvatarToUserUseCase,
+    private readonly removeAvatarFromUserUseCase: RemoveAvatarFromUserUseCase,
   ) {}
 
   @HttpCode(HttpStatus.OK)
@@ -96,5 +106,39 @@ export class UserController {
   @ApiBearerAuth()
   deleteUser(@Param('id') id: string): Promise<DeleteUserResponse> {
     return this.deleteUserUseCase.execute({ id });
+  }
+
+  @HttpCode(HttpStatus.CREATED)
+  @Post(':id/avatar')
+  @UseGuards(authGuard.AuthGuard)
+  @UseInterceptors(FileInterceptor('binary'))
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody(addAvatarToUserApi)
+  addAvatar(
+    @Req() request: authGuard.AuthenticatedRequest,
+    @Param('id') id: string,
+    @UploadedFile(new ZodValidationPipe(imageSchema))
+    binary: Express.Multer.File,
+  ): Promise<AddAvatarToUserResponse> {
+    return this.addAvatarToUserUseCase.execute({
+      binary,
+      userId: id,
+      requesterId: authGuard.getRequesterId(request),
+    });
+  }
+
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @Delete(':id/avatar')
+  @UseGuards(authGuard.AuthGuard)
+  @ApiBearerAuth()
+  removeAvatar(
+    @Req() request: authGuard.AuthenticatedRequest,
+    @Param('id') id: string,
+  ): Promise<void> {
+    return this.removeAvatarFromUserUseCase.execute({
+      userId: id,
+      requesterId: authGuard.getRequesterId(request),
+    });
   }
 }

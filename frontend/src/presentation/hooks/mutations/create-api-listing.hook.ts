@@ -1,14 +1,18 @@
 import { CreateApiListing } from "@/application/usecases";
 import type { ApiListing, CreateApiListingBody } from "@/domain/entities";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 
 const createApiListing = new CreateApiListing();
 
-export function useCreateApiListing() {
+/**
+ * Create a listing via the API, then invalidate cached listings.
+ * @returns The mutation for creating a listing.
+ */
+export function useCreateApiListing(): UseMutationResult<ApiListing, Error, CreateApiListingBody> {
     const queryClient = useQueryClient();
 
     return useMutation<ApiListing, Error, CreateApiListingBody>({
-        mutationFn: (body) => createApiListing.execute(body),
+        mutationFn: async body => createApiListing.execute(body),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["api-listings.get"] });
         },

@@ -1,11 +1,15 @@
 import { CreateNotification } from "@/application/usecases";
 import type { Notification, CreateNotificationBody } from "@/domain/entities";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, type UseMutationResult } from "@tanstack/react-query";
 
 const createNotification = new CreateNotification();
 
-export function useCreateNotification() {
+/**
+ * Create a notification.
+ * @returns The mutation for creating a notification.
+ */
+export function useCreateNotification(): UseMutationResult<Notification, Error, CreateNotificationBody> {
     return useMutation<Notification, Error, CreateNotificationBody>({
-        mutationFn: (body) => createNotification.execute(body),
+        mutationFn: async body => createNotification.execute(body),
     });
 }

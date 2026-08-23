@@ -29,6 +29,8 @@ export class CreateListingUseCase {
     listing.id = v4();
     listing.title = dto.title;
     listing.description = dto.description ?? null;
+    listing.category = dto.category;
+    listing.type = dto.type;
     listing.user = user;
     listing.attachments = [];
 

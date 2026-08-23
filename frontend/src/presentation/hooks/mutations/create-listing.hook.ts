@@ -5,10 +5,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 const createListing = new CreateListing();
 
 /**
- * Use the create listing mutation.
+ * Create a listing for a user, then invalidate that user's cached listings.
+ * @returns The mutation for creating a listing.
  */
 export function useCreateListing(): ReturnType<
-  typeof useMutation<void, Error, CreateListingParams>
+    typeof useMutation<void, Error, CreateListingParams>
 > {
     const queryClient = useQueryClient();
 

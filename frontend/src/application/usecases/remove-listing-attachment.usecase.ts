@@ -1,8 +1,11 @@
 import { di, UseCaseBase } from "@/infrastructure/di";
 import { API_LISTING_REPOSITORY_TOKEN, type IApiListingRepository } from "@/domain/repositories";
 
-export type RemoveListingAttachmentParams = { id: string; attachmentId: string };
+export interface RemoveListingAttachmentParams { id: string, attachmentId: string }
 
+/**
+ * Remove an attachment from a listing.
+ */
 export class RemoveListingAttachment extends UseCaseBase<void, RemoveListingAttachmentParams> {
     private readonly apiListingRepository;
 
@@ -11,7 +14,13 @@ export class RemoveListingAttachment extends UseCaseBase<void, RemoveListingAtta
         this.apiListingRepository = di.inject<IApiListingRepository>(API_LISTING_REPOSITORY_TOKEN);
     }
 
-    async execute({ id, attachmentId }: RemoveListingAttachmentParams): Promise<void> {
-        return this.apiListingRepository.removeAttachment(id, attachmentId);
+    /**
+     * Remove the attachment.
+     * @param params - The use case parameters.
+     * @param params.id - The id of the listing.
+     * @param params.attachmentId - The id of the attachment to remove.
+     */
+    public async execute({ id, attachmentId }: RemoveListingAttachmentParams): Promise<void> {
+        await this.apiListingRepository.removeAttachment(id, attachmentId);
     }
 }

@@ -24,3 +24,5 @@ export * from '@/application/usecases/users/get/get-user-by-id.usecase';
 export * from '@/application/usecases/auth/sign-in.usecase';
 export * from '@/application/usecases/listings/patch/update-listing.usecase';
 export * from '@/application/usecases/users/patch/update-user.usecase';
+export * from '@/application/usecases/users/avatar/add-avatar-to-user.usecase';
+export * from '@/application/usecases/users/avatar/remove-avatar-from-user.usecase';

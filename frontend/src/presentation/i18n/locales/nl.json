@@ -1,0 +1,194 @@
+{
+  "common": {
+    "back": "Terug",
+    "save": "Opslaan",
+    "saving": "Opslaan…",
+    "cancel": "Annuleren",
+    "delete": "Verwijderen",
+    "edit": "Bewerken",
+    "loading": "Laden…",
+    "search": "Zoeken",
+    "all": "Alle",
+    "yes": "Ja",
+    "no": "Nee",
+    "share": "Delen",
+    "favorite": "Toevoegen aan favorieten",
+    "unfavorite": "Verwijderen uit favorieten",
+    "addPhoto": "Foto toevoegen",
+    "removePhoto": "Foto verwijderen",
+    "takePhoto": "Foto maken",
+    "chooseFromLibrary": "Kies uit bibliotheek",
+    "send": "Versturen",
+    "close": "Sluiten",
+    "changeAvatar": "Profielfoto wijzigen",
+    "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm",
+    "notAvailableOffline": "Niet beschikbaar zonder internet. Maak verbinding om dit te laden.",
+    "loadError": "Er ging iets mis bij het laden. Trek naar beneden om het opnieuw te proberen."
+  },
+  "offline": {
+    "banner": "Je bent offline"
+  },
+  "nav": {
+    "home": "Home",
+    "listings": "Listings",
+    "chats": "Chats",
+    "account": "Account"
+  },
+  "landing": {
+    "tagline": "Ruil je vaardigheden met anderen in jouw buurt.",
+    "login": "Inloggen",
+    "register": "Registreren"
+  },
+  "login": {
+    "title": "Inloggen",
+    "emailLabel": "E-mailadres",
+    "emailPlaceholder": "voorbeeld@email.com",
+    "passwordLabel": "Wachtwoord",
+    "forgotPassword": "Wachtwoord vergeten?",
+    "submit": "Inloggen",
+    "submitting": "Bezig met inloggen…",
+    "noAccountPrefix": "Nog geen account? Klik ",
+    "noAccountSuffix": " om te registreren.",
+    "here": "hier"
+  },
+  "register": {
+    "title": "Registreren",
+    "continue": "Doorgaan",
+    "creatingAccount": "Account wordt aangemaakt…",
+    "haveAccountPrefix": "Heb je al een account? Klik ",
+    "haveAccountSuffix": " om in te loggen.",
+    "here": "hier",
+    "credentials": {
+      "emailLabel": "E-mailadres",
+      "emailPlaceholder": "voorbeeld@email.com",
+      "passwordLabel": "Wachtwoord",
+      "confirmPasswordLabel": "Herhaal wachtwoord"
+    },
+    "names": {
+      "firstnameLabel": "Voornaam",
+      "firstnamePlaceholder": "Jan",
+      "surnameLabel": "Achternaam",
+      "surnamePlaceholder": "Jansen"
+    },
+    "address": {
+      "countryLabel": "Land",
+      "countryPlaceholder": "Nederland",
+      "regionLabel": "Provincie",
+      "regionPlaceholder": "Overijssel",
+      "cityLabel": "Stad",
+      "cityPlaceholder": "Enschede",
+      "postalCodeLabel": "Postcode",
+      "postalCodePlaceholder": "7511 AB",
+      "streetLabel": "Straat",
+      "streetPlaceholder": "Hoofdstraat 1"
+    },
+    "pfp": {
+      "title": "Profielfoto"
+    },
+    "errors": {
+      "passwordTooShort": "Wachtwoord moet minimaal 8 tekens lang zijn",
+      "passwordLowercase": "Wachtwoord moet minimaal 1 kleine letter bevatten",
+      "passwordUppercase": "Wachtwoord moet minimaal 1 hoofdletter bevatten",
+      "passwordNumber": "Wachtwoord moet minimaal 1 cijfer bevatten",
+      "passwordSpecial": "Wachtwoord moet minimaal 1 speciaal teken bevatten",
+      "passwordMismatch": "Wachtwoorden komen niet overeen"
+    }
+  },
+  "home": {
+    "newListing": "Nieuwe listing",
+    "myListings": "Mijn listings",
+    "chats": "Chats",
+    "account": "Account",
+    "allChats": "Alle chats",
+    "noConversations": "Nog geen gesprekken.",
+    "newListingsHeading": "Nieuwe listings",
+    "allListings": "Alle listings",
+    "noListings": "Nog geen listings."
+  },
+  "listings": {
+    "tabs": {
+      "near": "Listings bij jou in de buurt",
+      "liked": "Favoriete listings",
+      "my": "Mijn listings"
+    },
+    "emptyLiked": "Je hebt nog geen listings geliked.",
+    "emptyMy": "Je hebt nog geen listings geplaatst.",
+    "emptyNear": "Nog geen listings.",
+    "distanceUnknown": "Afstand onbekend",
+    "distanceAway": "{{distance}} km verderop"
+  },
+  "listing": {
+    "sendMessage": "Bericht versturen",
+    "tradeRequestMessage": "Hoi, ik ben geïnteresseerd in je listing \"{{title}}\".",
+    "deleteTitle": "Weet je zeker dat je deze listing wilt verwijderen?",
+    "deleteDescription": "Deze actie is permanent en kan niet ongedaan worden gemaakt!"
+  },
+  "listingForm": {
+    "titleLabel": "Titel",
+    "descriptionLabel": "Beschrijving",
+    "typeLabel": "Type",
+    "categoryLabel": "Categorie",
+    "photosLabel": "Foto's"
+  },
+  "listingCategory": {
+    "moving": "Verhuizen",
+    "cooking": "Koken",
+    "gardening": "Tuinieren",
+    "carpentry": "Timmerwerk",
+    "childcare": "Kinderopvang",
+    "cleaning": "Schoonmaken",
+    "tutoring": "Bijles",
+    "tech_help": "Computerhulp",
+    "pet_care": "Huisdierenzorg",
+    "other": "Overig"
+  },
+  "listingType": {
+    "offer": "Aanbod",
+    "request": "Verzoek"
+  },
+  "chats": {
+    "title": "Chats",
+    "empty": "Nog geen gesprekken.",
+    "sayHello": "Zeg hallo — begin het gesprek.",
+    "sendMessage": "Bericht versturen"
+  },
+  "notifications": {
+    "title": "Meldingen",
+    "empty": "Nog geen meldingen."
+  },
+  "account": {
+    "menu": {
+      "personalInformation": "Persoonlijke gegevens",
+      "myListings": "Mijn listings",
+      "notifications": "Meldingen",
+      "privacy": "Privacy & beveiliging",
+      "preferences": "Voorkeuren",
+      "language": "Taal"
+    },
+    "sectionTitle": "Account",
+    "logout": "Uitloggen",
+    "settings": {
+      "firstnameLabel": "Voornaam",
+      "surnameLabel": "Achternaam",
+      "emailLabel": "E-mailadres",
+      "locationLabel": "Locatie",
+      "uploading": "Bezig met uploaden…"
+    },
+    "comingSoon": "{{feature}} komt binnenkort."
+  },
+  "language": {
+    "english": "Engels",
+    "dutch": "Nederlands"
+  },
+  "time": {
+    "yesterday": "Gisteren",
+    "daysAgo_one": "{{count}} dag geleden",
+    "daysAgo_other": "{{count}} dagen geleden",
+    "weeksAgo_one": "{{count}} week geleden",
+    "weeksAgo_other": "{{count}} weken geleden"
+  },
+  "permissions": {
+    "title": "Toestemming vereist",
+    "message": "Camera- en galerijtoegang zijn nodig."
+  }
+}

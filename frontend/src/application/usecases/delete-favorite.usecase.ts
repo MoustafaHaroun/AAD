@@ -1,8 +1,11 @@
 import { di, UseCaseBase } from "@/infrastructure/di";
 import { FAVORITE_REPOSITORY_TOKEN, type IFavoriteRepository } from "@/domain/repositories";
 
-export type DeleteFavoriteParams = { id: string };
+export interface DeleteFavoriteParams { id: string }
 
+/**
+ * Remove a favorite.
+ */
 export class DeleteFavorite extends UseCaseBase<void, DeleteFavoriteParams> {
     private readonly favoriteRepository;
 
@@ -11,7 +14,12 @@ export class DeleteFavorite extends UseCaseBase<void, DeleteFavoriteParams> {
         this.favoriteRepository = di.inject<IFavoriteRepository>(FAVORITE_REPOSITORY_TOKEN);
     }
 
-    async execute({ id }: DeleteFavoriteParams): Promise<void> {
-        return this.favoriteRepository.deleteFavorite(id);
+    /**
+     * Delete the favorite.
+     * @param params - The use case parameters.
+     * @param params.id - The id of the favorite to delete.
+     */
+    public async execute({ id }: DeleteFavoriteParams): Promise<void> {
+        await this.favoriteRepository.deleteFavorite(id);
     }
 }

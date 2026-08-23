@@ -5,6 +5,8 @@ import { GetAllUsersUseCase } from '@/application/usecases/users/get/get-all-use
 import { GetUserByIdUseCase } from '@/application/usecases/users/get/get-user-by-id.usecase';
 import { UpdateUserUseCase } from '@/application/usecases/users/patch/update-user.usecase';
 import { DeleteUserUseCase } from '@/application/usecases/users/delete/delete-user.usecase';
+import { AddAvatarToUserUseCase } from '@/application/usecases/users/avatar/add-avatar-to-user.usecase';
+import { RemoveAvatarFromUserUseCase } from '@/application/usecases/users/avatar/remove-avatar-from-user.usecase';
 import {
   AuthGuard,
   AuthenticatedRequest,
@@ -32,6 +34,8 @@ describe('UserController', () => {
   const mockGetByIdUseCase = { execute: jest.fn() };
   const mockUpdateUseCase = { execute: jest.fn() };
   const mockDeleteUseCase = { execute: jest.fn() };
+  const mockAddAvatarUseCase = { execute: jest.fn() };
+  const mockRemoveAvatarUseCase = { execute: jest.fn() };
 
   beforeEach(async () => {
     jest.clearAllMocks();
@@ -43,6 +47,11 @@ describe('UserController', () => {
         { provide: GetUserByIdUseCase, useValue: mockGetByIdUseCase },
         { provide: UpdateUserUseCase, useValue: mockUpdateUseCase },
         { provide: DeleteUserUseCase, useValue: mockDeleteUseCase },
+        { provide: AddAvatarToUserUseCase, useValue: mockAddAvatarUseCase },
+        {
+          provide: RemoveAvatarFromUserUseCase,
+          useValue: mockRemoveAvatarUseCase,
+        },
       ],
     })
       .overrideGuard(AuthGuard)
@@ -100,5 +109,30 @@ describe('UserController', () => {
     await controller.deleteUser('user-1');
 
     expect(mockDeleteUseCase.execute).toHaveBeenCalledWith({ id: 'user-1' });
+  });
+
+  it('addAvatar passes binary, userId and requesterId to AddAvatarToUserUseCase', async () => {
+    mockAddAvatarUseCase.execute.mockResolvedValue({ user: mockUser });
+    const binary = { originalname: 'avatar.png' } as Express.Multer.File;
+
+    const result = await controller.addAvatar(mockAuthReq, 'user-1', binary);
+
+    expect(result).toEqual({ user: mockUser });
+    expect(mockAddAvatarUseCase.execute).toHaveBeenCalledWith({
+      binary,
+      userId: 'user-1',
+      requesterId: 'user-1',
+    });
+  });
+
+  it('removeAvatar delegates to RemoveAvatarFromUserUseCase', async () => {
+    mockRemoveAvatarUseCase.execute.mockResolvedValue(undefined);
+
+    await controller.removeAvatar(mockAuthReq, 'user-1');
+
+    expect(mockRemoveAvatarUseCase.execute).toHaveBeenCalledWith({
+      userId: 'user-1',
+      requesterId: 'user-1',
+    });
   });
 });

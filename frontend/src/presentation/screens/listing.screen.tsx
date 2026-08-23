@@ -1,191 +1,299 @@
-import { Stack, useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { useState } from "react";
-import { Pressable, ScrollView, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { SCREEN_OPTIONS } from "@/presentation/styles/screen-options";
+import { RefreshControl, ScrollView, Share, View } from "react-native";
+import * as Linking from "expo-linking";
+import { AppHeader } from "@/presentation/components/containers/app-header";
+import { useTranslation } from "react-i18next";
 import {
-    Text,
-    Icon,
-    Popover,
-    PopoverTrigger,
-    PopoverContent,
-    AlertDialogTrigger,
-    AlertDialog,
-    AlertDialogContent,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogDescription,
-    AlertDialogFooter,
-    AlertDialogCancel,
-    AlertDialogAction,
-    Separator,
-    PopoverClose,
-} from "@/presentation/components/primitives/rnreusables";
-import { MapPin, Pencil, Trash, EllipsisVertical, Heart, ImageOff } from "lucide-react-native";
-import { useGetApiListing, useDeleteApiListing, useCreateFavorite, useDeleteFavorite, useCreateMessage } from "@/presentation/hooks";
-import { SwipableImageGallery } from "@/presentation/components/primitives/custom";
-import { Button } from "@/presentation/components/primitives/rnreusables/ui/button";
+    useGetApiListing,
+    useCreateFavorite,
+    useDeleteFavorite,
+    useGetFavorites,
+    useCreateMessage,
+    useConversations,
+    useCurrentUserId,
+    useCurrentUser,
+    useGetUser,
+    useNetworkStatus,
+} from "@/presentation/hooks";
+import { GradientButton } from "@/presentation/components/primitives/gradient-button";
+import { formatDistanceLabel } from "@/presentation/utils/distance.util";
+import {
+    ListingHeaderActions,
+    ListingStatus,
+    ListingCover,
+    ListingDetails,
+} from "@/presentation/components/domain/listing/listing-detail-parts";
+import type { ApiListing } from "@/domain/entities";
 
-export default function ListingScreen(): React.JSX.Element {
+/**
+ * Determine whether a viewer may edit a listing: its owner, or an admin.
+ * @param listing - The loaded listing, if any.
+ * @param currentUserId - The viewer's user id, if signed in.
+ * @param currentUserRole - The viewer's role, if signed in.
+ * @returns Whether the viewer may edit the listing.
+ */
+function canManageListing(listing: ApiListing | undefined, currentUserId: string | null, currentUserRole: string | undefined): boolean {
+    if (listing == null) {
+        return false;
+    }
+
+    return listing.user?.id === currentUserId || currentUserRole === "admin";
+}
+
+/**
+ * Format the distance from the viewer to a listing's owner, when both locations are known.
+ * @param t - The translation function.
+ * @param viewer - The viewer's own coordinates, if their location is known.
+ * @param listing - The loaded listing, if any.
+ * @returns The formatted distance label, or undefined.
+ */
+function getListingDistanceLabel(
+    t: ReturnType<typeof useTranslation>["t"],
+    viewer: Parameters<typeof formatDistanceLabel>[1] | undefined,
+    listing: ApiListing | undefined,
+): string | undefined {
+    if (viewer == null) {
+        return undefined;
+    }
+
+    return formatDistanceLabel(t, viewer, listing?.user ?? {});
+}
+
+/**
+ * Get a listing's attachment paths, in order.
+ * @param listing - The loaded listing, if any.
+ * @returns The attachment paths, or an empty array if the listing has none loaded yet.
+ */
+function getAttachmentPaths(listing: ApiListing | undefined): string[] {
+    if (listing?.attachments == null) {
+        return [];
+    }
+
+    return listing.attachments.map(a => a.path);
+}
+
+/**
+ * Determine whether the viewer is the listing's own poster.
+ * @param listing - The loaded listing, if any.
+ * @param currentUserId - The viewer's user id, if signed in.
+ * @returns Whether the viewer posted this listing.
+ */
+function computeIsOwnListing(listing: ApiListing | undefined, currentUserId: string | null): boolean {
+    if (listing?.user == null) {
+        return false;
+    }
+
+    return listing.user.id === currentUserId;
+}
+
+interface ListingScreenState {
+    id: string,
+    router: ReturnType<typeof useRouter>,
+    t: ReturnType<typeof useTranslation>["t"],
+    listing: ReturnType<typeof useGetApiListing>["data"],
+    isLoading: boolean,
+    isFetching: boolean,
+    error: Error | null,
+    refetch: () => unknown,
+    isOnline: boolean,
+    isFavorited: boolean,
+    canManage: boolean,
+    isOwnListing: boolean,
+    distanceLabel: string | undefined,
+    attachmentPaths: string[],
+    favorite: { id: string } | undefined,
+    isFavoriting: boolean,
+    isUnfavoriting: boolean,
+    createFavorite: ReturnType<typeof useCreateFavorite>["mutate"],
+    deleteFavoriteItem: ReturnType<typeof useDeleteFavorite>["mutate"],
+    sendMessage: ReturnType<typeof useCreateMessage>["mutate"],
+    conversations: ReturnType<typeof useConversations>["conversations"],
+}
+
+/**
+ * Load a listing and assemble the derived state its detail page needs.
+ * @returns The listing screen's view state.
+ */
+function useListingScreenState(): ListingScreenState {
     const router = useRouter();
+    const { t } = useTranslation();
     const { id } = useLocalSearchParams<{ id: string }>();
-    const { data: listing } = useGetApiListing(id);
-    const { mutate: mutateDeleteListing } = useDeleteApiListing();
-    const { mutate: createFavorite } = useCreateFavorite();
-    const { mutate: deleteFavoriteItem } = useDeleteFavorite();
+    const { data: listing, isLoading, isFetching, error, refetch } = useGetApiListing(id);
+    const { data: favorites } = useGetFavorites();
+    const { mutate: createFavorite, isPending: isFavoriting } = useCreateFavorite();
+    const { mutate: deleteFavoriteItem, isPending: isUnfavoriting } = useDeleteFavorite();
     const { mutate: sendMessage } = useCreateMessage();
+    const { conversations } = useConversations();
+    const currentUserId = useCurrentUserId();
+    const currentUser = useCurrentUser();
+    const { data: viewer } = useGetUser(currentUserId ?? "");
+    const isOnline = useNetworkStatus();
 
-    const [favoriteId, setFavoriteId] = useState<string | null>(null);
-    const isFavorited = favoriteId != null;
+    const favorite = favorites?.find(f => f.listingId === id);
+    const isFavorited = favorite != null;
+    const canManage = canManageListing(listing, currentUserId, currentUser?.role);
+    const isOwnListing = computeIsOwnListing(listing, currentUserId);
+    const distanceLabel = getListingDistanceLabel(t, viewer, listing);
+    const attachmentPaths = getAttachmentPaths(listing);
 
-    function deleteListing(): void {
-        if (listing != null) {
-            mutateDeleteListing({ id: listing.id }, { onSuccess: () => router.back() });
-        }
-    }
+    return {
+        id,
+        router,
+        t,
+        listing,
+        isLoading,
+        isFetching,
+        error,
+        refetch,
+        isOnline,
+        isFavorited,
+        canManage,
+        isOwnListing,
+        distanceLabel,
+        attachmentPaths,
+        favorite,
+        isFavoriting,
+        isUnfavoriting,
+        createFavorite,
+        deleteFavoriteItem,
+        sendMessage,
+        conversations,
+    };
+}
 
+/**
+ * Build the listing detail page's favorite/share/trade-request handlers.
+ * @param state - The listing screen's loaded state, from {@link useListingScreenState}.
+ * @returns The handlers used by the listing detail page.
+ */
+function useListingActions(state: ReturnType<typeof useListingScreenState>): {
+    toggleFavorite: () => void,
+    onShare: () => void,
+    onSendMessage: () => void,
+} {
+    const { router, t, listing, isOnline, favorite, isFavoriting, isUnfavoriting, createFavorite, deleteFavoriteItem, sendMessage, conversations } = state;
+
+    /**
+     * Favorite or unfavorite the listing.
+     */
     function toggleFavorite(): void {
-        if (isFavorited) {
-            deleteFavoriteItem({ id: favoriteId! }, { onSuccess: () => setFavoriteId(null) });
+        if (isFavoriting || isUnfavoriting || listing == null || !isOnline) {
+            return;
+        }
+
+        if (favorite == null) {
+            createFavorite({ listingId: listing.id });
         } else {
-            createFavorite(
-                { listingId: listing!.id },
-                { onSuccess: (data) => setFavoriteId(data.id) },
-            );
+            deleteFavoriteItem({ id: favorite.id });
         }
     }
 
+    /**
+     * Open the native share sheet with a link to this listing.
+     */
+    function onShare(): void {
+        if (listing == null) {
+            return;
+        }
+
+        const url = Linking.createURL(`/listings/${listing.id}`);
+
+        void Share.share({ message: `${listing.title}\n${url}`, title: listing.title, url });
+    }
+
+    /**
+     * Open the conversation with the listing's poster, sending the canned trade-request
+     * message only the first time a conversation with them is started.
+     */
     function onSendMessage(): void {
-        if (listing?.user == null) return;
+        if (listing?.user == null) {
+            return;
+        }
+
+        const posterId = listing.user.id;
+        const hasExistingConversation = conversations?.some(c => c.counterpart.id === posterId) ?? false;
+
+        if (hasExistingConversation) {
+            router.push(`/chats/${posterId}`);
+            return;
+        }
+
         sendMessage(
-            { content: `Hi, I'm interested in your listing "${listing.title}".`, recipientId: listing.user.id },
+            { content: t("listing.tradeRequestMessage", { title: listing.title }), recipientId: posterId },
+            { onSuccess: () => { router.push(`/chats/${posterId}`); } },
         );
     }
 
-    const attachmentPaths = listing?.attachments?.map(a => a.path) ?? [];
+    return { toggleFavorite, onShare, onSendMessage };
+}
+
+/**
+ * Render a listing's detail page with favoriting, sharing, and starting a trade chat.
+ * @returns The rendered listing screen.
+ */
+export default function ListingScreen(): React.JSX.Element {
+    const state = useListingScreenState();
+    const {
+        id, router, listing, isLoading, isFetching, error, refetch, isOnline,
+        isFavorited, canManage, isOwnListing, distanceLabel, attachmentPaths, t,
+    } = state;
+    const { toggleFavorite, onShare, onSendMessage } = useListingActions(state);
 
     return (
-        <>
-            <Stack.Screen options={{
-                ...SCREEN_OPTIONS,
-                headerRight: () => (
-                    <Popover>
-                        <PopoverTrigger asChild>
-                            <Pressable className="flex items-center justify-center w-8 aspect-square">
-                                <Icon className="size-5" as={EllipsisVertical} />
-                            </Pressable>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-40">
-                            <View className="flex flex-col gap-1">
-                                <PopoverClose
-                                    className="flex flex-row items-center gap-2 py-2 px-2"
-                                    onPress={() => router.push(`/listings/${id}/edit`)}
-                                >
-                                    <Icon className="size-4" as={Pencil} />
-                                    <Text className="text-sm font-medium">Edit</Text>
-                                </PopoverClose>
+        <View className="flex-1 bg-background">
+            <AppHeader
+                right={<ListingHeaderActions
+                    canManage={canManage}
+                    onEdit={() => { router.push(`/listings/${id}/edit`); }}
+                    onShare={onShare}
+                />}
+            />
 
-                                <PopoverClose>
-                                    <AlertDialog>
-                                        <AlertDialogTrigger>
-                                            <View className="flex flex-row items-center gap-2 py-2 px-2">
-                                                <Icon className="size-4" as={Trash} />
-                                                <Text className="text-sm font-medium">Delete</Text>
-                                            </View>
-                                        </AlertDialogTrigger>
-                                        <AlertDialogContent>
-                                            <AlertDialogHeader>
-                                                <AlertDialogTitle>Delete Listing</AlertDialogTitle>
-                                                <AlertDialogDescription>
-                                                    This action cannot be undone. Are you sure you wish to permanently delete your listing?
-                                                </AlertDialogDescription>
-                                            </AlertDialogHeader>
-                                            <AlertDialogFooter>
-                                                <AlertDialogCancel>
-                                                    <Text>Cancel</Text>
-                                                </AlertDialogCancel>
-                                                <AlertDialogAction onPress={deleteListing}>
-                                                    <Text>Delete</Text>
-                                                </AlertDialogAction>
-                                            </AlertDialogFooter>
-                                        </AlertDialogContent>
-                                    </AlertDialog>
-                                </PopoverClose>
-                            </View>
-                        </PopoverContent>
-                    </Popover>
-                ),
-            }} />
+            <View className="flex-1 bg-background">
+                <ScrollView
+                    bounces
+                    className="flex-1"
+                    refreshControl={
+                        <RefreshControl
+                            onRefresh={() => { void refetch(); }}
+                            refreshing={isFetching ? !isLoading : false}
+                        />
+                    }
+                >
 
-            <SafeAreaView className="flex-1 bg-background" edges={["bottom"]}>
-                <ScrollView className="flex-1" bounces>
+                    <ListingStatus
+                        hasError={error != null && listing == null}
+                        isLoading={isLoading}
+                        isOnline={isOnline}
+                    />
 
                     {/* Gallery */}
-                    {attachmentPaths.length > 0
-                        ? <SwipableImageGallery uris={attachmentPaths} />
-                        : (
-                            <View className="w-full aspect-video bg-muted items-center justify-center">
-                                <Icon as={ImageOff} className="text-muted-foreground size-12" />
-                            </View>
-                        )}
+                    {listing == null ? null : <ListingCover attachmentPaths={attachmentPaths} />}
 
-                    {listing != null && (
-                        <View className="flex flex-col gap-4 p-4">
-
-                            {/* User info */}
-                            <View className="flex flex-col gap-1">
-                                <Text className="text-2xl font-bold">
-                                    {listing.user?.firstname} {listing.user?.surname}
-                                </Text>
-                                {listing.user?.location != null && (
-                                    <View className="flex flex-row items-center gap-1">
-                                        <Icon as={MapPin} className="text-muted-foreground size-4" />
-                                        <Text className="text-sm text-muted-foreground">
-                                            {listing.user.location}
-                                        </Text>
-                                    </View>
-                                )}
-                            </View>
-
-                            <Separator />
-
-                            {/* Title + Favorite */}
-                            <View className="flex flex-row items-start justify-between gap-4">
-                                <Text className="text-lg font-bold flex-1">{listing.title}</Text>
-
-                                <Pressable
-                                    onPress={toggleFavorite}
-                                    className="w-12 h-12 rounded-full bg-primary items-center justify-center shrink-0"
-                                >
-                                    <Icon
-                                        as={Heart}
-                                        className={isFavorited ? "text-white size-5 fill-white" : "text-foreground size-5"}
-                                    />
-                                </Pressable>
-                            </View>
-
-                            {/* Description */}
-                            {listing.description != null && (
-                                <Text className="text-sm leading-relaxed text-foreground">
-                                    {listing.description}
-                                </Text>
-                            )}
-                        </View>
-                    )}
+                    {listing == null
+                        ? null
+                        : <ListingDetails
+                                distanceLabel={distanceLabel}
+                                isFavorited={isFavorited}
+                                isOnline={isOnline}
+                                listing={listing}
+                                onToggleFavorite={toggleFavorite}
+                            />}
                 </ScrollView>
 
                 {/* Fixed bottom CTA */}
-                <View className="px-4 pt-3 pb-4 bg-background border-t border-border">
-                    <Button
-                        className="rounded-full h-14"
-                        onPress={onSendMessage}
-                        disabled={listing == null}
-                    >
-                        <Text className="font-semibold text-base">Send message</Text>
-                    </Button>
-                </View>
-            </SafeAreaView>
-        </>
+                {listing != null && !isOwnListing
+                    ? <View className="border-t border-border bg-background px-4 pb-4 pt-3">
+                            <GradientButton
+                                disabled={!isOnline}
+                                onPress={onSendMessage}
+                            >
+                                {t("listing.sendMessage")}
+                            </GradientButton>
+                        </View>
+                    : null}
+            </View>
+        </View>
     );
 }

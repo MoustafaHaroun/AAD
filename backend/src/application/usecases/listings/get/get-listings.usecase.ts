@@ -11,7 +11,11 @@ export class GetListingsUseCase {
   constructor(private readonly listingRepository: ListingRepository) {}
 
   async execute(dto: GetListingsRequest): Promise<GetListingsResponse> {
-    const listings = await this.listingRepository.findAll(dto.q);
+    const listings = await this.listingRepository.findAll(
+      dto.q,
+      dto.category,
+      dto.type,
+    );
 
     return {
       listings: listings.map((l) => toPublicListing(l.toDomain())),

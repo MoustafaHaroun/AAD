@@ -7,11 +7,15 @@ export { useImageService } from "@/presentation/hooks/services/image-service.hoo
 // Auth
 export { useSignIn } from "@/presentation/hooks/mutations/sign-in.hook";
 export { useCurrentUser, useCurrentUserId } from "@/presentation/hooks/queries/current-user.hook";
+export { useSyncUserLocation } from "@/presentation/hooks/use-sync-user-location.hook";
+export { useNetworkStatus } from "@/presentation/hooks/use-network-status.hook";
+export { useListingDraft } from "@/presentation/hooks/use-listing-draft.hook";
 
 // Users
 export { useGetAllUsers } from "@/presentation/hooks/queries/get-all-users.hook";
 export { useGetUser } from "@/presentation/hooks/queries/get-user.hook";
 export { useCreateUser } from "@/presentation/hooks/mutations/create-user.hook";
+export { useUploadUserAvatar } from "@/presentation/hooks/mutations/upload-user-avatar.hook";
 export { useUpdateUser } from "@/presentation/hooks/mutations/update-user.hook";
 export { useDeleteUser } from "@/presentation/hooks/mutations/delete-user.hook";
 
@@ -31,11 +35,14 @@ export { useRemoveListingAttachment } from "@/presentation/hooks/mutations/remov
 
 // Messages
 export { useGetMessages } from "@/presentation/hooks/queries/get-messages.hook";
+export { useConversations } from "@/presentation/hooks/queries/get-conversations.hook";
 export { useGetMessage } from "@/presentation/hooks/queries/get-message.hook";
 export { useCreateMessage } from "@/presentation/hooks/mutations/create-message.hook";
 export { useDeleteMessage } from "@/presentation/hooks/mutations/delete-message.hook";
 
 // Notifications
 export { useGetNotification } from "@/presentation/hooks/queries/get-notification.hook";
+export { useGetNotifications } from "@/presentation/hooks/queries/get-notifications.hook";
 export { useCreateNotification } from "@/presentation/hooks/mutations/create-notification.hook";
+export { useUpdateNotification } from "@/presentation/hooks/mutations/update-notification.hook";
 export { useDeleteNotification } from "@/presentation/hooks/mutations/delete-notification.hook";

@@ -1,12 +1,14 @@
+import { BRAND_COLORS } from "@/presentation/styles/theme";
+
 export const SCREEN_OPTIONS = {
     title: "Trade²",
     headerTransparent: false,
     headerTitleAlign: "center",
     headerStyle: {
-        backgroundColor: "#F7DF6E",
+        backgroundColor: BRAND_COLORS.primary,
     },
     headerTitleStyle: {
         fontWeight: "bold",
     },
-    headerTintColor: "#000",
+    headerTintColor: BRAND_COLORS.black,
 };

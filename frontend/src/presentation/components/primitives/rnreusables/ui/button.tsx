@@ -1,6 +1,7 @@
 import { TextClassContext } from "@/presentation/components/primitives/rnreusables/ui/text";
 import { cn } from "@/presentation/utils/cn.util";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 import { Platform, Pressable } from "react-native";
 
 const buttonVariants = cva(
@@ -93,17 +94,18 @@ type ButtonProps = React.ComponentProps<typeof Pressable> &
     VariantProps<typeof buttonVariants>;
 
 /**
- *
- * @param root0
- * @param root0.className
- * @param root0.variant
- * @param root0.size
+ * Render a themed, variant-aware pressable button.
+ * @param props - The props.
+ * @param props.className - The NativeWind classes to be forwarded.
+ * @param props.variant - The visual style variant.
+ * @param props.size - The size variant.
+ * @returns The rendered button.
  */
-function Button({ className, variant, size, ...props }: ButtonProps) {
+function Button({ className, variant, size, ...props }: ButtonProps): React.JSX.Element {
     return (
         <TextClassContext.Provider value={buttonTextVariants({ variant, size })}>
             <Pressable
-                className={cn(props.disabled && "opacity-50", buttonVariants({ variant, size }), className)}
+                className={cn(props.disabled === true && "opacity-50", buttonVariants({ variant, size }), className)}
                 role="button"
                 {...props}
             />

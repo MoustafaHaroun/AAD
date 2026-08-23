@@ -1,4 +1,5 @@
 import { ScrollViewStyleReset } from "expo-router/html";
+import * as React from "react";
 import type { PropsWithChildren } from "react";
 
 // This file is web-only and used to configure the root HTML for every
@@ -6,11 +7,12 @@ import type { PropsWithChildren } from "react";
 // The contents of this function only run in Node.js environments and
 // Do not have access to the DOM or browser APIs.
 /**
- *
- * @param root0
- * @param root0.children
+ * Render the root HTML document used for static web rendering.
+ * @param props - The props.
+ * @param props.children - The app content to render inside the document body.
+ * @returns The rendered HTML document.
  */
-export default function Root({ children }: PropsWithChildren) {
+export default function Root({ children }: PropsWithChildren): React.JSX.Element {
     return (
         <html
             className="bg-background"

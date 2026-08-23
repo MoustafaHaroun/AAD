@@ -1,5 +1,7 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { CreateListingUseCase } from './create-listing.usecase';
+import { ListingCategory } from '@/domain/enums/listing-category.enum';
+import { ListingType } from '@/domain/enums/listing-type.enum';
 
 const mockUserModel = {
   id: 'user-1',
@@ -15,6 +17,8 @@ const mockListingDomain = {
   id: 'listing-1',
   title: 'Test Listing',
   description: 'Desc',
+  category: ListingCategory.CARPENTRY,
+  type: ListingType.OFFER,
   attachments: [],
   user: { id: 'user-1' },
 };
@@ -41,6 +45,8 @@ describe('CreateListingUseCase', () => {
     const result = await useCase.execute({
       title: 'Test Listing',
       description: 'Desc',
+      category: ListingCategory.CARPENTRY,
+      type: ListingType.OFFER,
       userId: 'user-1',
     });
 
@@ -55,6 +61,8 @@ describe('CreateListingUseCase', () => {
       useCase.execute({
         title: 'Test',
         description: 'description',
+        category: ListingCategory.CARPENTRY,
+        type: ListingType.OFFER,
         userId: 'missing',
       }),
     ).rejects.toThrow(UnauthorizedException);

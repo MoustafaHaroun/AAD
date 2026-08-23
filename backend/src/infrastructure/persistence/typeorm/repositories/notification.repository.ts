@@ -25,6 +25,7 @@ export class NotificationRepository {
     return await this.repository.find({
       where: { user: { id: userId } },
       relations: ['user'],
+      order: { createdAt: 'DESC' },
     });
   }
 

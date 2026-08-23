@@ -1,5 +1,6 @@
 import {
   Column,
+  CreateDateColumn,
   Entity,
   JoinColumn,
   ManyToOne,
@@ -16,6 +17,9 @@ export class MessageModel {
   @Column({ type: 'text' })
   content: string;
 
+  @CreateDateColumn({ name: 'created_at' })
+  createdAt: Date;
+
   @ManyToOne(() => UserModel)
   @JoinColumn({ name: 'sender_id' })
   sender: UserModel;
@@ -28,6 +32,7 @@ export class MessageModel {
     return {
       id: this.id,
       content: this.content,
+      createdAt: this.createdAt,
       sender: this.sender.toDomain(),
       recipient: this.recipient.toDomain(),
     } satisfies Message;

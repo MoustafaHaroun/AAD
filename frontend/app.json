@@ -24,7 +24,7 @@
       "edgeToEdgeEnabled": true,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#FCC010"
       },
       "package": "nl.saxion.trade2"
     },
@@ -49,6 +49,15 @@
               "-DSQLITE_ENABLE_DBSTAT_VTAB=1 -DSQLITE_ENABLE_SNAPSHOT=1"
             ]
           }
+        }
+      ],
+      "expo-secure-store",
+      "expo-font",
+      "expo-localization",
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Trade² uses your location to show how far away listings are from you."
         }
       ]
     ],

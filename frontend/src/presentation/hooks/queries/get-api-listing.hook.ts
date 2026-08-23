@@ -1,13 +1,40 @@
 import { GetApiListing } from "@/application/usecases";
 import type { ApiListing } from "@/domain/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient, type UseQueryResult } from "@tanstack/react-query";
 
 const getApiListing = new GetApiListing();
 
-export function useGetApiListing(id: string) {
-    return useQuery<ApiListing, Error>({
+/**
+ * Fetch a single listing by id, falling back to any cached list data.
+ * @param id - The listing id.
+ * @returns The query for the listing.
+ */
+export function useGetApiListing(id: string): UseQueryResult<ApiListing> {
+    const queryClient = useQueryClient();
+
+    return useQuery<ApiListing>({
         queryKey: ["api-listings.get", id],
-        queryFn: () => getApiListing.execute({ id }),
-        enabled: id != null,
+        queryFn: async () => getApiListing.execute({ id }),
+        enabled: id.length > 0,
+        // A listing already seen in any cached list (Home, Listings, etc.)
+        // Has all the fields this screen needs — show it immediately
+        // Instead of waiting on (or failing) a separate network fetch.
+        initialData: () => {
+            const listQueries = queryClient.getQueriesData<ApiListing[] | ApiListing>({ queryKey: ["api-listings.get"] });
+
+            for (const [, data] of listQueries) {
+                if (!Array.isArray(data)) {
+                    continue;
+                }
+
+                const match = data.find(listing => listing.id === id);
+
+                if (match != null) {
+                    return match;
+                }
+            }
+
+            return undefined;
+        },
     });
 }

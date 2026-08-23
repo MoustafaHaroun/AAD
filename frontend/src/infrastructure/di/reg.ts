@@ -17,7 +17,7 @@ import { ImageService, SharingService } from "@/infrastructure/services";
  * Register implementations.
  * @param di - The DI container.
  */
-export function register(di: DIContainer) {
+export function register(di: DIContainer): void {
     registerRepositories(di);
     registerServices(di);
 }
@@ -26,7 +26,7 @@ export function register(di: DIContainer) {
  * Register repository implementations.
  * @param di - The DI container.
  */
-function registerRepositories(di: DIContainer) {
+function registerRepositories(di: DIContainer): void {
     di.provide(irepositories.LISTING_REPOSITORY_TOKEN, new ListingRepository());
     di.provide(irepositories.ATTACHMENT_REPOSITORY_TOKEN, new AttachmentRepository());
     di.provide(irepositories.AUTH_REPOSITORY_TOKEN, new AuthHttpRepository());
@@ -41,7 +41,7 @@ function registerRepositories(di: DIContainer) {
  * Register service implementations.
  * @param di - The DI container.
  */
-function registerServices(di: DIContainer) {
+function registerServices(di: DIContainer): void {
     di.provide(iservices.IMAGE_SERVICE_TOKEN, new ImageService());
     di.provide(iservices.SHARING_SERVICE_TOKEN, new SharingService());
 }

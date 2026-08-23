@@ -1,8 +1,11 @@
 import { di, UseCaseBase } from "@/infrastructure/di";
 import { NOTIFICATION_REPOSITORY_TOKEN, type INotificationRepository } from "@/domain/repositories";
 
-export type DeleteNotificationParams = { id: string };
+export interface DeleteNotificationParams { id: string }
 
+/**
+ * Delete a notification.
+ */
 export class DeleteNotification extends UseCaseBase<void, DeleteNotificationParams> {
     private readonly notificationRepository;
 
@@ -11,7 +14,12 @@ export class DeleteNotification extends UseCaseBase<void, DeleteNotificationPara
         this.notificationRepository = di.inject<INotificationRepository>(NOTIFICATION_REPOSITORY_TOKEN);
     }
 
-    async execute({ id }: DeleteNotificationParams): Promise<void> {
-        return this.notificationRepository.deleteNotification(id);
+    /**
+     * Delete the notification.
+     * @param params - The use case parameters.
+     * @param params.id - The id of the notification to delete.
+     */
+    public async execute({ id }: DeleteNotificationParams): Promise<void> {
+        await this.notificationRepository.deleteNotification(id);
     }
 }

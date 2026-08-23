@@ -13,6 +13,8 @@ import { UpdateListingUseCase } from '@/application/usecases/listings/patch/upda
 import { DeleteListingUseCase } from '@/application/usecases/listings/delete/delete-listing.usecase';
 import { AddAttachmentToListingUseCase } from '@/application/usecases/listings/attachments/add-attachment-to-listing.usecase';
 import { Role } from '@/domain/enums/role.enum';
+import { ListingCategory } from '@/domain/enums/listing-category.enum';
+import { ListingType } from '@/domain/enums/listing-type.enum';
 
 const mockListing = {
   id: 'listing-1',
@@ -66,7 +68,9 @@ describe('ListingController', () => {
   });
 
   it('getListings delegates to GetListingsUseCase', async () => {
-    mockGetListingsUseCase.execute.mockResolvedValue({ listings: [mockListing] });
+    mockGetListingsUseCase.execute.mockResolvedValue({
+      listings: [mockListing],
+    });
 
     const result = await controller.getListings({});
 
@@ -75,7 +79,9 @@ describe('ListingController', () => {
   });
 
   it('getListings passes the search query through to GetListingsUseCase', async () => {
-    mockGetListingsUseCase.execute.mockResolvedValue({ listings: [mockListing] });
+    mockGetListingsUseCase.execute.mockResolvedValue({
+      listings: [mockListing],
+    });
 
     const result = await controller.getListings({ q: 'carpentry' });
 
@@ -111,12 +117,16 @@ describe('ListingController', () => {
     const result = await controller.createListing(mockAuthReq, {
       title: 'Test',
       description: 'Description',
+      category: ListingCategory.CARPENTRY,
+      type: ListingType.OFFER,
     });
 
     expect(result).toEqual({ listing: mockListing });
     expect(mockCreateUseCase.execute).toHaveBeenCalledWith({
       title: 'Test',
       description: 'Description',
+      category: ListingCategory.CARPENTRY,
+      type: ListingType.OFFER,
       userId: 'user-1',
     });
   });

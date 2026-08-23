@@ -18,4 +18,6 @@ export const userSchema = {
   firstname: z.string().min(1).max(128),
   surname: z.string().min(1).max(128),
   location: z.string().min(1).max(256),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
 };

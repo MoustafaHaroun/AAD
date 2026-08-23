@@ -1,13 +1,17 @@
 import { RemoveListingAttachment, type RemoveListingAttachmentParams } from "@/application/usecases";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 
 const removeListingAttachment = new RemoveListingAttachment();
 
-export function useRemoveListingAttachment() {
+/**
+ * Remove an attachment from a listing, then invalidate the cached listing.
+ * @returns The mutation for removing a listing attachment.
+ */
+export function useRemoveListingAttachment(): UseMutationResult<void, Error, RemoveListingAttachmentParams> {
     const queryClient = useQueryClient();
 
-    return useMutation<void, Error, RemoveListingAttachmentParams>({
-        mutationFn: (params) => removeListingAttachment.execute(params),
+    return useMutation({
+        mutationFn: async params => removeListingAttachment.execute(params),
         onSuccess: async (_, variables) => {
             await queryClient.invalidateQueries({ queryKey: ["api-listings.get", variables.id] });
         },

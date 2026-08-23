@@ -2,8 +2,11 @@ import { di, UseCaseBase } from "@/infrastructure/di";
 import { API_LISTING_REPOSITORY_TOKEN, type IApiListingRepository } from "@/domain/repositories";
 import type { RNFile } from "@/domain/entities";
 
-export type UploadListingAttachmentParams = { id: string; files: RNFile[] };
+export interface UploadListingAttachmentParams { id: string, files: RNFile[] }
 
+/**
+ * Upload attachment files to a listing.
+ */
 export class UploadListingAttachment extends UseCaseBase<void, UploadListingAttachmentParams> {
     private readonly apiListingRepository;
 
@@ -12,7 +15,13 @@ export class UploadListingAttachment extends UseCaseBase<void, UploadListingAtta
         this.apiListingRepository = di.inject<IApiListingRepository>(API_LISTING_REPOSITORY_TOKEN);
     }
 
-    async execute({ id, files }: UploadListingAttachmentParams): Promise<void> {
-        return this.apiListingRepository.uploadAttachment(id, files);
+    /**
+     * Upload the attachments.
+     * @param params - The use case parameters.
+     * @param params.id - The id of the listing.
+     * @param params.files - The files to upload.
+     */
+    public async execute({ id, files }: UploadListingAttachmentParams): Promise<void> {
+        await this.apiListingRepository.uploadAttachment(id, files);
     }
 }

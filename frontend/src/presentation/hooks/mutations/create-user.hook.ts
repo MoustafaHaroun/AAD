@@ -1,14 +1,18 @@
 import { CreateUser } from "@/application/usecases";
 import type { User, CreateUserBody } from "@/domain/entities";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, type UseMutationResult } from "@tanstack/react-query";
 
 const createUser = new CreateUser();
 
-export function useCreateUser() {
+/**
+ * Register a new user, then invalidate the cached user list.
+ * @returns The mutation for creating a user.
+ */
+export function useCreateUser(): UseMutationResult<User, Error, CreateUserBody> {
     const queryClient = useQueryClient();
 
     return useMutation<User, Error, CreateUserBody>({
-        mutationFn: (body) => createUser.execute(body),
+        mutationFn: async body => createUser.execute(body),
         onSuccess: async () => {
             await queryClient.invalidateQueries({ queryKey: ["users.get.all"] });
         },

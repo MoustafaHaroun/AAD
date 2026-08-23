@@ -1,13 +1,18 @@
 import { GetNotification } from "@/application/usecases";
 import type { Notification } from "@/domain/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 const getNotification = new GetNotification();
 
-export function useGetNotification(id: string) {
-    return useQuery<Notification, Error>({
+/**
+ * Fetch a single notification by id.
+ * @param id - The notification id.
+ * @returns The query for the notification.
+ */
+export function useGetNotification(id: string): UseQueryResult<Notification> {
+    return useQuery<Notification>({
         queryKey: ["notifications.get", id],
-        queryFn: () => getNotification.execute({ id }),
-        enabled: id != null,
+        queryFn: async () => getNotification.execute({ id }),
+        enabled: id.length > 0,
     });
 }

@@ -27,6 +27,15 @@ export class UserModel {
   @Column({ type: 'varchar', nullable: true })
   location: string | null;
 
+  @Column({ type: 'double precision', nullable: true })
+  latitude: number | null;
+
+  @Column({ type: 'double precision', nullable: true })
+  longitude: number | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  avatar: string | null;
+
   @OneToMany(() => ListingModel, (listing) => listing.user)
   listings: ListingModel[];
 
@@ -53,6 +62,9 @@ export class UserModel {
       surname: this.surname,
       role: this.role,
       location: this.location ?? null,
+      latitude: this.latitude ?? null,
+      longitude: this.longitude ?? null,
+      avatar: this.avatar ?? null,
       listings: this.listings,
       notifications: this.notifications,
     } satisfies User;

@@ -7,6 +7,9 @@ export class UpdateNotificationRequest {
 
   @ApiProperty({ example: 'An updated description.', required: false })
   message?: string | null;
+
+  @ApiProperty({ example: true, required: false })
+  read?: boolean;
 }
 
 export class UpdateNotificationResponse {

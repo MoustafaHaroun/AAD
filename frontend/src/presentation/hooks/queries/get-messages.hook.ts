@@ -1,12 +1,18 @@
 import { GetMessages } from "@/application/usecases";
 import type { Message } from "@/domain/entities";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, type UseQueryResult } from "@tanstack/react-query";
 
 const getMessages = new GetMessages();
 
-export function useGetMessages() {
-    return useQuery<Message[], Error>({
+/**
+ * Fetch all of the current user's messages, polling for new ones.
+ * @returns The query for the messages.
+ */
+export function useGetMessages(): UseQueryResult<Message[]> {
+    return useQuery<Message[]>({
         queryKey: ["messages.get"],
-        queryFn: () => getMessages.execute(),
+        queryFn: async () => getMessages.execute(),
+        // No WebSocket support on the backend yet — poll for new messages instead.
+        refetchInterval: 5000,
     });
 }

@@ -1,7 +1,10 @@
 import { Listing, User } from '@/domain/entities';
 
 export type PublicListing = Omit<Listing, 'user'> & {
-  user: Pick<User, 'id' | 'firstname' | 'surname' | 'role'>;
+  user: Pick<
+    User,
+    'id' | 'firstname' | 'surname' | 'role' | 'latitude' | 'longitude'
+  >;
 };
 
 export function toPublicListing(listing: Listing): PublicListing {
@@ -14,6 +17,8 @@ export function toPublicListing(listing: Listing): PublicListing {
       firstname: user.firstname,
       surname: user.surname,
       role: user.role,
+      latitude: user.latitude,
+      longitude: user.longitude,
     },
   };
 }

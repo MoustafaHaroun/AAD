@@ -1,20 +1,24 @@
 import { di, UseCaseBase } from "@/infrastructure/di";
 import type { Listing } from "@/domain/entities";
 import {
-    ATTACHMENT_REPOSITORY_TOKEN, IAttachmentRepository,
+    ATTACHMENT_REPOSITORY_TOKEN, type IAttachmentRepository,
     type IListingRepository,
     LISTING_REPOSITORY_TOKEN,
 } from "@/domain/repositories";
 
-export type EditListingParams = {
+export interface EditListingParams {
     userId: string,
     listing: Listing,
 }
 
 export type EditListingReturnType = Listing;
 
+/**
+ * Edit a listing, reconciling its attachments with the incoming set.
+ */
 export class EditListing extends UseCaseBase<EditListingReturnType, EditListingParams> {
     private readonly listingRepository;
+
     private readonly attachmentRepository;
 
     constructor() {
@@ -28,7 +32,15 @@ export class EditListing extends UseCaseBase<EditListingReturnType, EditListingP
         );
     }
 
-    async execute({ userId, listing }: EditListingParams): Promise<EditListingReturnType> {
+    /**
+     * Edit the listing, saving new attachments and deleting removed ones.
+     * @param params - The use case parameters.
+     * @param params.userId - The id of the user editing the listing.
+     * @param params.listing - The listing's new state, including local attachment URIs.
+     * @returns The updated listing.
+     * @throws {Error} When no listing exists with the given id.
+     */
+    public async execute({ userId, listing }: EditListingParams): Promise<EditListingReturnType> {
         const existing = await this.listingRepository.getListingById(listing.id);
 
         if (existing == null) {
