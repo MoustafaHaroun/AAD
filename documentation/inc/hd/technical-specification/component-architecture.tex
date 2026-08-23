@@ -113,7 +113,7 @@ The authentication repository implements registration and sign-in operations.
 The token store provides persistent session-token storage for the authentication flow.
 The query client and query persister configure TanStack React Query and its persisted query cache.
 
-The local persistence adapters implement access to cached non-sensitive listing data and listing drafts.
+The local persistence adapters implement access to listing drafts.
 They use Expo SQLite, Drizzle ORM, and the listing-draft store.
 The local persistence implementation is separate from secure session storage and does not store authentication tokens or other sensitive credentials.
 

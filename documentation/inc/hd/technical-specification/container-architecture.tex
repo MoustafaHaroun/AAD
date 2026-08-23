@@ -33,9 +33,10 @@ The application uses mobile operating-system capabilities through Expo and React
 Secure Session Storage persists authentication tokens and other small sensitive session values on the device.
 The application uses \texttt{expo-secure-store} for this purpose.
 Expo SecureStore provides encrypted platform-backed key-value storage through iOS Keychain services and Android Keystore-backed storage.
+The store is also used to persist the user's selected display language, a non-sensitive preference kept here for simplicity.
 
 The Expo React Native Application stores and retrieves session information through this container.
-Secure Session Storage is separate from the local cache and draft storage because authentication tokens and other credentials must not be stored with non-sensitive application data.
+Secure Session Storage is otherwise kept separate from the local cache and draft storage because authentication tokens and other credentials must not be stored with non-sensitive application data.
 
 \subsubsection{Local Cache and Draft Storage}
 \label{sec:c2-local-storage}
@@ -43,6 +44,6 @@ Secure Session Storage is separate from the local cache and draft storage becaus
 Local Cache and Draft Storage persists non-sensitive application data on the device.
 The application uses Expo SQLite as its local database and Drizzle ORM to define the schema and perform typed database operations.
 
-This container stores cached listing data, listing details, user preferences, and incomplete form drafts.
+This container stores incomplete form drafts.
 The Expo React Native Application reads and writes this data through local persistence adapters.
 Authentication tokens and other sensitive session values are stored separately in Secure Session Storage.

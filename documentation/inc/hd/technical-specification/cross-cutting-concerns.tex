@@ -17,7 +17,6 @@ This ensures that users understand why current data cannot be refreshed or why a
 
 TanStack React Query caches retrieved server data in memory during application use.
 The query persister retains suitable non-sensitive query data between application launches.
-Cached listing data and listing details are additionally supported by the local persistence layer, which uses Expo SQLite and Drizzle ORM.
 The application can display previously retrieved listing information when the device is offline, but cached content is not treated as authoritative because it may differ from the current data stored by the \tradesq{} Back-end API.
 
 The application stores incomplete listing forms through the listing-draft store.
@@ -55,7 +54,7 @@ The internationalisation module centralises translated interface text and active
 This approach allows labels, validation messages, buttons, navigation controls, and other user-facing content to remain consistent across supported languages.
 
 The application is designed to respect system text scaling.
-Fixed-height text containers are reviewed and adjusted where they can clip or truncate enlarged text.
+Fixed-height text containers that could clip or truncate enlarged text use a minimum height instead, so they grow with the content rather than cutting it off.
 This includes the listing-title wrapper in listing cards, the description text area in create-listing and edit-listing forms, and search-input wrappers in the home, listings, and chats screens.
 Essential information must remain readable and usable when a user increases the system font size.
 
