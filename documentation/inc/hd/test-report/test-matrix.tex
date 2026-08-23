@@ -22,4 +22,24 @@ The table below maps every front-end functional requirement (as defined in the T
         FR10 & TC022 \\
         FR11 & TC023, TC024 \\
         FR12 & TC021, TC025, TC026 \\
+        FR13 & TC005 \\
+        FR14 & TC029 \\
+        FR15 & TC030 \\
+        FR16 & TC031 \\
+        FR17 & TC032 \\
+        NFR5 & TC031, TC032 \\
+        NFR8 & TC021, TC025, TC026 \\
+        NFR11 & TC028 \\
+        NFR12 & TC027 \\
+        NFR13 & TC002, TC010 \\
+        NFR15 & TC030 \\
+        NFR18 & TC006 \\
 \end{htable}
+
+Requirements not listed above are not covered by an on-device test case, for one of the following reasons:
+
+\begin{itemize}
+    \item \textbf{Not implemented in the current app}: FR18 (no indicator distinguishes a pending-sync change from a synced one; offline listing changes are simply disabled rather than queued), NFR17 (no per-item cached-vs-confirmed indicator exists beyond the global offline banner), and NFR20 (the front-end has no automated test suite).
+    \item \textbf{Not verifiable through app interaction alone}: NFR1--NFR4, NFR7, NFR9, NFR10, NFR14, NFR16, and NFR19 describe implementation details (transport scheme, secure-storage usage, API contracts, technology stack, cross-platform build, cached-data classification, static analysis) or design-review judgment calls (touch target sizing) that a tester cannot confirm or deny purely by using the app on a single device.
+    \item \textbf{Implemented but not exercised by a dedicated test case}: NFR6 (the API client maps backend error responses to their plain-language \texttt{message} field instead of showing the raw response body).
+\end{itemize}

@@ -11,7 +11,7 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Steps & 1) Tap Register. 2) Enter a unique email and a password meeting the policy (min. 8 characters, incl. lowercase, uppercase, digit, and special character), and confirm it. 3) Continue and enter first/last name. 4) Continue and enter address fields. 5) Continue and optionally skip the profile photo step. 6) Tap Create account. \\
     End condition & The account exists and the user is signed in. \\
     Expected result & The app signs the new user in automatically and navigates to the Home screen. \\
-    Result & Not run \\
+    Result & PASSED \\
 \end{htable}
 
 \begin{htable}[caption = {TC002}, label = {tc:002}, postsep = 2em]{colspec={lX}}
@@ -311,5 +311,77 @@ Each test case below states the requirement(s) it verifies, its pre-condition, t
     Steps & 1) Open the Notifications screen. 2) Delete a notification. \\
     End condition & n/a \\
     Expected result & The notification no longer appears in the list. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC027}, label = {tc:027}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC027 \\
+    Name & Screen reader announces on-screen content \\
+    Description & Core screens are usable with a screen reader enabled. \\
+    Requirements & NFR12 \\
+    Pre-condition & The device's screen reader (TalkBack) is turned on in system settings. \\
+    Steps & 1) Enable TalkBack in the device's Accessibility settings. 2) Open the app and navigate through Login/Register, Home, Listings, and a listing detail screen using swipe gestures. 3) Focus each interactive element (buttons, inputs, tabs) along the way. \\
+    End condition & n/a \\
+    Expected result & Every focused button, input, and navigation element is announced with a meaningful label, and the login, browse-listings, and view-listing flows can be completed using only screen-reader navigation. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC028}, label = {tc:028}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC028 \\
+    Name & App respects the device's text size setting \\
+    Description & The app's text scales when the device's system font/text size setting is increased. \\
+    Requirements & NFR11 \\
+    Pre-condition & None. \\
+    Steps & 1) In the device's system settings, increase the text/font size to the largest available option. 2) Open the app and navigate through Home, Listings, and a listing detail screen. \\
+    End condition & n/a \\
+    Expected result & Text throughout the app scales up accordingly and stays readable, with no truncated or overlapping text and no clipped buttons. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC029}, label = {tc:029}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC029 \\
+    Name & Protected screens require sign-in \\
+    Description & A signed-out user cannot reach protected app functionality; the app directs them to the sign-in flow instead. \\
+    Requirements & FR14 \\
+    Pre-condition & None. \\
+    Steps & 1) Log out (TC006). 2) Attempt to return to a tab that requires an authenticated session, for example by reopening the app or navigating back. \\
+    End condition & n/a \\
+    Expected result & The app shows the Landing/Login screen; the previously visited protected tab is not shown. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC030}, label = {tc:030}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC030 \\
+    Name & Listings show loading, empty, and error/retry states \\
+    Description & Asynchronous listing loads show an appropriate state for each outcome: loading, no results, and a failed request. \\
+    Requirements & FR15, NFR15 \\
+    Pre-condition & None. \\
+    Steps & 1) Open the Listings screen and observe the loading indicator while it fetches. 2) Search using a keyword that matches no listings and observe the empty state. 3) Turn off the device's network connection, then pull-to-refresh or reopen the Listings screen. \\
+    End condition & Restore the device's network connection. \\
+    Expected result & A loading indicator is shown while fetching; a clear "no results" state is shown for the empty search; a clear error state with a retry action is shown when the request fails, and retrying after connectivity is restored loads the listings. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC031}, label = {tc:031}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC031 \\
+    Name & Listing draft is preserved when leaving the create form \\
+    Description & Incomplete listing input is kept as a local draft if the user navigates away without submitting. \\
+    Requirements & FR16, NFR5 \\
+    Pre-condition & The user is on the Create Listing screen. \\
+    Steps & 1) Fill in some fields (e.g. the title) without saving. 2) Navigate away from the screen. 3) Return to Create Listing. \\
+    End condition & n/a \\
+    Expected result & The previously entered field values are restored. \\
+    Result & Not run \\
+\end{htable}
+
+\begin{htable}[caption = {TC032}, label = {tc:032}, postsep = 2em]{colspec={lX}}
+    Test Case ID & TC032 \\
+    Name & Previously loaded listings remain visible offline \\
+    Description & Listings retrieved while online stay visible, with an offline indicator, once the device loses connectivity. \\
+    Requirements & FR17, NFR5 \\
+    Pre-condition & The Listings screen has been opened at least once while online. \\
+    Steps & 1) Open the Listings screen while online and let it load. 2) Turn off the device's network connection. 3) Reopen or revisit the Listings screen. \\
+    End condition & Restore the device's network connection. \\
+    Expected result & The previously loaded listings are still displayed, and an offline indicator/banner is shown. \\
     Result & Not run \\
 \end{htable}
