@@ -36,21 +36,6 @@ export function copyFileToDocument(uri: string): string | null {
 }
 
 /**
- * Copy a file to the cache directory.
- * @param uri - The uri of the file.
- * @returns The uri as string if successful or null if the file doesn't exist.
- */
-export function copyFileToCache(uri: string): string | null {
-    const fileName = uri.split("/").pop();
-
-    if (fileName == null || fileName === "") {
-        return null;
-    }
-
-    return copyFile(uri, new File(Paths.cache, fileName));
-}
-
-/**
  * Remove a file from the persistent document storage.
  * @param uri - The uri of the file
  * @returns The uri as string if successful or null if file never existed.

@@ -12,6 +12,7 @@ Copy `.env.example` to `.env` and set `EXPO_PUBLIC_API_BASE_URL` to the backend 
 npm run android
 npm run ios
 ```
+This was tested on Android devices.
 
 ## Testing against the hosted backend
 - Server URL: `https://api.mufasadev.nl`

@@ -1,7 +1,6 @@
 import { useLocalSearchParams, useRouter } from "expo-router";
 import * as React from "react";
-import { RefreshControl, ScrollView, Share, View } from "react-native";
-import * as Linking from "expo-linking";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { AppHeader } from "@/presentation/components/containers/app-header";
 import { useTranslation } from "react-i18next";
 import {
@@ -15,6 +14,7 @@ import {
     useCurrentUser,
     useGetUser,
     useNetworkStatus,
+    useSharingService,
 } from "@/presentation/hooks";
 import { GradientButton } from "@/presentation/components/primitives/gradient-button";
 import { formatDistanceLabel } from "@/presentation/utils/distance.util";
@@ -159,6 +159,7 @@ function useListingActions(state: ReturnType<typeof useListingScreenState>): {
     onSendMessage: () => void,
 } {
     const { router, t, listing, isOnline, favorite, isFavoriting, isUnfavoriting, createFavorite, deleteFavoriteItem, sendMessage, conversations } = state;
+    const sharingService = useSharingService();
 
     /**
      * Favorite or unfavorite the listing.
@@ -176,16 +177,16 @@ function useListingActions(state: ReturnType<typeof useListingScreenState>): {
     }
 
     /**
-     * Open the native share sheet with a link to this listing.
+     * Open the native share sheet with the listing's title, description, and photo.
      */
     function onShare(): void {
         if (listing == null) {
             return;
         }
 
-        const url = Linking.createURL(`/listings/${listing.id}`);
+        const message = listing.description == null ? listing.title : `${listing.title}\n\n${listing.description}`;
 
-        void Share.share({ message: `${listing.title}\n${url}`, title: listing.title, url });
+        void sharingService.shareListing({ title: listing.title, message, attachmentUrl: listing.attachments?.[0]?.path ?? null });
     }
 
     /**
