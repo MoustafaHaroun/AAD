@@ -10,7 +10,7 @@ In this context, a container does not refer to a Docker container.
     \label{fig:c2}
 \end{figure}
 
-As shown in \cref{fig:c2}, the \tradesq{} Mobile Application consists of the Expo React Native application, Secure Session Storage, and Local Cache and Draft Storage.
+As shown in \cref{fig:c2}, the \tradesq{} Mobile Application consists of the Expo React Native application, Secure Session Storage, and Local Cache, Draft and Synchronisation Storage.
 The \tradesq{} back-end API and the mobile operating system remain external systems because their internal implementation is outside the scope of this document.
 
 \subsection{Containers}
@@ -50,7 +50,7 @@ This container stores user preferences, cached listing data, listing details, in
 Cached data reduces loading time and allows previously retrieved content to remain available when the device is offline.
 Draft storage prevents temporary network failure, accidental navigation, or an application restart from unnecessarily discarding user input.
 
-Queued operations are synchronised with the \tradesq{} back-end API when connectivity is restored.
+The container stores queued offline operations until the application synchronises them with the \tradesq{} back-end API after connectivity is restored.
 Cached data and queued changes are not treated as authoritative until the back-end API confirms them.
 Authentication tokens and other sensitive session values are stored separately in Secure Session Storage.
 

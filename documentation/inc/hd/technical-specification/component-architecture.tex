@@ -14,7 +14,7 @@ The application follows a layered Clean Architecture variant to separate user-in
 As shown in \cref{fig:c3} (also provided as a separate PNG file), the \textcolor[HTML]{806000}{presentation layer} contains Expo Router routes, screens, reusable user-interface components, and React Query hooks.
 The \textcolor[HTML]{A63D00}{application layer} contains use cases that coordinate individual user actions.
 The \textcolor[HTML]{6A4C93}{domain layer} contains entities and interfaces that define the application model independently of a specific API, storage mechanism, or device service.
-The \textcolor[HTML]{176B3A}{infrastructure layer} implements these interfaces using the \tradesq{} Backend API, device storage, and Expo platform capabilities.
+The \textcolor[HTML]{176B3A}{infrastructure layer} implements these interfaces using the \tradesq{} Back-end API, device storage, and Expo platform capabilities.
 
 \subsection{Expo Router and Application Shell}
 Expo Router provides file-based routing for the application.
@@ -28,7 +28,7 @@ The prompt allows the user to navigate to the sign-in screen or registration scr
 
 The application shell restores a previously stored session token when the application starts.
 A valid stored session enables account-related functionality without requiring the user to sign in after every application restart.
-When the Backend API rejects a stored session, the application removes the invalid token, clears protected local state, and returns the user to the sign-in flow.
+When the Back-end API rejects a stored session, the application removes the invalid token, clears protected local state, and returns the user to the sign-in flow.
 
 \subsection{Presentation Screens and Shared Components}
 Presentation screens render the user-facing routes of the application.
@@ -42,7 +42,7 @@ Reusable listing cards, buttons, dialogs, loading indicators, empty states, and 
 
 The presentation layer uses React Hook Form and Zod-based validation to validate user input before submission.
 Form controls retain user-entered values when validation or network errors occur.
-Presentation components do not communicate directly with the \tradesq{} Backend API.
+Presentation components do not communicate directly with the \tradesq{} Back-end API.
 They use query, mutation, and service hooks that expose application actions and their loading, success, and error states.
 
 \subsection{Query and Mutation Hooks}
@@ -91,7 +91,7 @@ It also allows the application to use HTTP-backed repositories when online and l
 \subsection{Infrastructure Adapters}
 
 Infrastructure adapters provide concrete implementations of domain repository and service interfaces.
-HTTP repository adapters communicate with the \tradesq{} Backend API through a shared API client.
+HTTP repository adapters communicate with the \tradesq{} Back-end API through a shared API client.
 The API client centralises the API base URL, request configuration, authentication headers, response handling, and normalised error handling.
 
 The authentication repository performs sign-in and registration operations.
@@ -124,11 +124,11 @@ Create, edit, delete, favourite, and attachment changes are added to a persisten
 
 The synchronisation queue retries queued operations when the application regains connectivity.
 Each queued operation has a unique identifier to prevent duplicate submission after a retry.
-The application displays a pending state until the Backend API confirms that an operation has completed.
+The application displays a pending state until the Back-end API confirms that an operation has completed.
 
 If synchronisation fails because of invalid data, expired authorisation, or a server-side conflict, the operation is marked as requiring user attention.
 The application preserves the original local data and provides an understandable explanation and retry option.
-The Backend API remains the authoritative source for shared data after synchronisation.
+The Back-end API remains the authoritative source for shared data after synchronisation.
 
 \subsection{Accessibility}
 

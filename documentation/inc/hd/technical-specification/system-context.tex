@@ -5,7 +5,8 @@ Users can create trade offers and requests, discover listings, manage their prof
 
 At the C1 level, the mobile application is treated as one software system.
 Its internal structure, including screens, navigation, state management, local storage, and communication clients, is intentionally not shown here.
-These details are described in the later C2, C3, and C4 sections.
+These details are described in the later C2, and C3 sections.
+A C4 code-level section is omitted, as the code is subject to change and would therefore provide only a momentary representation of the implementation, while the C3 diagram sufficiently describes the application's architecture.
 
 \begin{figure}[H]
     \centering
@@ -17,11 +18,11 @@ These details are described in the later C2, C3, and C4 sections.
 As shown in \cref{fig:c1}, the \tradesq{} User interacts directly with the \tradesq{} Mobile Application.
 The application is responsible for presenting information, collecting user input, guiding users through the available features, and providing understandable feedback for loading, success, empty, error, and offline states.
 
-The \tradesq{} Backend API is an external dependency of the mobile application.
+The \tradesq{} Back-end API is an external dependency of the mobile application.
 The application communicates with the API through HTTPS to retrieve and update shared application data, including authentication, profiles, listings, favourites, notifications, and other user-facing information.
 If real-time messaging had been implemented, the application would additionally have used a WebSocket connection to receive and send messaging events.
 The app does not directly access server-side persistence or storage systems.
-Those systems are implementation details of the backend and are outside the scope of this document.
+Those systems are implementation details of the back-end and are outside the scope of this document.
 
 The application also uses services offered by the mobile operating system.
 These platform services provide secure storage for session credentials, network-connectivity information, media selection for profile and listing images, notification capabilities, and accessibility functionality such as screen readers and system text scaling.
