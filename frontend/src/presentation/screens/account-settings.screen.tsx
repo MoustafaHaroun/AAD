@@ -1,8 +1,8 @@
 import { Stack, useRouter } from "expo-router";
 import * as React from "react";
 import { useEffect } from "react";
-import { Platform, Pressable, ScrollView, View } from "react-native";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { Platform, Pressable, View } from "react-native";
+import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -156,7 +156,7 @@ export default function AccountSettingsScreen(): React.JSX.Element {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="flex-1"
                 >
-                    <ScrollView contentContainerStyle={{ padding: 16 }}>
+                    <KeyboardAwareScrollView contentContainerStyle={{ padding: 16 }}>
                         {user != null &&
                             <AvatarPicker
                                 avatar={user.avatar}
@@ -220,7 +220,7 @@ export default function AccountSettingsScreen(): React.JSX.Element {
 
                         {error != null &&
                             <Text className="mb-4 text-sm text-destructive">{error.message}</Text>}
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
 
                     <View className="border-t border-border bg-background p-4">
                         <GradientButton

@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { View, ScrollView, Platform } from "react-native";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AppHeader } from "@/presentation/components/containers/app-header";
@@ -236,7 +236,7 @@ export default function EditListingScreen(): React.JSX.Element {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="flex-1"
                 >
-                    <ScrollView contentContainerStyle={{ padding: 16 }}>
+                    <KeyboardAwareScrollView contentContainerStyle={{ padding: 16 }}>
                         <ListingBasicFields
                             category={category}
                             control={control}
@@ -276,7 +276,7 @@ export default function EditListingScreen(): React.JSX.Element {
 
                         {error != null &&
                             <Text className="mb-4 text-sm text-destructive">{error.message}</Text>}
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
 
                     <View className="flex-row gap-3 border-t border-border bg-background p-4">
                         <GradientButton

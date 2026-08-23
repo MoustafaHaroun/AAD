@@ -1,8 +1,8 @@
 import React from "react";
-import { Image, View, ScrollView, Platform } from "react-native";
+import { Image, View, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -57,7 +57,7 @@ export default function LoginScreen(): React.JSX.Element {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="flex-1"
                 >
-                    <ScrollView
+                    <KeyboardAwareScrollView
                         className="flex-1"
                         contentContainerStyle={{ padding: 24 }}
                         keyboardShouldPersistTaps="handled"
@@ -124,7 +124,7 @@ export default function LoginScreen(): React.JSX.Element {
 
                             {t("login.noAccountSuffix")}
                         </Text>
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </>

@@ -4,7 +4,7 @@ import {
     Pressable,
     ScrollView,
     View,
-    Dimensions,
+    useWindowDimensions,
     type NativeScrollEvent,
     type NativeSyntheticEvent,
 } from "react-native";
@@ -12,8 +12,6 @@ import * as React from "react";
 import { useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { FullscreenImageViewer } from "@/presentation/components/primitives/custom/fullscreen-image-viewer";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export interface SwipableImageGalleryProps {
     readonly uris: string[],
@@ -27,6 +25,7 @@ export interface SwipableImageGalleryProps {
  */
 export function SwipableImageGallery({ uris }: SwipableImageGalleryProps): React.JSX.Element | null {
     const { t } = useTranslation();
+    const { width: SCREEN_WIDTH } = useWindowDimensions();
     const scrollViewRef = useRef<ScrollView>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
     const [fullscreenOpen, setFullscreenOpen] = useState(false);

@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from "react";
-import { Image, View, ScrollView, Platform } from "react-native";
+import { Image, View, Platform } from "react-native";
 import { Stack, useRouter } from "expo-router";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { KeyboardAvoidingView } from "react-native-keyboard-controller";
+import { KeyboardAvoidingView, KeyboardAwareScrollView } from "react-native-keyboard-controller";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, type Control } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -211,7 +211,7 @@ export default function RegisterScreen(): React.JSX.Element {
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
                     className="flex-1"
                 >
-                    <ScrollView
+                    <KeyboardAwareScrollView
                         className="flex-1"
                         contentContainerStyle={{ padding: 24, flexGrow: 1 }}
                         keyboardShouldPersistTaps="handled"
@@ -255,7 +255,7 @@ export default function RegisterScreen(): React.JSX.Element {
 
                             {t("register.haveAccountSuffix")}
                         </Text>
-                    </ScrollView>
+                    </KeyboardAwareScrollView>
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </>

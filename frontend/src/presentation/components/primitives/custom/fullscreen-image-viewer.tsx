@@ -1,12 +1,12 @@
 import * as React from "react";
 import { useState } from "react";
 import {
-    Dimensions,
     Image,
     Modal,
     Pressable,
     ScrollView,
     View,
+    useWindowDimensions,
     type NativeScrollEvent,
     type NativeSyntheticEvent,
 } from "react-native";
@@ -15,8 +15,6 @@ import { X } from "lucide-react-native";
 import { useTranslation } from "react-i18next";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Text } from "@/presentation/components/primitives/rnreusables/ui/text";
-
-const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 export interface FullscreenImageViewerProps {
     readonly uris: string[],
@@ -41,6 +39,7 @@ export function FullscreenImageViewer({
     onClose,
 }: FullscreenImageViewerProps): React.JSX.Element {
     const { t } = useTranslation();
+    const { width: SCREEN_WIDTH } = useWindowDimensions();
     const [index, setIndex] = useState(initialIndex);
 
     /**
