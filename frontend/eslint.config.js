@@ -12,9 +12,8 @@ const RULES = getRules();
 export default [
     {
         ignores: [
-            `${SOURCE_DIR}/presentation/components/primitives/rn-reusables/**/*`,
+            `${SOURCE_DIR}/presentation/components/primitives/rnreusables/**/*`,
             `${SOURCE_DIR}/presentation/utils/cn.util.ts`,
-            `${SOURCE_DIR}/presentation/hooks/rn-reusables/**/*`,
         ],
     },
     {
@@ -51,7 +50,7 @@ export default [
                 {
                     selector: "parameter",
                     format: ["camelCase", "PascalCase"],
-                    leadingUnderscore: "forbid",
+                    leadingUnderscore: "allow",
                 },
                 {
                     selector: "memberLike",
@@ -366,7 +365,7 @@ function getRules() {
             "react/default-props-match-prop-types": "error",
             "react/destructuring-assignment": "warn",
             "react/display-name": "off",
-            "react/forbid-component-props": ["warn", { forbid: ["style"] }],
+            "react/forbid-component-props": ["warn", { forbid: [{ propName: "style", allowedFor: ["LinearGradient"] }] }],
             "react/forbid-dom-props": "warn",
             "react/forbid-elements": "warn",
             "react/forbid-foreign-prop-types": "warn",
@@ -445,7 +444,7 @@ function getRules() {
             "react/prefer-stateless-function": "warn",
             "react/prop-types": "error",
             "react/react-in-jsx-scope": "off",
-            "react/require-default-props": "warn",
+            "react/require-default-props": ["warn", { ignoreFunctionalComponents: true }],
             "react/require-optimization": "warn",
             "react/require-render-return": "error",
             "react/self-closing-comp": "warn",
@@ -643,7 +642,7 @@ function getRules() {
                 {
                     selector: "parameter",
                     format: ["camelCase", "PascalCase"],
-                    leadingUnderscore: "forbid",
+                    leadingUnderscore: "allow",
                 },
                 {
                     selector: "memberLike",
@@ -686,7 +685,7 @@ function getRules() {
             "typescript/no-import-type-side-effects": "warn",
             "typescript/no-inferrable-types": ["warn", { ignoreParameters: true, ignoreProperties: true }],
             "typescript/no-invalid-this": "error",
-            "typescript/no-invalid-void-type": ["warn", { allowAsThisParameter: true }],
+            "typescript/no-invalid-void-type": ["warn", { allowAsThisParameter: true, allowInGenericTypeArguments: true }],
             "typescript/no-loop-func": "error",
             "typescript/no-loss-of-precision": "warn",
             "typescript/no-magic-numbers": ["off", { ignoreArrayIndexes: true, ignoreDefaultValues: true, ignoreClassFieldInitialValues: true, ignore: [0, 1] }],
