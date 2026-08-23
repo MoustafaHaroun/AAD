@@ -21,6 +21,8 @@
     "send": "Versturen",
     "close": "Sluiten",
     "changeAvatar": "Profielfoto wijzigen",
+    "showPassword": "Wachtwoord tonen",
+    "hidePassword": "Wachtwoord verbergen",
     "viewPhoto": "Bekijk foto {{index}} van {{total}}, volledig scherm",
     "notAvailableOffline": "Niet beschikbaar zonder internet. Maak verbinding om dit te laden.",
     "loadError": "Er ging iets mis bij het laden. Trek naar beneden om het opnieuw te proberen.",

@@ -2,6 +2,7 @@ import { Eye, EyeOff } from "lucide-react-native";
 import * as React from "react";
 import { useState } from "react";
 import { Pressable, View, type TextInputProps } from "react-native";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/presentation/components/primitives/rnreusables/ui/icon";
 import { Input } from "@/presentation/components/primitives/rnreusables/ui/input";
 import { cn } from "@/presentation/utils/cn.util";
@@ -16,6 +17,7 @@ export function PasswordInput({
     className,
     ...props
 }: TextInputProps & React.RefAttributes<React.ComponentRef<typeof Input>>): React.JSX.Element {
+    const { t } = useTranslation();
     const [visible, setVisible] = useState(false);
 
     return (
@@ -27,6 +29,8 @@ export function PasswordInput({
             />
 
             <Pressable
+                accessibilityLabel={visible ? t("common.hidePassword") : t("common.showPassword")}
+                accessibilityRole="button"
                 className="absolute right-[16px]"
                 onPress={() => { setVisible(prev => !prev); }}
             >

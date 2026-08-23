@@ -25,6 +25,8 @@ export function PfpStep({ avatarUri, onPick }: PfpStepProps): React.JSX.Element 
             <Text className="mb-3 text-[16px] font-noto-semibold text-black">{t("register.pfp.title")}</Text>
 
             <Pressable
+                accessibilityLabel={t("common.changeAvatar")}
+                accessibilityRole="button"
                 className="relative"
                 onPress={onPick}
             >

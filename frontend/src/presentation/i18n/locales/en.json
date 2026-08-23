@@ -21,6 +21,8 @@
     "send": "Send",
     "close": "Close",
     "changeAvatar": "Change profile picture",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "viewPhoto": "View photo {{index}} of {{total}}, fullscreen",
     "notAvailableOffline": "Not available offline. Connect to the internet to load it.",
     "loadError": "Something went wrong loading this. Pull down to try again.",
