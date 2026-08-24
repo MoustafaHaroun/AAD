@@ -45,12 +45,16 @@ export const listingDraftStore = {
                     target: listingDraftSchema.id,
                     set: { ...draft, updatedAt: new Date().toISOString() },
                 });
-        } catch {}
+        } catch (error) {
+            console.log(error); // eslint-disable-line no-console
+        }
     },
 
     async clear(id: string): Promise<void> {
         try {
             await db.delete(listingDraftSchema).where(eq(listingDraftSchema.id, id));
-        } catch {}
+        } catch (error) {
+            console.log(error); // eslint-disable-line no-console
+        }
     },
 };

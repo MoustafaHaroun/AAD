@@ -15,7 +15,9 @@ export function extractErrorMessage(text: string): string | null {
         if (Array.isArray(message) && message.every(entry => typeof entry === "string")) {
             return message.join(", ");
         }
-    } catch {}
+    } catch (error) {
+        console.log(error); // eslint-disable-line no-console
+    }
 
     return null;
 }

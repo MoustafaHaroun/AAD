@@ -57,7 +57,9 @@ export class ListingRepository implements IListingRepository {
                     eq(attachmentSchema.listingId, listingSchema.id),
                 )
                 .where(eq(listingSchema.user, userId));
-        } catch {}
+        } catch (error) {
+            console.log(error); // eslint-disable-line no-console
+        }
 
         return this.reduceListingResults(result);
     }
@@ -71,7 +73,9 @@ export class ListingRepository implements IListingRepository {
 
             await db.insert(listingSchema).values({ ...listing, id: listingId });
             await Promise.all(listing.attachments.map(attachment => db.insert(attachmentSchema).values({ id: uuid(), listingId, path: attachment })));
-        } catch {}
+        } catch (error) {
+            console.log(error); // eslint-disable-line no-console
+        }
 
         return listing;
     }
@@ -132,7 +136,9 @@ export class ListingRepository implements IListingRepository {
     public async deleteListing(listingId: string): Promise<void> {
         try {
             await db.delete(listingSchema).where(eq(listingSchema.id, listingId));
-        } catch {}
+        } catch (error) {
+            console.log(error); // eslint-disable-line no-console
+        }
     }
 
     private reduceListingResults(result: Array<{
