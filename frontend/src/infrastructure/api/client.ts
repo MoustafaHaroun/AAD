@@ -25,9 +25,6 @@ async function request<T>(path: string, init: RequestInit = {}): Promise<T> {
     const response = await fetch(`${BASE_URL}${path}`, { ...init, headers });
 
     if (!response.ok) {
-        // A 401 on a request that carried a token means the session itself was
-        // Rejected (expired/invalidated), not a login attempt with bad
-        // Credentials (those requests never carry a token) — sign the user out.
         if (response.status === 401 && token != null) {
             tokenStore.clear();
             queryClient.clear();

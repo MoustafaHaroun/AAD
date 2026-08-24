@@ -32,10 +32,6 @@ export default function ListingsScreen(): React.JSX.Element {
     const [query, setQuery] = useState(params.q ?? "");
     const [category, setCategory] = useState<ListingCategory | undefined>(undefined);
 
-    // Always fetch the same unfiltered list — a single stable cache entry —
-    // And filter client-side below. Server-side filtering would mean every
-    // Distinct search/category combination is its own network-only query
-    // With nothing to fall back on offline.
     const { data, isFetching, isLoading, error, refetch } = useGetApiListings();
     const { data: favorites } = useGetFavorites();
     const { data: currentUser } = useGetUser(currentUserId ?? "");

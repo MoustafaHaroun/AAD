@@ -16,9 +16,6 @@ export function useGetApiListing(id: string): UseQueryResult<ApiListing> {
         queryKey: ["api-listings.get", id],
         queryFn: async () => getApiListing.execute({ id }),
         enabled: id.length > 0,
-        // A listing already seen in any cached list (Home, Listings, etc.)
-        // Has all the fields this screen needs — show it immediately
-        // Instead of waiting on (or failing) a separate network fetch.
         initialData: () => {
             const listQueries = queryClient.getQueriesData<ApiListing[] | ApiListing>({ queryKey: ["api-listings.get"] });
 

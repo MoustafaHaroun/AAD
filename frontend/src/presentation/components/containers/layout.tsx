@@ -67,10 +67,6 @@ export default function Layout(): React.JSX.Element {
             setLanguageReady(true);
         });
 
-        // Restored/saved entirely in the background — queries must never
-        // Wait on this. A restored entry only fills in for a query that
-        // Hasn't already fetched fresher data, so it can't clobber a live
-        // Result even if the persisted snapshot turns out to be stale.
         const [unsubscribe] = persistQueryClient({
             queryClient,
             persister: queryPersister,

@@ -2,8 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import type { PersistedClient } from "@tanstack/query-persist-client-core";
 
-// Bumping this key orphans any snapshot written under the old key — used
-// Once already to discard a bad cache saved during the blocking-restore bug.
 const PERSIST_KEY = "trade2.query-cache.v2";
 const RESTORE_TIMEOUT_MS = 3000;
 

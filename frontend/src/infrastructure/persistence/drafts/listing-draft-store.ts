@@ -16,9 +16,6 @@ export interface ListingDraft {
  * listing's own id for an edit-in-progress.
  */
 export const listingDraftStore = {
-    // Draft persistence is a convenience, not a critical path — a broken
-    // Local DB (e.g. a pending migration that hasn't run yet on this device)
-    // Must never crash or block the actual create/edit listing flow.
     async get(id: string): Promise<ListingDraft | null> {
         try {
             const rows = await db.select().from(listingDraftSchema).where(eq(listingDraftSchema.id, id));
@@ -48,16 +45,12 @@ export const listingDraftStore = {
                     target: listingDraftSchema.id,
                     set: { ...draft, updatedAt: new Date().toISOString() },
                 });
-        } catch {
-            // Ignored — see comment above.
-        }
+        } catch {}
     },
 
     async clear(id: string): Promise<void> {
         try {
             await db.delete(listingDraftSchema).where(eq(listingDraftSchema.id, id));
-        } catch {
-            // Ignored — see comment above.
-        }
+        } catch {}
     },
 };

@@ -12,7 +12,6 @@ export function useGetMessages(): UseQueryResult<Message[]> {
     return useQuery<Message[]>({
         queryKey: ["messages.get"],
         queryFn: async () => getMessages.execute(),
-        // No WebSocket support on the backend yet — poll for new messages instead.
         refetchInterval: 5000,
     });
 }

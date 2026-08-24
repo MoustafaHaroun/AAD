@@ -57,9 +57,7 @@ export class ListingRepository implements IListingRepository {
                     eq(attachmentSchema.listingId, listingSchema.id),
                 )
                 .where(eq(listingSchema.user, userId));
-        } catch {
-            // Ignored — draft/local persistence is a convenience, not a critical path.
-        }
+        } catch {}
 
         return this.reduceListingResults(result);
     }
@@ -73,9 +71,7 @@ export class ListingRepository implements IListingRepository {
 
             await db.insert(listingSchema).values({ ...listing, id: listingId });
             await Promise.all(listing.attachments.map(attachment => db.insert(attachmentSchema).values({ id: uuid(), listingId, path: attachment })));
-        } catch {
-            // Ignored — draft/local persistence is a convenience, not a critical path.
-        }
+        } catch {}
 
         return listing;
     }
@@ -136,9 +132,7 @@ export class ListingRepository implements IListingRepository {
     public async deleteListing(listingId: string): Promise<void> {
         try {
             await db.delete(listingSchema).where(eq(listingSchema.id, listingId));
-        } catch {
-            // Ignored — draft/local persistence is a convenience, not a critical path.
-        }
+        } catch {}
     }
 
     private reduceListingResults(result: Array<{

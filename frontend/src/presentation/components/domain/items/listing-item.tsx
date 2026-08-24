@@ -79,9 +79,6 @@ export default function ListingItem({ listing, onPress, distanceLabel }: Listing
     return (
         <View className="flex flex-col overflow-hidden rounded-[10px]">
             <View className="relative">
-                {/* Note: this is a *sibling* of the favorite button below, not a parent —
-                    nesting a Pressable inside another Pressable's subtree causes the outer
-                    one to swallow touches meant for the inner one on Android. */}
                 <Pressable
                     accessibilityLabel={listing.title}
                     accessibilityRole="button"

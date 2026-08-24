@@ -15,9 +15,7 @@ export function extractErrorMessage(text: string): string | null {
         if (Array.isArray(message) && message.every(entry => typeof entry === "string")) {
             return message.join(", ");
         }
-    } catch {
-        // Not JSON — fall through to the raw-text fallback.
-    }
+    } catch {}
 
     return null;
 }
