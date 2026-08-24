@@ -25,3 +25,7 @@ This was tested on Android devices.
 npm run lint:check   # static analysis
 npm test             # automated tests
 ```
+
+## Deployment
+
+The app can also be built and submitted using [Expo Application Services (EAS)](https://expo.dev/eas), which supports building for both Android and iOS and submitting those builds to the Google Play Console and the Apple App Store.
